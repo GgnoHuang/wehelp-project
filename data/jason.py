@@ -39,7 +39,7 @@ for item in results:
             cursor.execute("INSERT INTO images(place_id, url) VALUES(%s, %s);", (place_id, url))
 
     conn.commit()
-
+ 
 cursor.close()
 conn.commit()
 conn.close()
