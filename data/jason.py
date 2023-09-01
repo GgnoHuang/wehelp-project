@@ -29,12 +29,14 @@ for item in results:
     cursor.execute("INSERT INTO places(name,category,description,address,transport, mrt,lat,lng) VALUES(%s, %s, %s, %s, %s, %s, %s, %s);",(
         name, category, description, address, transport, mrt, lat, lng))
 
-    place_id = cursor.lastrowid# 這個重要
+    place_id = cursor.lastrowid# 這個重要# 這個重要# 這個重要# 這個重要# 這個重要
+    # 這個重要# 這個重要# 這個重要# 這個重要
     splitfile=item["file"].split('https')
     splitfile.pop(0)
     for index,url in enumerate(splitfile):
         url="https"+url
-        cursor.execute("INSERT INTO images(place_id, url) VALUES(%s, %s);", (place_id, url))
+        if ".jpg" in url.lower() or ".png" in url.lower():
+            cursor.execute("INSERT INTO images(place_id, url) VALUES(%s, %s);", (place_id, url))
 
     conn.commit()
 

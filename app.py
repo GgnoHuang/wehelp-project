@@ -26,38 +26,145 @@ cursor = conn.cursor()
 @app.route("/")
 def index():
 	return render_template("index.html")
-
 @app.route("/attraction/<id>")
 def attraction(id):
 	return render_template("attraction.html")
-
 @app.route("/booking")
 def booking():
 	return render_template("booking.html")
-
 @app.route("/thankyou")
 def thankyou():
 	return render_template("thankyou.html")
 
 
+
+
 @app.route("/api/attractions", methods = ["GET"])
 def api_attractions():
+    error_res = {
+        "error": True,
+        "message":"發生錯誤"
+    }
+    page = request.args.get("page",type=int,default=0)
+    keyword = request.args.get("keyword",type=str)
+
     try:
-        cursor.execute("SELECT * FROM places;")
+        if keyword != None:
+            cursor.execute("SELECT DISTINCT mrt FROM places")
+            # 先把所有捷運站名字找出來，並且不重複顯示
+            mrts = cursor.fetchall()
+            #==  先搜尋捷運站名字  ==  #==  先搜尋捷運站名字  ==  #==  先搜尋捷運站名字  ==  #==  先搜尋捷運站名字  ==  #==  先搜尋捷運站名字  ==  
+            if page==0:
+                page=1
+                offset=0
+            else:
+                offset = (page-1)*12
+            next_page = page+1 # offset就是設定要從第幾筆資料開始取，一頁12筆，所以要取第二頁資料就要跳過12筆
+            # 如果要取第三頁資料就要跳過24筆
+
+
+            for mrt in mrts:
+                if keyword == mrt[0]:
+                    cursor.execute("SELECT COUNT(*) FROM places WHERE mrt = %s;", (keyword,))
+                    place_cnt = cursor.fetchone()[0]
+                    # 計算總量，如果超過可顯示的量就不回傳
+                    if page*12 > place_cnt:
+                        if page*12-place_cnt >= 12:
+                            error_res = {
+                                "error": True,
+                                "message":"您輸入的數字已超過總頁數"
+                            }
+                            return Response(json.dumps(error_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
+
+                    cursor.execute("SELECT * FROM places WHERE mrt = %s LIMIT %s OFFSET %s", (keyword,12,offset))
+                    result = cursor.fetchall()
+
+                    places_data = []
+                    for row in result:
+                        id, name, category, description, address, transport, mrt, lat, lng = row
+                        cursor.execute("SELECT url FROM images WHERE place_id = %s;", (id,))
+                        images_result = cursor.fetchall()
+                        images = [image_row[0] for image_row in images_result]
+                        place = {
+                            "id": id,
+                            "name": name,
+                            "category": category,
+                            "description": description,
+                            "address": address,
+                            "transport": transport,
+                            "mrt": mrt,
+                            "lat": float(lat),
+                            "lng": float(lng),
+                            "images": images,
+                        }
+                        places_data.append(place)
+                    if len(result)<12:
+                        next_page=None
+                    data = {
+                        "nextPage":next_page,
+                        "data": places_data
+                    }
+                    json_data = json.dumps(data, ensure_ascii=False, sort_keys=False, indent=3)
+                    return Response(json_data, status=200,content_type='application/json; charset=utf-8')
+            #== 如果沒有符合的捷運再模糊搜尋景點名字 
+            
+            cursor.execute("SELECT * FROM places WHERE name LIKE %s LIMIT %s OFFSET %s", ('%'+keyword+'%', 12, offset))
+            result = cursor.fetchall()
+            places_data = []
+            for row in result:
+                id, name, category, description, address, transport, mrt, lat, lng = row
+                cursor.execute("SELECT url FROM images WHERE place_id = %s;", (id,))
+                images_result = cursor.fetchall()
+                images = [image_row[0] for image_row in images_result]
+                place = {
+                    "id": id,
+                    "name": name,
+                    "category": category,
+                    "description": description,
+                    "address": address,
+                    "transport": transport,
+                    "mrt": mrt,
+                    "lat": float(lat),
+                    "lng": float(lng),
+                    "images": images,
+                }
+                places_data.append(place)
+            if len(result)<12:
+                next_page=None
+            data = {
+                "nextPage":next_page,
+                "data": places_data
+            }
+            json_data = json.dumps(data, ensure_ascii=False, sort_keys=False, indent=3)
+            return Response(json_data, status=200,content_type='application/json; charset=utf-8')
+        
+        elif keyword == None:
+            print("keyword是None")
+        
+
+# 以下為沒有搜尋關鍵字 # 以下為沒有搜尋關鍵字 # 以下為沒有搜尋關鍵字# 以下為沒有搜尋關鍵字# 以下為沒有搜尋關鍵字# 以下為沒有搜尋關鍵字
+        cursor.execute("SELECT COUNT(*) FROM places")
+        data_cnt = cursor.fetchone()[0]
+        # 得到資料數量    # 得到資料數量    # 得到資料數量
+        if page*12 > data_cnt:
+            if page*12-data_cnt >= 12:
+                error_res = {
+                    "error": True,
+                    "message":"您輸入的數字已超過總頁數"
+                }
+                return Response(json.dumps(error_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
+        if page==0:#這坨重複寫了很多次，看能不能只寫一次然後放在一個地方就好
+            page=1#這坨重複寫了很多次，看能不能只寫一次然後放在一個地方就好
+            offset=0#這坨重複寫了很多次，看能不能只寫一次然後放在一個地方就好
+        else:#這坨重複寫了很多次，看能不能只寫一次然後放在一個地方就好
+            offset = (page-1)*12#這坨重複寫了很多次，看能不能只寫一次然後放在一個地方就好
+        next_page = page+1#這坨重複寫了很多次，看能不能只寫一次然後放在一個地方就好
+        cursor.execute("SELECT * FROM places LIMIT %s OFFSET %s",(12,offset))
         result = cursor.fetchall()
+
         places_data = []
-
-
-        page = request.args.get("keyword",type=int,default=0)
-
-
-        page = request.args.get("page",type=int,default=0)
-
-
-
-        for cnt,row in enumerate(result):
+        for row in result:
             id, name, category, description, address, transport, mrt, lat, lng = row
-
             cursor.execute("SELECT url FROM images WHERE place_id = %s;", (id,))
             images_result = cursor.fetchall()
             images = [image_row[0] for image_row in images_result]
@@ -75,15 +182,8 @@ def api_attractions():
                 "images": images,
             }
             places_data.append(place)
-            cnt+=1
-            if cnt == page*12:
-                break
-
-        next_page=len(places_data)//12
-        next_page+=1
-        if len(places_data)%12 > 0:
-            next_page+=1
-
+        if len(result) < 12:
+            next_page=None
         data = {
             "nextPage":next_page,
             "data": places_data
@@ -93,52 +193,81 @@ def api_attractions():
         # json_data = jsonify(data)
         return Response(json_data, status=200,content_type='application/json; charset=utf-8')
     
-    except:
-        error_res = {
-            "error": True,
-            "message":"請按照情境提供對應的錯誤訊息"
-        }
+    except:# 什麼情況下會進到except? mysql筆記裡面有！！
+        print("except了")
         return Response(json.dumps(error_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
     # son_dumps(dict)时，如果dict包含有汉字，
     # 一定加上ensure_ascii=False。否则按参数默认值True，
     # 意思是保证dumps之后的结果里所有的字符都能够被ascii表示，
     # 汉字在ascii的字符集里面，因此经过dumps以后的str里，汉字会变成对应的unicode。
 
-        
+
+
+@app.route("/api/attraction/<id>")
+def api_attraction_id(id):
+    error_res = {
+        "error": True,
+        "message":"伺服器發生錯誤"
+    }
+    try:
+        cursor.execute("SELECT * FROM places WHERE id = %s", (id,))
+        result = cursor.fetchone()
+        if result==None:
+            error_res["message"]="查無景點"
+            return Response(json.dumps(error_res, ensure_ascii=False), status=400, content_type='application/json; charset=utf-8')
+        id, name, category, description, address, transport, mrt, lat, lng = result
+        cursor.execute("SELECT url FROM images WHERE place_id = %s;", (id,))
+        images_result = cursor.fetchall()
+        images = [image_row[0] for image_row in images_result]
+        place = {
+            "id": id,
+            "name": name,
+            "category": category,
+            "description": description,
+            "address": address,
+            "transport": transport,
+            "mrt": mrt,
+            "lat": float(lat),
+            "lng": float(lng),
+            "images": images,
+        }
+        data = {"data": place}
+
+        json_data = json.dumps(data, ensure_ascii=False, sort_keys=False, indent=3)
+        return Response(json_data, status=200,content_type='application/json; charset=utf-8')
+    except:# 什麼情況下會進到except? mysql筆記裡面有！！
+        print("except了")
+        return Response(json.dumps(error_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
 
 
 
-  # if len(result) != 0 :~~~~~~~~``
-  #         data = {
-  #           "data":{
-  #             "id": result[0][0],
-  #             "name": result[0][1],
-  #             "username": result[0][2],
-  #         }}
-  #         session["username_to_rename"] = result[0][2]
-  #         # 這邊要確定你搜尋的是哪個人，然後放到變數，等等要改名的時候再跟當前用戶做比對
-  #         json_data = jsonify(data)
-  #         return json_data~~~~~~~~~
+@app.route("/api/mrts")
+def api_mrts():
+    error_res = {
+        "error": True,
+        "message":"請按照情境提供對應的錯誤訊息"
+    }
+    try:
+        cursor.execute("SELECT p.mrt, COUNT(p.mrt) AS mrt_count FROM places p GROUP BY p.mrt ORDER BY mrt_count DESC;")
+                # 先把所有捷運站名字找出來，並且不重複顯示
+        mrts = cursor.fetchall()
+        sorted_mrt = []
+        for cnt,row in enumerate(mrts):
+            print(row)
+            mrt = row[0]
+            if mrt != None:
+                sorted_mrt.append(mrt)
+                cnt+=1
+            if cnt == 40:
+                break
+        data = {"data": sorted_mrt}
 
+        json_data = json.dumps(data, ensure_ascii=False, sort_keys=False, indent=3)
+        return Response(json_data, status=200,content_type='application/json; charset=utf-8')
+    except:
+        print("except了")
+        return Response(json.dumps(error_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
 
-
-# def validate_string_parameter(value):
-#     if isinstance(value, str):
-#         return True
-#     return False
-
-# @app.route('/api/endpoint', methods=['GET'])
-# def api_endpoint():
-#     query_param = request.args.get('param', None)
-    
-#     if query_param is None:
-#         return jsonify({'error': 'Missing parameter'}), 400
-    
-#     if not validate_string_parameter(query_param):
-#         return jsonify({'error': 'Invalid parameter format'}), 400
-    
-#     # 在這裡進行你的處理邏輯
-#     return jsonify({'result': 'Success'})
 
 
 
