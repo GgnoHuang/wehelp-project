@@ -54,22 +54,17 @@ def api_attractions():
             # 先把所有捷運站名字找出來，並且不重複顯示
             mrts = cursor.fetchall()
             #==  先搜尋捷運站名字  ==  #==  先搜尋捷運站名字  ==  #==  先搜尋捷運站名字  ==  #==  先搜尋捷運站名字  ==  #==  先搜尋捷運站名字  ==  
-            if page==0:
-                page=1
-                offset=0
-            else:
-                offset = (page-1)*12
+            offset = page*12
             next_page = page+1 # offset就是設定要從第幾筆資料開始取，一頁12筆，所以要取第二頁資料就要跳過12筆
             # 如果要取第三頁資料就要跳過24筆
-
 
             for mrt in mrts:
                 if keyword == mrt[0]:
                     cursor.execute("SELECT COUNT(*) FROM places WHERE mrt = %s;", (keyword,))
                     place_cnt = cursor.fetchone()[0]
                     # 計算總量，如果超過可顯示的量就不回傳
-                    if page*12 > place_cnt:
-                        if page*12-place_cnt >= 12:
+                    if (page+1)*12 > place_cnt:
+                        if (page+1)*12-place_cnt >= 12:
                             error_res = {
                                 "error": True,
                                 "message":"您輸入的數字已超過總頁數"
@@ -146,19 +141,15 @@ def api_attractions():
         cursor.execute("SELECT COUNT(*) FROM places")
         data_cnt = cursor.fetchone()[0]
         # 得到資料數量    # 得到資料數量    # 得到資料數量
-        if page*12 > data_cnt:
-            if page*12-data_cnt >= 12:
+        if (page+1)*12 > data_cnt:
+            if (page+1)*12-data_cnt >= 12:
                 error_res = {
                     "error": True,
                     "message":"您輸入的數字已超過總頁數"
                 }
                 return Response(json.dumps(error_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
-        if page==0:#這坨重複寫了很多次，看能不能只寫一次然後放在一個地方就好
-            page=1#這坨重複寫了很多次，看能不能只寫一次然後放在一個地方就好
-            offset=0#這坨重複寫了很多次，看能不能只寫一次然後放在一個地方就好
-        else:#這坨重複寫了很多次，看能不能只寫一次然後放在一個地方就好
-            offset = (page-1)*12#這坨重複寫了很多次，看能不能只寫一次然後放在一個地方就好
-        next_page = page+1#這坨重複寫了很多次，看能不能只寫一次然後放在一個地方就好
+        offset = page*12
+        next_page = page+1
         cursor.execute("SELECT * FROM places LIMIT %s OFFSET %s",(12,offset))
         result = cursor.fetchall()
 
