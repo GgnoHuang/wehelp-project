@@ -325,10 +325,28 @@ main{
     width: 150px;
   }
 }
+/* =-=▼▼▼▼▼▼▼▼▼▼▼---低於768 -小於iPad Mini  --▼▼▼▼▼▼▼▼▼▼▼▼▼▼-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+@media(max-width:767px){
+  .nav {
+    width: 376px;
+  }
+  .mainwrapper{
+    width: 376px;
+  }
+  .info{
+    width: 376px;
+  }
+  .imggbox{
+    width: 171px;
+    margin: 0px 7.5px;
+    margin-top: 15px;
+  }
+}
 
 
 /* =-=▼▼▼▼▼▼▼▼▼▼▼---低於768 -小於iPad Mini  --▼▼▼▼▼▼▼▼▼▼▼▼▼▼-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-@media(max-width:767px){
+@media(max-width:375px){
   .nav {
     width: 360px;
   }
