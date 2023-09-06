@@ -1,8 +1,12 @@
 from flask import *
 # from flask import jsonify
 # from collections import OrderedDict
+from flask_cors import CORS
 
-app=Flask(__name__)
+app=Flask(__name__,
+        static_folder='static',
+        static_url_path='/static')
+CORS(app,origins='*')
 app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
 
@@ -142,7 +146,7 @@ def api_attractions():
         data_cnt = cursor.fetchone()[0]
         # 得到資料數量    # 得到資料數量    # 得到資料數量
         if (page+1)*12 > data_cnt:
-            if (page+1)*12-data_cnt >= 12:
+            if (page+1)*12 - data_cnt >= 12:
                 error_res = {
                     "error": True,
                     "message":"您輸入的數字已超過總頁數"
@@ -244,7 +248,6 @@ def api_mrts():
         mrts = cursor.fetchall()
         sorted_mrt = []
         for cnt,row in enumerate(mrts):
-            print(row)
             mrt = row[0]
             if mrt != None:
                 sorted_mrt.append(mrt)
