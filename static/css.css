@@ -353,6 +353,9 @@ main{
   .imggbox{
     width: 328px;
   }
+  .imggbox{
+    margin: 0px 15px;
+  }
   .mainwrapper{
     width: 360px;
   }
