@@ -1,5 +1,4 @@
-// url="http://54.65.60.124:3000/api/mrts"
-url="http://127.0.0.1:3000/api/mrts"
+url="http://54.65.60.124:3000/api/mrts"
 let mrtsArr=[];
 const userInput = document.querySelector(".user-input");
 
@@ -63,8 +62,7 @@ submitBtn.addEventListener("click", function() {
 let apiRequestTriggered = false;
 let keyword="";
 function fetchNextPageData(){
-    // const nextPageUrl = `http://54.65.60.124:3000/api/attractions?page=${nextPage}&keyword=${keyword}`;
-    const nextPageUrl = `http://127.0.0.1:3000/api/attractions?page=${nextPage}&keyword=${keyword}`;
+    const nextPageUrl = `http://54.65.60.124:3000/api/attractions?page=${nextPage}&keyword=${keyword}`;
     // 定義url不能放函數外面，不然他不會重新賦值
     return fetch(nextPageUrl).then((res) => res.json());
 }
