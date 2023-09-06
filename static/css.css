@@ -215,7 +215,7 @@ main{
   display: flex;
   flex-wrap: wrap;
   margin: 15px;
-  width: 270px;
+  width: 268px;
 }
 
 .imgand-mask{
@@ -292,16 +292,48 @@ main{
 /* =-=▼▼▼▼▼▼▼▼▼▼▼---低於1200---▼▼▼▼▼▼▼▼▼▼▼▼▼▼-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
 @media(max-width:1199px){
   .nav {
-    width: 360px;
+    width: 768px;
   }
-
   .taipei{
     margin-left: 10px;
   }
-
   main{
     display: flex;
     justify-content: center;
+  }
+  .mainwrapper{
+    width: 768px;
+  }
+  .hero{
+    background-position: -80px 0px;
+  }
+  .info{
+    width: 768px;
+  }
+  .img-zone{
+    grid-template-columns: repeat(2,1fr);
+  }
+  .imggbox{
+    width: 352px;
+    margin: 0px 15px;
+    margin-top: 15px;
+  }
+  .imgand-mask{
+    height: 235px;
+  }
+  .textbox-2 div{
+    width: 150px;
+  }
+}
+
+
+/* =-=▼▼▼▼▼▼▼▼▼▼▼---低於768 -小於iPad Mini  --▼▼▼▼▼▼▼▼▼▼▼▼▼▼-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+@media(max-width:767px){
+  .nav {
+    width: 360px;
+  }
+  .imggbox{
+    width: 328px;
   }
   .mainwrapper{
     width: 360px;
@@ -323,14 +355,6 @@ main{
   .img-zone{
     grid-template-columns: repeat(1,1fr);
   }
-  .imggbox{
-    width: 320px;
-    margin: 0px 15px;
-    margin-top: 15px;
-  }
-  .imgand-mask{
-    height: 235px;
-  }
   .footer-wrapper{
     display: flex;
     justify-content: center;
@@ -338,9 +362,4 @@ main{
   .footer{
     width: 360px;
   }
-
-  .textbox-2 div{
-    width: 150px;
-  }
-
 }

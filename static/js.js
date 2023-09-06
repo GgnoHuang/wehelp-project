@@ -1,5 +1,6 @@
-url="http://54.65.60.124:3000/api/mrts"
 
+// url="http://54.65.60.124:3000/api/mrts"
+url="http://127.0.0.1:3000/api/mrts"
 let mrtsArr=[];
 const userInput = document.querySelector(".user-input");
 
@@ -59,18 +60,19 @@ submitBtn.addEventListener("click", function() {
   // 這邊如果重新啟用observe就不用io.disconnect();
 });
 
+
+let apiRequestTriggered = false;
 let keyword="";
 function fetchNextPageData(){
-    const nextPageUrl = `http://54.65.60.124:3000/api/attractions?page=${nextPage}&keyword=${keyword}`;
-
-    
+    const nextPageUrl = `http://127.0.0.1:3000/api/attractions?page=${nextPage}&keyword=${keyword}`;
     // 定義url不能放函數外面，不然他不會重新賦值
     return fetch(nextPageUrl).then((res) => res.json());
 }
 // ===============---io---=====================
 function handleIntersection(entries){
   entries.forEach((entry) => {
-    if (entry.isIntersecting) {
+    if (entry.isIntersecting && !apiRequestTriggered){
+      apiRequestTriggered = true;
       fetchNextPageData().then((data) => {
         const results = data.data;
           dataNum = results.length;
@@ -92,6 +94,12 @@ function handleIntersection(entries){
           if(imgZone.innerHTML==""){
             imgZone.innerHTML=` <h3>查無景點資料</h3>`
           }
+      })
+      .catch(error => {
+        console.error('API請求錯誤:', error);
+      })
+      .finally(() => {
+        apiRequestTriggered = false; // 重設為false，以便可以再次觸發API請求
       });
     }
   });
@@ -173,15 +181,20 @@ prevBtns.addEventListener('click', () => {
   updateSlider();
 });
 nextBtns.addEventListener('click', () => {
+  slideIndex++;
   if(screenSize=="360px"){
-    slideIndex++;
     if (slideIndex==10){
-      slideIndex=9
+      slideIndex=9;
     }
-  }else{
-    slideIndex++;
+  }
+  else if(screenSize=="768px"){
+    if (slideIndex==4){
+      slideIndex=3;
+    }
+  }
+  else{
     if (slideIndex==3){
-      slideIndex=2
+      slideIndex=2;
     }
   }
   updateSlider();
