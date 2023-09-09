@@ -1,6 +1,6 @@
 
 // =====// ▼ ▼ ▼載入各個捷運站按鈕▼ ▼ ▼ ▼ ▼ =====// =====// =====// =====// =====
-fetch("http://127.0.0.1:3000/api/mrts")
+fetch("http://54.65.60.124:3000/api/mrts")
   .then(res=>{
     return res.json();
   })
@@ -53,7 +53,7 @@ function handleIntersection(entries){
   entries.forEach((entry) => {
     if (entry.isIntersecting && !apiRequestTriggered){
       apiRequestTriggered = true;
-      fetch(`http://127.0.0.1:3000/api/attractions?page=${nextPage}&keyword=${keyword}`)
+      fetch(`http://54.65.60.124:3000/api/attractions?page=${nextPage}&keyword=${keyword}`)
         .then((res) => res.json())
         .then((data) => {
           const results = data.data;
