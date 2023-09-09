@@ -1,58 +1,103 @@
-url="http://54.65.60.124:3000/api/mrts"
 
-let mrtsArr=[];
-const userInput = document.querySelector(".user-input");
-
-fetch(url).then(res=>{
+// =====// ▼ ▼ ▼載入各個捷運站按鈕▼ ▼ ▼ ▼ ▼ =====// =====// =====// =====// =====
+fetch("http://127.0.0.1:3000/api/mrts")
+  .then(res=>{
     return res.json();
-  }).then(data=>{
+  })
+  .then(data=>{
     let results=data.data;
     for(let i=0;i<results.length;i++){
       mrtsArr.push(results[i])
     };
     loadMrt();
   })
-const placeBar = document.querySelector('.place') 
-let loadMrt=()=>{
+
+let mrtsArr=[];
+function loadMrt(){
   for(let i=0 ; i< mrtsArr.length ; i++){
+    const placeBar = document.querySelector('.place') 
     const NewDiv = document.createElement("div");
     NewDiv.className='mrt';
-    // ===========================  // ============================
     const newP = document.createElement('p');
     newP.textContent=mrtsArr[i];
     newP.className='mrt-text';
-
     NewDiv.appendChild(newP);
     placeBar.appendChild(NewDiv);
-  }
+  };
   const mrtBtns = document.querySelectorAll(".mrt-text");
-  mrtBtns.forEach((mrtBtn) => {
-    mrtBtn.addEventListener("click", function () {
-
-      keyword=mrtBtn.innerText
-      nextPage=undefined;
+  mrtBtns.forEach((mrtBtn) => { //這邊一定要放在loadMrt裡面，因為mrtBtns在fetch之後才出現
+    mrtBtn.addEventListener("click", ()=>{
+      keyword = mrtBtn.innerText
+      nextPage = undefined;
       imgZone.innerHTML = ""
-
+      const userInput = document.querySelector(".user-input");
       userInput.value=mrtBtn.innerText
       io.observe(document.getElementById("watch_end_of_document"));
+      // 這邊可以呼叫下面的io是因為addEventListener裡面的callback也是非同步
     });
   });
 }
-let nextPage ;// 不需要給值，因為querystr預設是零  ?page=0
+// =====△ △ △ △載入各個捷運站按鈕△ △ △ △==// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====
+// =====▼ ▼ ▼▼ io 和 io要呼叫的函式 ▼▼ ▼ ▼ ▼ ▼==// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====
 let catArr=[];
 let imgArr=[];
 let mrtArr=[];
 let nameArr=[];
+// ===============---io---=====================
+const io = new IntersectionObserver(handleIntersection);
+let apiRequestTriggered = false;
+let nextPage = 0;
+let keyword= "";
+let dataNum;
+function handleIntersection(entries){
+  entries.forEach((entry) => {
+    if (entry.isIntersecting && !apiRequestTriggered){
+      apiRequestTriggered = true;
+      fetch(`http://127.0.0.1:3000/api/attractions?page=${nextPage}&keyword=${keyword}`)
+        .then((res) => res.json())
+        .then((data) => {
+          const results = data.data;
+          dataNum = results.length;
+          catArr = [];
+          imgArr = [];
+          mrtArr = [];
+          nameArr = [];
+          for (let i=0; i<results.length; i++) {
+            catArr.push(results[i].category);
+            imgArr.push(results[i].images[0]);
+            mrtArr.push(results[i].mrt);
+            nameArr.push(results[i].name);
+          }
+          load();
+          nextPage = data.nextPage;
+          if(nextPage == null){
+            io.disconnect();
+          }
+          if(imgZone.innerHTML==""){
+            imgZone.innerHTML=` <h3>查無景點資料</h3>`
+          }
+        })
+        .catch(error => {
+          console.error('API請求錯誤:', error);
+        })
+        .finally(() => {
+          apiRequestTriggered = false; // 重設為false，以便可以再次觸發API請求
+        });
+    }
+  });
+}
+io.observe(document.getElementById("watch_end_of_document"));
 
+// =====△ △ △ △ io和io 要呼叫的函式△ △ △ △==// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====
+// =====▼ ▼ ▼▼ 搜尋功能▼▼ ▼ ▼ ▼ ▼==// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====
 const submitBtn = document.querySelector(".submit-btn");
-
-// ============@@@=----搜尋功能----@@@============
-submitBtn.addEventListener("click", function() {
+submitBtn.addEventListener("click", function(){
   // catArr=[];imgArr=[];mrtArr=[];nameArr=[];
-  nextPage=undefined;
+  nextPage = 0;
   imgZone.innerHTML = ""
   //innerHTML 比這個好  document.querySelectorAll(".imggbox").forEach((imgBox) => {
   //   imgBox.parentNode.removeChild(imgBox);});
+  const userInput = document.querySelector(".user-input");
   const userInputValue = userInput.value;
   keyword = userInputValue;
   io.observe(document.getElementById("watch_end_of_document"));
@@ -60,57 +105,10 @@ submitBtn.addEventListener("click", function() {
 });
 
 
-let apiRequestTriggered = false;
-let keyword="";
-function fetchNextPageData(){
-    const nextPageUrl = `http://54.65.60.124:3000/api/attractions?page=${nextPage}&keyword=${keyword}`;
-
-    // 定義url不能放函數外面，不然他不會重新賦值
-    return fetch(nextPageUrl).then((res) => res.json());
-}
-// ===============---io---=====================
-function handleIntersection(entries){
-  entries.forEach((entry) => {
-    if (entry.isIntersecting && !apiRequestTriggered){
-      apiRequestTriggered = true;
-      fetchNextPageData().then((data) => {
-        const results = data.data;
-          dataNum = results.length;
-          catArr=[];
-          imgArr=[];
-          mrtArr=[];
-          nameArr=[];
-          for (let i = 0; i < results.length; i++) {
-            catArr.push(results[i].category);
-            imgArr.push(results[i].images[0]);
-            mrtArr.push(results[i].mrt);
-            nameArr.push(results[i].name);
-          }
-          load();
-          nextPage=data.nextPage;
-          if(nextPage==null){
-            io.disconnect();
-          }
-          if(imgZone.innerHTML==""){
-            imgZone.innerHTML=` <h3>查無景點資料</h3>`
-          }
-      })
-      .catch(error => {
-        console.error('API請求錯誤:', error);
-      })
-      .finally(() => {
-        apiRequestTriggered = false; // 重設為false，以便可以再次觸發API請求
-      });
-    }
-  });
-}
-const io = new IntersectionObserver(handleIntersection);
-io.observe(document.getElementById("watch_end_of_document"));
-
-//@@@@@@@@@@創建元素@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@--創建元素--@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 const imgZone = document.querySelector('.img-zone')
-let load=()=>{
-  for(let i=0 ;i<dataNum;i++){
+function load(){
+  for(let i=0 ;i< dataNum ;i++){
     let imgData = imgArr[i];
     let mrtData = mrtArr[i];
     let catData = catArr[i];
@@ -159,9 +157,9 @@ let load=()=>{
 
 //@@@@@@@@@@@@@@@----左右滾動----@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 const Place = document.querySelector(".place");
-const Btns = document.querySelectorAll(".btn");
-const nextBtns = document.getElementById("next");
-const prevBtns = document.getElementById("prev");
+// const Btns = document.querySelectorAll(".btn");
+const nextBtn = document.getElementById("next");
+const prevBtn = document.getElementById("prev");
 
 // 拿來檢查視窗為大或小
 const mainwrapper = document.querySelector(".mainwrapper");
@@ -173,14 +171,14 @@ function handleResize(){
 }
 window.addEventListener("resize", handleResize);
 handleResize();//偵測螢幕大小變化，防止被亂玩，防止螢幕變化使得slideIndex數值混亂
-prevBtns.addEventListener('click', () => {
+prevBtn.addEventListener('click', () => {
       slideIndex--;
       if(slideIndex<0){
       slideIndex=0
     }
   updateSlider();
 });
-nextBtns.addEventListener('click', () => {
+nextBtn.addEventListener('click', () => {
   slideIndex++;
   if(screenSize=="360px"){
     if (slideIndex==10){

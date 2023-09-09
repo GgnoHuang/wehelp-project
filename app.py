@@ -105,7 +105,7 @@ def api_attractions():
 
                         cursor.execute("SELECT * FROM places WHERE mrt = %s LIMIT %s OFFSET %s", (keyword,12,offset))
                         result = cursor.fetchall()
-                        print(result)
+                        # print(result)
                         places_data = []
                         for row in result:
                             id, name, category, description, address, transport, mrt, lat, lng = row
@@ -140,7 +140,7 @@ def api_attractions():
                 
                 cursor.execute("SELECT * FROM places WHERE name LIKE %s LIMIT %s OFFSET %s", ('%'+keyword+'%', 12, offset))
                 result = cursor.fetchall()
-                print(result)
+                # print(result)
 
                 places_data = []
                 for row in result:
@@ -195,7 +195,7 @@ def api_attractions():
             next_page = page+1
             cursor.execute("SELECT * FROM places LIMIT %s OFFSET %s",(12,offset))
             result = cursor.fetchall()
-            print(result)
+            # print(result)
 
             places_data = []
             for row in result:
@@ -262,7 +262,7 @@ def api_attraction_id(id):
 
             cursor.execute("SELECT * FROM places WHERE id = %s", (id,))
             result = cursor.fetchone()
-            print(result)
+            # print(result)
             if result==None:
                 error_res["message"]="查無景點"
 
