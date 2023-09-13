@@ -1,18 +1,22 @@
-
 // =====// ▼ ▼ ▼載入各個捷運站按鈕▼ ▼ ▼ ▼ ▼ =====// =====// =====// =====// =====
 fetch("http://54.65.60.124:3000/api/mrts")
   .then(res=>{
+    if(!res.ok){throw new Error('fetch抓失敗')}
+    console.log('fetch成功:api/mrts')
     return res.json();
   })
   .then(data=>{
     let results=data.data;
-    for(let i=0;i<results.length;i++){
+    for(let i=0; i<results.length;i++){
       mrtsArr.push(results[i])
     };
     loadMrt();
   })
+  .catch(error => {
+    console.error('api/mrts的API請求錯誤:', error);
+  })
 
-let mrtsArr=[];
+let mrtsArr = [];
 function loadMrt(){
   for(let i=0 ; i< mrtsArr.length ; i++){
     const placeBar = document.querySelector('.place') 
@@ -28,7 +32,7 @@ function loadMrt(){
   mrtBtns.forEach((mrtBtn) => { //這邊一定要放在loadMrt裡面，因為mrtBtns在fetch之後才出現
     mrtBtn.addEventListener("click", ()=>{
       keyword = mrtBtn.innerText
-      nextPage = undefined;
+      nextPage = 0; //可以直接用底下的變數，因為這裡是非同步執行，執行的時候變數已經宣告
       imgZone.innerHTML = ""
       const userInput = document.querySelector(".user-input");
       userInput.value=mrtBtn.innerText
@@ -54,8 +58,13 @@ function handleIntersection(entries){
     if (entry.isIntersecting && !apiRequestTriggered){
       apiRequestTriggered = true;
       fetch(`http://54.65.60.124:3000/api/attractions?page=${nextPage}&keyword=${keyword}`)
-        .then((res) => res.json())
-        .then((data) => {
+        .then(res=>{
+          if(!res.ok){throw new Error('fetch抓失敗')}
+          // 如果throw new Error，就會立即中斷Promise 所以不會執行return res.json()
+          console.log('fetch成功:api/attractions')
+          return res.json();
+        })
+        .then(data => {
           const results = data.data;
           dataNum = results.length;
           catArr = [];
@@ -69,16 +78,18 @@ function handleIntersection(entries){
             nameArr.push(results[i].name);
           }
           load();
+          console.log(`成功加載${dataNum}筆資料`)
           nextPage = data.nextPage;
           if(nextPage == null){
             io.disconnect();
+            console.log('nextPage為null，停止觀測')
           }
           if(imgZone.innerHTML==""){
             imgZone.innerHTML=` <h3>查無景點資料</h3>`
           }
         })
         .catch(error => {
-          console.error('API請求錯誤:', error);
+          console.error('api/attractions的API請求錯誤:', error);
         })
         .finally(() => {
           apiRequestTriggered = false; // 重設為false，以便可以再次觸發API請求
@@ -101,7 +112,6 @@ submitBtn.addEventListener("click", function(){
   const userInputValue = userInput.value;
   keyword = userInputValue;
   io.observe(document.getElementById("watch_end_of_document"));
-  // 這邊如果重新啟用observe就不用io.disconnect();
 });
 
 

@@ -4,20 +4,17 @@ from flask import *
 from flask_cors import CORS
 import mysql.connector
 import mysql.connector.pooling
-
 import json
 # ------------------------
-
 app=Flask(__name__,
         static_folder='static',
         static_url_path='/static')
-CORS(app,origins='*')
+CORS(app, origins = '*')
 
-app.config["JSON_AS_ASCII"]=False
-app.config["TEMPLATES_AUTO_RELOAD"]=True
-app.secret_key="john"
+app.config["JSON_AS_ASCII"] = False
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.secret_key = "john"
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dbconfig = {
     "host": "localhost",
     "user": "root",
@@ -26,10 +23,10 @@ dbconfig = {
     "pool_name": "mypool",
     "pool_size": 20,  # 池中連接的數量# 池中連接的數量
 }
-connection_pool = mysql.connector.pooling.MySQLConnectionPool(**dbconfig)
+pool = mysql.connector.pooling.MySQLConnectionPool(**dbconfig)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-print(connection_pool)
+print(pool)
 
 # 用連接池的話這段不需要 mysql.connector.connect
 # conn = mysql.connector.connect(
@@ -40,6 +37,7 @@ print(connection_pool)
 # )
 # cursor = conn.cursor()
 # 用連接池的話這段不需要，不需要 mysql.connector.connect
+#  取而代之是 conn = pool.get_connection()
 
 # json_data = json.dumps(data, ensure_ascii=False, indent=2)
 
@@ -70,7 +68,7 @@ def api_attractions():
         "message":"發生錯誤"
     }
     try:
-        conn = connection_pool.get_connection()
+        conn = pool.get_connection()
 
         if conn.is_connected():
             cursor = conn.cursor()
@@ -235,8 +233,6 @@ def api_attractions():
         cursor.close()
         conn.close()
 
-        print("except了")
-
 
         return Response(json.dumps(error_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
     # son_dumps(dict)时，如果dict包含有汉字，
@@ -254,7 +250,7 @@ def api_attraction_id(id):
     }
 
     try:
-        conn = connection_pool.get_connection()
+        conn = pool.get_connection()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         if conn.is_connected():
@@ -292,11 +288,9 @@ def api_attraction_id(id):
             cursor.close()
             conn.close()
             return Response(json_data, status=200,content_type='application/json; charset=utf-8')
-    except:# 什麼情況下會進到except? mysql筆記裡面有！！
-
-
+    except Exception as err:# 什麼情況下會進到except? mysql筆記裡面有
         print("except了")
-
+        print(err)
         cursor.close()
         conn.close()
         return Response(json.dumps(error_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
@@ -310,7 +304,7 @@ def api_mrts():
         "message":"請按照情境提供對應的錯誤訊息"
     }
     try:
-        conn = connection_pool.get_connection()
+        conn = pool.get_connection()
         if conn.is_connected():
             cursor = conn.cursor()
 
@@ -322,7 +316,7 @@ def api_mrts():
                 mrt = row[0]
                 if mrt != None:
                     sorted_mrt.append(mrt)
-                    cnt+=1
+                    cnt += 1
                 if cnt == 40:
                     break
             data = {"data": sorted_mrt}
