@@ -13,7 +13,7 @@
   <header class="nav-wrapper">
     <div class="nav">
         <div class="taipei">
-          <a href="#">台北一日遊</a>
+          <a href="/">台北一日遊</a>
         </div>
 
         <div class="a">
@@ -51,12 +51,13 @@
               
               <div class="time-picker">
                 <p>選擇時間：</p>
-                <form action="">
+                <form action="" class="time-picker-form">
                   <label class="time-picker-label-1" for="morning">
-                    <input id="morning" name="time-picker" type="radio">上半天
+                    <input name="time-picker" id="morning" value="morning" type="radio" class="time-picker-btn" required>上半天
                   </label>
+                  
                   <label for="afternoon">
-                    <input id="afternoon" name="time-picker" type="radio">下半天
+                    <input name="time-picker" id="afternoon" value="afternoon" class="time-picker-btn" type="radio">下半天
                   </label>
                 </form>
               </div>
@@ -64,7 +65,7 @@
               <div class="nav-fee">
                 <p class="a">導覽費用：</p>
 
-                <p class="b">新台幣2000元</p>
+                <p class="price">請選擇時間</p>
               </div>
 
               <div class="booking-btn">

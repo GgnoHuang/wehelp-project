@@ -47,6 +47,7 @@ let catArr=[];
 let imgArr=[];
 let mrtArr=[];
 let nameArr=[];
+let idArr = [];
 // ===============---io---=====================
 const io = new IntersectionObserver(handleIntersection);
 let apiRequestTriggered = false;
@@ -54,30 +55,34 @@ let nextPage = 0;
 let keyword= "";
 let dataNum;
 function handleIntersection(entries){
-  entries.forEach((entry) => {
+  entries.forEach(entry =>{
     if (entry.isIntersecting && !apiRequestTriggered){
       apiRequestTriggered = true;
       fetch(`http://54.65.60.124:3000/api/attractions?page=${nextPage}&keyword=${keyword}`)
-        .then(res=>{
+        .then(res =>{
           if(!res.ok){throw new Error('fetch抓失敗')}
           // 如果throw new Error，就會立即中斷Promise 所以不會執行return res.json()
           console.log('fetch成功:api/attractions')
           return res.json();
         })
-        .then(data => {
+        .then(data =>{
           const results = data.data;
           dataNum = results.length;
           catArr = [];
           imgArr = [];
           mrtArr = [];
           nameArr = [];
+          idArr = []; 
           for (let i=0; i<results.length; i++) {
             catArr.push(results[i].category);
             imgArr.push(results[i].images[0]);
             mrtArr.push(results[i].mrt);
             nameArr.push(results[i].name);
+            idArr.push(results[i].id);
           }
+          
           load();
+
           console.log(`成功加載${dataNum}筆資料`)
           nextPage = data.nextPage;
           if(nextPage == null){
@@ -123,9 +128,10 @@ function load(){
     let mrtData = mrtArr[i];
     let catData = catArr[i];
     let nameData = nameArr[i];
+    let idData = idArr[i];
+
     const Newimggbox = document.createElement("div");
     Newimggbox.className='imggbox';
-
     const NewimgAndMask = document.createElement('div');
     NewimgAndMask.className='imgand-mask';
     const Newmask = document.createElement('div');
@@ -162,8 +168,18 @@ function load(){
     Newimggbox.appendChild(textBoxTwo)
 
     imgZone.appendChild(Newimggbox)
+
+
+    Newimggbox.addEventListener('click',()=>{
+      let url = location.href;
+      url = url + 'attraction/' + idData
+      window.location.href = url
+      console.log(url)
+      console.log(idData)
+    })
   }
 }
+
 
 //@@@@@@@@@@@@@@@----左右滾動----@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 const Place = document.querySelector(".place");

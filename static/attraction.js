@@ -10,11 +10,15 @@
 //     throw err;
 //   }
 // }
+
+const currentURL = location.href
+const pageId = location.href.split('/')[location.href.split('/').length-1]
+console.log(`當前id:${pageId}`)
+
               //看一下上下差異
-// !!!!!~~~~~~~~~~~~~~~~~~~~
 async function fetchData(){
   try{
-    const res = await fetch("http://54.65.60.124:3000/api/attraction/6");
+    const res = await fetch(`http://54.65.60.124:3000/api/attraction/${pageId}`);
     const data = await res.json();
     return data;
   }
@@ -60,114 +64,33 @@ function loadData(){
   transport.innerHTML = transportData
 }
 
+//============================================================
 
 
+// const price = document.querySelector(".price");
+// const morning = document.getElementById("morning");
+// morning.addEventListener('click',()=>{
+//   var selectedValue = document.querySelector('input[name="time-picker"]:checked').value;
+//   console.log(morning.checked)
+//   console.log(selectedValue);
+//   price.innerHTML = "新台幣2000元" 
+// })
+// const afternoon = document.getElementById("afternoon");
+// afternoon.addEventListener('click',()=>{
+//   var selectedValue = document.querySelector('input[name="time-picker"]:checked').value;
+//   console.log(afternoon.checked)
+//   console.log(selectedValue);
+//   price.innerHTML = "新台幣2500元" 
+// })
 
-
-
-
-
-
-
-
-// async function fetchData(){
-//   try{
-//     const res = await fetch("1234243awedfafds");
-//     if(!res.ok){
-//       throw new Error('api/attraction請求失敗');
-//     }
-//     const data = await res.json();
-//     return data;
-//   }
-//   catch(err){
-//     console.log(`先印出第一次err：${err}`)
-//     throw err;
-//   }
-// }
-// async function test(){
-//   try{
-//     const testResult =await fetchData()
-//   }catch(err){
-//     console.log(`又印出第2次err：${err}`)
-//   }
-// }
-// test() //這裡一定要呼叫
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-// async function fetchData() {
-//   try {
-//     const res = await fetch("123");
-//     if (!res.ok) {
-//       throw new Error('沒fetch到');
-//     }
-//     const data = await response.json();
-//     return data;
-//   }
-//   catch (err){
-//     console.error(`喔喔喔喔喔喔：${err}`);
-//     throw err;
-//   }
-// }
-// async function testErr() {
-//   try {
-//     const result = await fetchData();
-//   } catch (err) {
-//     console.error(`啊啊啊啊啊啊啊：${err}`);
-//   }
-// }
-// testErr(); 
-
-
-
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// function test(){
-//   try{
-//     fetchData()
-//   }
-//   catch{
-
-//   }
-// }
-
-
-
-
-// async function example() {
-//   console.log('开始');
-//   try {
-//     const result1 = await fetchData()
-//     console.log('第一个异步操作完成:', result1);
-//   } catch (error) {
-//     console.error('发生错误:', error);
-//   }
-//   console.log('结束');
-// }
-
-// async function hello(){
-//   let ok =
-// }
-// example();
-// console.log('异步操作进行中...');
-
-
-
-
-
-
-
-
-
-
-
-
-// function test(){
-//   throw new Error("錯誤ㄛ")
-// }
-// try{
-//   test()
-//   console.log("fine")
-// }catch(err){
-//   console.log(err)
-// }
+// 這樣比上面更好
+const price = document.querySelector(".price");
+const timePickerBtns = document.querySelectorAll(".time-picker-btn");
+timePickerBtns.forEach(btn =>{
+  btn.addEventListener('click', ()=>{
+    const selectedValue = document.querySelector('input[name="time-picker"]:checked').value;
+    price.innerHTML = selectedValue == "morning" ? "新台幣2000元"
+                      :selectedValue == "afternoon" ? "新台幣2500元"
+                      : ""
+  })
+})

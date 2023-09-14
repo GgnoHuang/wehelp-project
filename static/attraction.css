@@ -285,9 +285,8 @@ line-height: 24px; /* 100% */
   align-items: center;
   margin-right: 5px;
 }
-.time-picker #morning, .time-picker #afternoon{
+#morning, #afternoon{
   accent-color: #489;
-
   margin-right: 4px;
 }
 /* input[type="radio"] {
@@ -317,7 +316,7 @@ line-height: 24px; /* 100% */
   border:1px solid rgb(9, 16, 22);
 }
 
-.b{
+.price{
   border:1px solid rgb(9, 16, 22);
   color: var(--secondary-color-gray-70, #666);
   font-family: Noto Sans TC;
