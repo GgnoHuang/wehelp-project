@@ -1,3 +1,6 @@
+svg{
+  cursor: pointer;
+}
 *{
   margin: 0;
   padding: 0;
@@ -29,95 +32,126 @@ font-style: normal;
 font-family: Noto Sans TC;
 }
 
-.a{
+.nav-actions{
   display: flex;
 }
-.a div{
+.nav-actions div{
   display: flex;
   align-items: center;
   padding: 10px;
 }
-.a a{
+.nav-actions div{
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+.nav-actions a{
   color: var(--secondary-color-gray-70, #666);
-
-font-family: Noto Sans TC;
-font-size: 16px;
-font-style: normal;
-font-weight: 500;
-line-height: 83.125% ;
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 83.125% ;
 }
 
 /* ================================================== */
 /* ================================================== */
 
 main{
-
-  /* border: 3px solid red; */
-  /* height: 966px;  */
-  /* height到時候要刪掉 */
-  /* 這到時候要刪掉 *//* 這到時候要刪掉 */
   padding: 40px 0;
 }
-/* .mainwrapper{
-  width: 1200px;
-} */
-
 .wrapper-1{
-  /* border: 2px solid blueviolet; */
   display: flex;
   justify-content: center;
 }
 .attraction-and-booking{
-  /* border: 2px rgb(9, 35, 108) solid; */
+  /* border: 2px rgba(195, 0, 255, 0.868) solid; */
   width: 1200px;
   display: flex;
-  /* border: 1px red solid; */
   padding-bottom: 40px;
   border-bottom: 1px solid#E8E8E8;
 }
-.attraction-img-wrapper{
-  border: 12px rgba(119, 0, 255, 0) solid;
 
+/* ~~~~~ *//* ~~~~~ */
+.attraction-img-wrapper{
+  position: relative;
+  /* border: 2px rgba(195, 0, 255, 0.868) solid; */
   height: 400px;
   width: 540px;
   margin: 0px 15px;
+  overflow: hidden;
 }
-.attraction-img{
+.carousel{
   height: 100%;
   width: 100%;
-  object-fit:cover;
-  /* 後來發現長寬都要100%如果要cover的話，
-才塞得滿 */
+  display: flex; 
+  transition: all 0.8s ease;
 }
 
+.attraction-img{
+  flex-shrink: 0;
+  /* 如果父元素有flex，子元素的flex-shrink默認為0 1 auto，所以導致子元素設定的width無效 */
+  height:100%;
+  width: 100%;
+  object-fit:cover;
+/* 後來發現長寬都要100%如果要cover的話，才塞得滿 */
+}
+.img-btn{
+  opacity: 0.5;
+  position:absolute;
+  top:50%;
+  transform: translateY(-50%);
+  height: 36px;
+  width: 36px;
+  cursor: pointer;
+  z-index: 99;
+  /* 研究不用z-index會被擠飛的原因 */
+}
+.prev-btn{
+  left: 10px;
+}
+.next-btn{
+  right: 10px;
+}
+/* --------------- */
+.dot-area{
+  display: flex;
+  /* border: 1px red solid; */
+  position:absolute;
+  z-index: 99;
+  margin-bottom: 10px;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.dot-area svg{
+  opacity: 0.8;
+  margin: 0px 6px;
+}
+circle{
+  transition: all 0.6s ease;
+}
+/* --------------- */
 .booking{
-  /* border: 2px rgb(119, 0, 255) solid; */
-
   width: 600px;
   height: 400px;
-  /* background-color: rgba(0, 255, 255, 0.195); */
   margin: 0px 15px;
 }
-
-
 .attraction-name {
   height: 33px;
   width: 100%;
   margin-bottom: 15px;
   display: flex;
   align-items: center;
-
   color: var(--secondary-color-gray-70, #666);
-/* Header 3 - Blod 24(24) */
-font-family: Noto Sans TC;
-font-size: 24px;
-font-style: normal;
-font-weight: 700;
-line-height: 24px; /* 100% */
+  font-family: Noto Sans TC;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px; /* 100% */
 }
 
 .attraction-class-mrt{
-  border: 0.5px rgb(54, 26, 86) solid;
   height: 22px;
   width: 100%;
   margin-bottom: 15px;
@@ -125,7 +159,6 @@ line-height: 24px; /* 100% */
   align-items: center;
   
   color: var(--secondary-color-gray-70, #666);
-  /* Body - Med 16(13.3) */
   font-family: Noto Sans TC;
   font-size: 16px;
   font-style: normal;
@@ -134,16 +167,16 @@ line-height: 24px; /* 100% */
 }
 /* =====--- 用戶選項區 ---===== */
 .booking-detail{
+
   background-color: rgba(232, 232, 232, 1);
   border-radius: 5px;
-  /* border: 2px rgb(54, 26, 86) solid; */
   height: 302px;
   width: 100%;
   padding: 15px 20px 0px 20px;
 }
 
 .detail-1{
-    border: 2px rgb(54, 26, 86) solid;
+  
   display: flex;
   align-items: center;
   width: 100%;
@@ -158,17 +191,14 @@ line-height: 24px; /* 100% */
 }
 
 
-
 .detail-2{
-  border: 2px rgb(54, 26, 86) solid;
+  
   display: flex;
   align-items: center;
   width: 100%;
   margin-bottom: 15px;
   height: 24px;
   color: var(--secondary-color-gray-70, #666);
-
-  /* Body - Med 16(13.3) */
   font-family: Noto Sans TC;
   font-size: 16px;
   font-style: normal;
@@ -178,7 +208,7 @@ line-height: 24px; /* 100% */
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 .date-picker{
-  border:1px solid red;
+  /* border: 1px rgb(0, 30, 255) solid; */
   width: 100%;
   margin-bottom: 15px;
   height: 35px;
@@ -186,7 +216,7 @@ line-height: 24px; /* 100% */
   align-items: center;
 }
 .date-picker p{
-  border:1px solid rgb(0, 145, 255);
+  /* border: 1px rgb(0, 255, 94) solid; */
   white-space: nowrap;
   color: var(--secondary-color-gray-70, #666);
   font-family: Noto Sans TC;
@@ -195,14 +225,11 @@ line-height: 24px; /* 100% */
   font-weight: 700;
   line-height: 13.3px; /* 83.125% */
   margin-right: 5px;
-
-  display: flex; /* 使用 Flex 布局 */
+  display: flex; 
   align-items: center;
-
-  /* border: rgb(220, 79, 79) 2px solid; */
 }
 .calendar{
-  border: rgb(220, 79, 79) 1px solid;
+  /* border: 1px red solid; */
   padding: 0px 10px;
   background: var(--White, #FFF);
   display: flex;
@@ -210,43 +237,36 @@ line-height: 24px; /* 100% */
   height: 100%;
 }
 .calendar input{
+  /* border: 1px red solid; */
   color: var(--Black, #000);
-  /* Body - Med 16(13.3) */
   font-family: Noto Sans TC;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: 13.3px; /* 83.125% */
-
-  outline: none; 
-  border: rgb(220, 79, 79) 1px solid;
-
+  line-height: 13.3px;
   height: 100%;
   width: 173px;
-  background-image: url('./calendar.png'); /* 自定义图标的URL */
-  background-size: 24px 24px; /* 自定义图标的尺寸 */
+  background-image: url('./calendar.png'); 
+  background-size: 24px 24px; 
   background-repeat: no-repeat;
-  background-position: right;
-
+  background-position: right 48%;
+  border: none;
+  
 }
 .calendar input::-webkit-calendar-picker-indicator {
   opacity: 0;
-}/* 這啥？ */
-
-
-
-
+}/* 研究一下 */
 
 
 .time-picker{
-  /* border:1px solid rgb(0, 47, 255); */
-
+  /* border: 1px red solid; */
   width: 100%;
   margin-bottom: 15px;
   height: 22px;
   display: flex;
 }
 .time-picker p{
+  /* border: 1px red solid; */
   white-space: nowrap;
   color: var(--secondary-color-gray-70, #666);
   font-family: Noto Sans TC;
@@ -254,24 +274,18 @@ line-height: 24px; /* 100% */
   font-style: normal;
   font-weight: 700;
   line-height: 13.3px; /* 83.125% */
-  border: 1px black solid;  
   display: flex; 
   align-items: center;
   height: 100%;
-
-  /* border:1px solid rgb(255, 0, 212); */
   margin-right: 5px;
-  /* border: rgb(220, 79, 79) 2px solid; */
 }
 
 .time-picker form{
-  /* border:1px solid rgb(255, 0, 212); */
   display: flex;
   align-items: center;
   height: 100%;
 }
 .time-picker label{
-  /* border:1px solid rgb(39, 161, 255); */
   height: 100%;
   color: var(--secondary-color-gray-70, #666);
   font-family: Noto Sans TC;
@@ -289,22 +303,16 @@ line-height: 24px; /* 100% */
   accent-color: #489;
   margin-right: 4px;
 }
-/* input[type="radio"] {
-  display: none;
-} */
-
-
 
 
 .nav-fee{
-  border:1px solid rgb(9, 16, 22);
   width: 100%;
   margin-bottom: 25px;
   height: 22px;
   display: flex;
   align-items: center;
 }
-.a{
+.unpriced{
   white-space: nowrap;
   color: var(--secondary-color-gray-70, #666);
   font-family: Noto Sans TC;
@@ -313,11 +321,9 @@ line-height: 24px; /* 100% */
   font-weight: 700;
   line-height: 13.3px; 
   margin-right: 5px;
-  border:1px solid rgb(9, 16, 22);
 }
 
 .price{
-  border:1px solid rgb(9, 16, 22);
   color: var(--secondary-color-gray-70, #666);
   font-family: Noto Sans TC;
   font-size: 16px;
@@ -326,18 +332,16 @@ line-height: 24px; /* 100% */
   line-height: 13.3px; /* 83.125% */
 }
 
-
-
 .booking-btn{
+  /* 這邊不用width100%研究一下 */
   width: 100%;
   display: flex;
   }
-
 .booking-btn p{
+  cursor: pointer;
   padding: 10px 20px;
   background-color: rgba(68, 136, 153, 1);
   border-radius: 5px;
-
   color: var(--additional-color-white, #FFF);
   text-align: center;
   font-family: Noto Sans TC;
@@ -349,29 +353,27 @@ line-height: 24px; /* 100% */
 
 /* ============================================================================================ */
 .wrapper-2{
+  margin-top: 40px;
   display: flex;
   justify-content: center;
-  }
+}
 .attraction-info{/* 這個就不用flex了，讓子元素自動width100%*/
+  /* border: 2px rgba(195, 0, 255, 0.868) solid; */
   padding: 10px;
   width: 1200px;
-  border: 2px solid greenyellow;
   color: var(--secondary-color-gray-70, #666);
-  /* color: red; */
-
   font-family: Noto Sans TC;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  /* 研究 line-height: normal; */
 }
 .description{
   margin-bottom: 20px;
-  border: 1px blue solid;
 }
 .info-1, .info-2{
   height: 32px;
-  border: 1px rgba(0, 34, 255, 0.63) solid;
   display: flex;
   align-items: center;
 
@@ -384,16 +386,15 @@ line-height: 24px; /* 100% */
 }
 .address{
   margin-bottom: 20px;
-  border: 1px blue solid;
 }
 .transport{
-  border: #489 2px solid;
   margin-bottom: 80px;
 }
 
 /* ================================================== *//* ================================================== */
 
 .footer{
+  /* border: 2px red solid; */
   height: 104px;
   background-color: rgba(117, 117, 117, 1);
   display: flex;
@@ -411,29 +412,95 @@ line-height: 24px; /* 100% */
 
 /* =-=▼▼▼▼▼▼▼▼▼▼▼---低於1200---▼▼▼▼▼▼▼▼▼▼▼▼▼▼-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
 @media(max-width:1199px){
-
-}
-/* =-=▼▼▼▼▼▼▼▼▼▼▼---低於768 -小於iPad Mini  --▼▼▼▼▼▼▼▼▼▼▼▼▼▼-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-
-@media(max-width:767px){
-
-}
-
-
-/* =-=▼▼▼▼▼▼▼▼▼▼▼---低於768 -小於iPad Mini  --▼▼▼▼▼▼▼▼▼▼▼▼▼▼-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-@media(max-width:375px){
   .nav {
-    width: 360px;
+    min-width: 768px;
+  }
+  .attraction-info{/* 這個就不用flex了，讓子元素自動width100%*/
+    padding: 0px 50px; 
+  }
+  .taipei{
+    margin-left: 10px;
+  }
+  .attraction-and-booking{
+    /* max-width: 768px; */
+    width: 90%;
+    justify-content: center;
+  }
+  .footer-wrapper{
+    max-width: 1199px
+  }
+  .footer{
+    width: 100%;
   }
 
-  .mainwrapper{
-    width: 360px;
+}
+@media(max-width:932px){
+  .detail-2{
+    line-height:23px;
+    height: 48px;
   }
+}
+/* =-=▼▼▼▼▼▼▼▼▼▼▼---低於768 -小於iPad Mini  --▼▼▼▼▼▼▼▼▼▼▼▼▼▼-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+@media(max-width:767px){
+  main{
+    padding:0px 0px 40px 0px;
+  }
+  .attraction-and-booking{
+    /* border: 2px rgba(195, 0, 255, 0.868) solid; */
+    max-width: 1200px;
+    display: flex;
+    padding-bottom: 40px;
+    border-bottom: 1px solid#E8E8E8;
+    justify-content: center;
+  }
+  .nav {
+    min-width: 360px;
+  }
+  .attraction-and-booking{
+    width: 100%;
+    flex-wrap: wrap;
+    padding-bottom: 40px;
+    border-bottom: 1px solid#E8E8E8;
+  }
+  .attraction-img-wrapper{
+    position: relative;
+    height: 350px;
+    width: 100%;
+    margin: 0px ;
+    overflow: hidden;
+  }
+  .booking{
+    border: 2px rgba(0, 26, 255, 0.868) solid;
+    width: 100%;
+    height: 400px;
+    margin: 20px 10px 0px 10px;
+  }
+  .booking-detail{
+    border-radius: 5px;
+    height: 300px;
+    width: 100%;
+    padding: 15px 20px 0px 20px;
+  }
+
+  .detail-2{
+    height: 48px;
+    font-weight: 400;
+    line-height: normal;
+  }
+
+  .attraction-info{/* 這個就不用flex了，讓子元素自動width100%*/
+    border: 1px rgba(255, 0, 0, 0.868) solid;
+    margin: 0px 10px;
+    padding: 10px;
+    /* width: 90%; */
+  }
+
   .footer-wrapper{
     display: flex;
     justify-content: center;
   }
   .footer{
-    width: 360px;
+    min-width: 360px;
   }
 }
+
