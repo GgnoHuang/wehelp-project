@@ -1,3 +1,4 @@
+
 // =================fetch===================
 const pageId = location.href.split('/')[location.href.split('/').length-1]
 async function fetchData(){
@@ -59,6 +60,7 @@ function loadData(){
     svgEl.setAttribute("viewBox", "0 0 12 12");
     svgEl.setAttribute("fill", "none");
     const blackDot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    blackDot.setAttribute("class", "dots");
     blackDot.setAttribute("cx", "6");
     blackDot.setAttribute("cy", "6");
     blackDot.setAttribute("r", "5.5");
@@ -77,6 +79,7 @@ function loadData(){
       svgEl.setAttribute("viewBox", "0 0 12 12");
       svgEl.setAttribute("fill", "none");
       const whiteDot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      whiteDot.setAttribute("class", "dots");
       whiteDot.setAttribute("cx", "6");
       whiteDot.setAttribute("cy", "6");
       whiteDot.setAttribute("r", "6");
@@ -88,7 +91,7 @@ function loadData(){
   createBlackDot();
   createWhiteDots();
   function selectImg(){
-    const dots = document.querySelectorAll("circle")
+    const dots = document.querySelectorAll(".dots")
     dots.forEach((dot,index) => {
       dot.addEventListener('click',(e)=>{
         dots.forEach(dot=>{
@@ -120,7 +123,7 @@ function autoSlide(){
 }
 //===================CAROUSEL + DOT==============================
 function slideImage(){
-  const dots = document.querySelectorAll("circle")
+  const dots = document.querySelectorAll(".dots")
   dots.forEach(dot => {
         dot.setAttribute("r", "6"); 
         dot.setAttribute("fill", "white"); 
@@ -163,8 +166,32 @@ imgBtns.forEach(btn =>{
 
 autoSlide();//研究一下這個呼叫擺放的位置
 
-//==========================================================
+//=================== radioStyleChange ===========================
+const timePickerLabel = document.querySelectorAll(".time-picker-label");
+const radioSVGs = document.querySelectorAll(".radio-svgs");
+const morningLabel = document.getElementById('morning');
+const afternoonLabel = document.getElementById('afternoon');
+function radioColorChange(radio){
+  radio.innerHTML=`<g clip-path="url(#clip0_3_336)"><circle cx="11" cy="11" r="11" fill="white"/><circle cx="11" cy="11" r="9" fill="#448899"/></g><defs><clippath><rect width="22" height="22" fill="white"/></clippath></defs>`
+}
+function radioColorRestore(radio){
+  radio.innerHTML=`<g clip-path="url(#clip0_3_341)"><circle cx="11" cy="11" r="11" fill="white"/></g><defs><clippath ><rect width="22" height="22" fill="white"/></clippath></defs>`
+}
+morningLabel.addEventListener('click',()=>{
+  for(let i=0; i<radioSVGs.length; i++){
+    radioColorRestore(radioSVGs[i])
+  };
+  radioColorChange(document.querySelector('.radio-svgs-1'))
+})
 
+afternoonLabel.addEventListener('click',()=>{
+  for(let i=0; i<radioSVGs.length; i++){
+    radioColorRestore(radioSVGs[i])
+  };
+  radioColorChange(document.querySelector('.radio-svgs-2'))
+})
+
+//-------------------------------------------------------
 const price = document.querySelector(".price");
 const timePickerBtns = document.querySelectorAll(".time-picker-btn");
 timePickerBtns.forEach(btn =>{
@@ -175,3 +202,6 @@ timePickerBtns.forEach(btn =>{
                       : ""
   })
 })
+
+
+

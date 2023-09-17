@@ -14,6 +14,7 @@ svg{
   height: 54px;
   background: var(--additional-color-white, #FFF);
   align-items: center;
+  /* border:red solid 1px; */
 }
 .nav {
   display: flex;
@@ -55,6 +56,12 @@ font-family: Noto Sans TC;
 }
 
 /* ================================================== */
+.separator::before {
+  content: "";
+  height:1px;
+  display: block;
+  background-color:rgba(232, 232, 232, 1)
+}
 /* ================================================== */
 
 main{
@@ -128,7 +135,7 @@ main{
   opacity: 0.8;
   margin: 0px 6px;
 }
-circle{
+.dot-area circle{
   transition: all 0.6s ease;
 }
 /* --------------- */
@@ -255,18 +262,22 @@ circle{
 }
 .calendar input::-webkit-calendar-picker-indicator {
   opacity: 0;
-}/* 研究一下 */
+}
+.calendar input:focus{
+  outline:none;
+} 
+
+
+
 
 
 .time-picker{
-  /* border: 1px red solid; */
   width: 100%;
   margin-bottom: 15px;
   height: 22px;
   display: flex;
 }
 .time-picker p{
-  /* border: 1px red solid; */
   white-space: nowrap;
   color: var(--secondary-color-gray-70, #666);
   font-family: Noto Sans TC;
@@ -294,12 +305,20 @@ circle{
   font-weight: 500;
   line-height: 13.3px; /* 83.125% */
   padding: 0px 8px 0px 5px;
-
   display: flex;
   align-items: center;
   margin-right: 5px;
 }
+
+.time-picker-form svg{
+  margin-right: 4px;
+}
+.time-picker-btn{
+  display: none;
+}
+
 #morning, #afternoon{
+  /* border: 1px rgb(0, 30, 255) solid; */
   accent-color: #489;
   margin-right: 4px;
 }
