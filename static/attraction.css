@@ -1,0 +1,524 @@
+svg{
+  cursor: pointer;
+}
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+.nav-wrapper{
+  display: flex;
+  justify-content: center;
+  height: 54px;
+  background: var(--additional-color-white, #FFF);
+  align-items: center;
+  /* border:red solid 1px; */
+}
+.nav {
+  display: flex;
+  justify-content: center;
+  width: 1200px;
+  height: 34px;
+  justify-content: space-between;
+}
+
+.taipei a{
+  color: #489;
+  font-size: 30px;
+font-weight: 700;
+line-height: 34px;
+font-style: normal;
+font-family: Noto Sans TC;
+}
+
+.nav-actions{
+  display: flex;
+}
+.nav-actions div{
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+.nav-actions div{
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+.nav-actions a{
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 83.125% ;
+}
+
+/* ================================================== */
+.separator::before {
+  content: "";
+  height:1px;
+  display: block;
+  background-color:rgba(232, 232, 232, 1)
+}
+/* ================================================== */
+
+main{
+  padding: 40px 0;
+}
+.wrapper-1{
+  display: flex;
+  justify-content: center;
+}
+.attraction-and-booking{
+  /* border: 2px rgba(195, 0, 255, 0.868) solid; */
+  width: 1200px;
+  display: flex;
+  padding-bottom: 40px;
+  border-bottom: 1px solid#E8E8E8;
+}
+
+/* ~~~~~ *//* ~~~~~ */
+.attraction-img-wrapper{
+  position: relative;
+  /* border: 2px rgba(195, 0, 255, 0.868) solid; */
+  height: 400px;
+  width: 540px;
+  margin: 0px 15px;
+  overflow: hidden;
+}
+.carousel{
+  height: 100%;
+  width: 100%;
+  display: flex; 
+  transition: all 0.8s ease;
+}
+
+.attraction-img{
+  flex-shrink: 0;
+  /* 如果父元素有flex，子元素的flex-shrink默認為0 1 auto，所以導致子元素設定的width無效 */
+  height:100%;
+  width: 100%;
+  object-fit:cover;
+/* 後來發現長寬都要100%如果要cover的話，才塞得滿 */
+}
+.img-btn{
+  opacity: 0.5;
+  position:absolute;
+  top:50%;
+  transform: translateY(-50%);
+  height: 36px;
+  width: 36px;
+  cursor: pointer;
+  z-index: 99;
+  /* 研究不用z-index會被擠飛的原因 */
+}
+.prev-btn{
+  left: 10px;
+}
+.next-btn{
+  right: 10px;
+}
+/* --------------- */
+.dot-area{
+  display: flex;
+  /* border: 1px red solid; */
+  position:absolute;
+  z-index: 99;
+  margin-bottom: 10px;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.dot-area svg{
+  opacity: 0.8;
+  margin: 0px 6px;
+}
+.dot-area circle{
+  transition: all 0.6s ease;
+}
+/* --------------- */
+.booking{
+  width: 600px;
+  height: 400px;
+  margin: 0px 15px;
+}
+.attraction-name {
+  height: 33px;
+  width: 100%;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px; /* 100% */
+}
+
+.attraction-class-mrt{
+  height: 22px;
+  width: 100%;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 13.3px; /* 83.125% */
+}
+/* =====--- 用戶選項區 ---===== */
+.booking-detail{
+
+  background-color: rgba(232, 232, 232, 1);
+  border-radius: 5px;
+  height: 302px;
+  width: 100%;
+  padding: 15px 20px 0px 20px;
+}
+
+.detail-1{
+  
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 15px;
+  height: 22px;
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 13.3px; /* 83.125% */
+}
+
+
+.detail-2{
+  
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 15px;
+  height: 24px;
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 13.3px; /* 83.125% */
+}
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+.date-picker{
+  /* border: 1px rgb(0, 30, 255) solid; */
+  width: 100%;
+  margin-bottom: 15px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+}
+.date-picker p{
+  /* border: 1px rgb(0, 255, 94) solid; */
+  white-space: nowrap;
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 13.3px; /* 83.125% */
+  margin-right: 5px;
+  display: flex; 
+  align-items: center;
+}
+.calendar{
+  /* border: 1px red solid; */
+  padding: 0px 10px;
+  background: var(--White, #FFF);
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+.calendar input{
+  /* border: 1px red solid; */
+  color: var(--Black, #000);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 13.3px;
+  height: 100%;
+  width: 173px;
+  background-image: url('./calendar.png'); 
+  background-size: 24px 24px; 
+  background-repeat: no-repeat;
+  background-position: right 48%;
+  border: none;
+  
+}
+.calendar input::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+.calendar input:focus{
+  outline:none;
+} 
+
+
+
+
+
+.time-picker{
+  width: 100%;
+  margin-bottom: 15px;
+  height: 22px;
+  display: flex;
+}
+.time-picker p{
+  white-space: nowrap;
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 13.3px; /* 83.125% */
+  display: flex; 
+  align-items: center;
+  height: 100%;
+  margin-right: 5px;
+}
+
+.time-picker form{
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+.time-picker label{
+  height: 100%;
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 13.3px; /* 83.125% */
+  padding: 0px 8px 0px 5px;
+  display: flex;
+  align-items: center;
+  margin-right: 5px;
+}
+
+.time-picker-form svg{
+  margin-right: 4px;
+}
+.time-picker-btn{
+  display: none;
+}
+
+#morning, #afternoon{
+  /* border: 1px rgb(0, 30, 255) solid; */
+  accent-color: #489;
+  margin-right: 4px;
+}
+
+
+.nav-fee{
+  width: 100%;
+  margin-bottom: 25px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+}
+.unpriced{
+  white-space: nowrap;
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 13.3px; 
+  margin-right: 5px;
+}
+
+.price{
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 13.3px; /* 83.125% */
+}
+
+.booking-btn{
+  /* 這邊不用width100%研究一下 */
+  width: 100%;
+  display: flex;
+  }
+.booking-btn p{
+  cursor: pointer;
+  padding: 10px 20px;
+  background-color: rgba(68, 136, 153, 1);
+  border-radius: 5px;
+  color: var(--additional-color-white, #FFF);
+  text-align: center;
+  font-family: Noto Sans TC;
+  font-size: 19px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px; /* 84.211% */
+}
+
+/* ============================================================================================ */
+.wrapper-2{
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+.attraction-info{/* 這個就不用flex了，讓子元素自動width100%*/
+  /* border: 2px rgba(195, 0, 255, 0.868) solid; */
+  padding: 10px;
+  width: 1200px;
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  /* 研究 line-height: normal; */
+}
+.description{
+  margin-bottom: 20px;
+}
+.info-1, .info-2{
+  height: 32px;
+  display: flex;
+  align-items: center;
+
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 13.3px; /* 83.125% */
+}
+.address{
+  margin-bottom: 20px;
+}
+.transport{
+  margin-bottom: 80px;
+}
+
+/* ================================================== *//* ================================================== */
+
+.footer{
+  /* border: 2px red solid; */
+  height: 104px;
+  background-color: rgba(117, 117, 117, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.footer p{
+  color: var(--additional-color-white, #FFF);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 13.3px;
+}
+
+/* =-=▼▼▼▼▼▼▼▼▼▼▼---低於1200---▼▼▼▼▼▼▼▼▼▼▼▼▼▼-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+@media(max-width:1199px){
+  .nav {
+    min-width: 768px;
+  }
+  .attraction-info{/* 這個就不用flex了，讓子元素自動width100%*/
+    padding: 0px 50px; 
+  }
+  .taipei{
+    margin-left: 10px;
+  }
+  .attraction-and-booking{
+    /* max-width: 768px; */
+    width: 90%;
+    justify-content: center;
+  }
+  .footer-wrapper{
+    max-width: 1199px
+  }
+  .footer{
+    width: 100%;
+  }
+
+}
+@media(max-width:932px){
+  .detail-2{
+    line-height:23px;
+    height: 48px;
+  }
+}
+/* =-=▼▼▼▼▼▼▼▼▼▼▼---低於768 -小於iPad Mini  --▼▼▼▼▼▼▼▼▼▼▼▼▼▼-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+@media(max-width:767px){
+  main{
+    padding:0px 0px 40px 0px;
+  }
+  .attraction-and-booking{
+    /* border: 2px rgba(195, 0, 255, 0.868) solid; */
+    max-width: 1200px;
+    display: flex;
+    padding-bottom: 40px;
+    border-bottom: 1px solid#E8E8E8;
+    justify-content: center;
+  }
+  .nav {
+    min-width: 360px;
+  }
+  .attraction-and-booking{
+    width: 100%;
+    flex-wrap: wrap;
+    padding-bottom: 40px;
+    border-bottom: 1px solid#E8E8E8;
+  }
+  .attraction-img-wrapper{
+    position: relative;
+    height: 350px;
+    width: 100%;
+    margin: 0px ;
+    overflow: hidden;
+  }
+  .booking{
+    width: 100%;
+    height: 400px;
+    margin: 20px 10px 0px 10px;
+  }
+  .booking-detail{
+    border-radius: 5px;
+    height: 300px;
+    width: 100%;
+    padding: 15px 20px 0px 20px;
+  }
+
+  .detail-2{
+    height: 48px;
+    font-weight: 400;
+    line-height: normal;
+  }
+
+  .attraction-info{/* 這個就不用flex了，讓子元素自動width100%*/
+    /* border: 1px rgba(255, 0, 0, 0.868) solid; */
+    margin: 0px 10px;
+    padding: 10px;
+    /* width: 90%; */
+  }
+
+  .footer-wrapper{
+    display: flex;
+    justify-content: center;
+  }
+  .footer{
+    min-width: 360px;
+  }
+}
+

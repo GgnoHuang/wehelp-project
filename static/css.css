@@ -3,14 +3,7 @@
   padding: 0;
   box-sizing: border-box;
   text-decoration: none;
-  /* font-family: ; */
 }
-
-
-/* 设置全局样式 */
-/* body {
-  font-family: Arial, sans-serif;
-} */
 
 .nav-wrapper{
   display: flex;
@@ -19,7 +12,6 @@
   background: var(--additional-color-white, #FFF);
   align-items: center;
 }
-/* 导航栏样式 */
 .nav {
   display: flex;
   justify-content: center;
@@ -37,7 +29,6 @@ font-style: normal;
 font-family: Noto Sans TC;
 }
 
-
 .a{
   display: flex;
 }
@@ -49,7 +40,6 @@ font-family: Noto Sans TC;
 .a a{
   color: var(--secondary-color-gray-70, #666);
 
-/* Body - Med 16(13.3) */
 font-family: Noto Sans TC;
 font-size: 16px;
 font-style: normal;
@@ -59,9 +49,6 @@ line-height: 83.125% ;
 
 /* ================================================== */
 /* ================================================== */
-/* ================================================== */
-
-
 
 .hero {
   height: 320px;
@@ -105,7 +92,6 @@ line-height: 83.125% ;
   line-height: 13.3px; 
 }
 
-
 .three{
   display: flex;
 }
@@ -125,7 +111,6 @@ line-height: 83.125% ;
   padding: 8px 15px;
 }
 
-/* ================================================== *//* ================================================== */
 /* ================================================== *//* ================================================== */
 /* ================================================== *//* ================================================== */
 
@@ -253,8 +238,8 @@ main{
   object-fit: cover;
   width: 100%;
   height: 100%;
-  /* 父元素設定flex這邊就只要width */
-  /* height會自動 */
+/* 後來發現長寬都要100%如果要cover的話，
+才塞得滿 */
 }
 
 .textbox-2{
