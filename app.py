@@ -1,11 +1,3 @@
-# book=[
-#     dict(id=row[0],author=row[1],
-#          language=row[2],title=row[3])
-#          for row in cursor.fetchall()
-# ]
-
-
-
 from flask import *
 from flask import request as req
 # from flask import jsonify
@@ -69,11 +61,13 @@ def register():
         conn.close()
         ok_res = { "ok": True }
         return Response(json.dumps(ok_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
+    
+    conn.close()
     print('連接池失敗。')
 
   except Exception as err :# 什麼情況下會進到except? mysql筆記裡面有！！
     print(err)
-    cursor.close()
+
     conn.close()
     return Response(json.dumps(err_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
 

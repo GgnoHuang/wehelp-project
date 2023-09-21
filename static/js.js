@@ -1,3 +1,24 @@
+const closeBtn = document.querySelector('.close-btn');
+const loginFrom= document.querySelector('.login');
+const registerFrom= document.querySelector('.register');
+
+closeBtn.addEventListener('click',()=>{
+  
+})
+
+
+
+const clickToLogin= document.querySelector('.click-to-login');
+clickToLogin.addEventListener('click',()=>{
+  loginFrom.setAttribute('style','display:block')
+  registerFrom.setAttribute('style','display:none')
+})
+
+
+
+
+
+
 
 // =================== 9/20 =======================================
 const modal = document.querySelector('.bg-modal');
@@ -170,24 +191,8 @@ function logout(){
   localStorage.removeItem("token");
   document.querySelector(".login-msg").innerHTML='登出成功';
 }
-// localStorage.removeItem("token");
-// ==========@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// ==========@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-// const issuedAt = decodedToken.iat; // 签发时间
-// const expiration = decodedToken.exp; // 过期时间
-
-// ==========@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// ==========@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
-
-
-
-
-// console.error('HTTP error:', response.status);
-//         return Promise.reject('HTTP error');
-// =================== 9/20 =======================================
 
 
 
