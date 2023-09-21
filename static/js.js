@@ -1,3 +1,208 @@
+
+// =================== 9/20 =======================================
+const modal = document.querySelector('.bg-modal');
+function openModal() {
+  // modal.style.pointerEvents = 'auto';
+  document.body.style.overflow = 'hidden';
+    /* pointer-events: none; 變成底下的元素也可以點得到*/
+}
+function closeModal() {
+  // modal.style.display = 'block';
+  modal.style.pointerEvents = 'none';
+      /* pointer-events: none; 變成底下的元素也可以點得到*/
+  // document.body.style.overflow = 'hidden';
+}
+openModal()
+
+// ================註冊=====================================
+
+async function register(){
+  const apiUrl ='http://127.0.0.1:3000/api/user'
+  const usernameInput = document.getElementById('username').value
+  const useremailInput = document.getElementById('useremail').value
+  const passwordInput = document.getElementById('password').value
+  const registerMsg = document.querySelector(".register-msg")
+
+  if(usernameInput == "" || useremailInput == "" || passwordInput == ""){
+    registerMsg.innerHTML='請填寫每個欄位'
+    return;
+  };
+  if(usernameInput != usernameInput.trim() || useremailInput != useremailInput.trim() || passwordInput!=passwordInput.trim()){
+    registerMsg.innerHTML='請勿輸入空格'
+    return;
+  };
+  const passwordpattern = /^[a-zA-Z0-9]+$/;
+  if(!passwordpattern.test(passwordInput)){
+    registerMsg.innerHTML='僅能輸入英文及數字'
+    return;
+  };
+  const emailPattern = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+  if(!emailPattern.test(useremailInput)){
+    registerMsg.innerHTML='請輸入正確的電子信箱格式'
+    return;
+  };// ------------------------
+  try{
+    const response = await fetch(apiUrl,{
+      method:'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "username": usernameInput,
+        "useremail": useremailInput,
+        "password": passwordInput
+      })
+    })
+
+    if (!response.ok) {
+      let errData = await response.json()
+
+      registerMsg.innerHTML=errData.message;
+      // alert(errData)
+      // document.querySelector(".register-success").innerHTML=errData
+
+      throw new Error(errData.message);
+      // Promise 被拒绝： 如果在 Promise 对象中使用 reject() 方法来拒绝 Promise，它将触发 catch 块。
+      // 手动抛出的错误： 您可以使用 throw 语句在代码中手动抛出错误，然后在 catch 块中捕获它们。
+    }
+    const data = await response.json();
+    console.log(data)
+    registerMsg.innerHTML="註冊成功！"
+    document.getElementById('username').value="";
+    document.getElementById('useremail').value="";
+    document.getElementById('password').value="";
+  }catch(err){
+    // document.querySelector(".register-success").innerHTML="不明錯誤"
+    console.error(`請求失敗：${err}`)
+  }
+}
+
+async function login(){
+  const loginEmailInput = document.querySelector('.login-email').value
+  const loginPasswordInput = document.querySelector('.login-password').value
+  const loginMsg = document.querySelector(".login-msg")
+  try{
+    const apiUrl ='http://127.0.0.1:3000/api/user/auth'
+    const res = await fetch(apiUrl,{
+      method:'PUT',
+      headers:{
+        // 'Accept': 'application/json', //???????????????????
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "useremail": loginEmailInput,
+        "password": loginPasswordInput
+      })
+    })
+    if(!res.ok){
+      // const errData = await response.response.json()
+      // loginMsg.innerHTML=errData.message
+      const data = await res.json();
+      // console.error(data)
+      errData = data.message;
+      loginMsg.innerHTML = errData;
+      throw new Error(errData);
+    }
+    const data = await res.json();
+    const token = data.token
+    localStorage.setItem('token', token);
+    loginMsg.innerHTML='登入成功，取得token';
+
+    document.querySelector('.login-btn').style.display="none"
+    document.querySelector('.logout-btn').style.display="block"
+    document.querySelector('.login-email').value="";
+    document.querySelector('.login-password').value="";
+    checkUserAuth()
+  }
+  catch(err){
+    console.error(err);
+  }
+}
+
+
+async function checkUserAuth(){
+  document.querySelector('.login-btn').style.display = "none"
+  document.querySelector('.logout-btn').style.display = "none"
+  const token = localStorage.getItem('token')
+  if(token == null){ // 沒有token情況直接return就不fetch了
+    document.querySelector('.login-btn').style.display="block"
+    document.querySelector('.logout-btn').style.display="none"
+    return
+  }
+  try{
+    const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
+      method:'GET',
+      headers:{'Authorization': 'Bearer '+token}
+    })
+    if(!res.ok){ //有token但過期，api判斷token過期 會進入except，得到500狀態碼所以!res.ok
+      console.log('用戶未登入')
+      document.querySelector('.login-btn').style.display = "block"
+      localStorage.removeItem("token");
+      return;
+    }
+    const data = await res.json();
+    console.log(data)
+    // if(data.data == null){
+    //   console.log(data)
+    //   console.log(`${data.data}～～～${data.data == null}`)
+
+    //   // document.querySelector(".login-msg").innerHTML='已過期請重新登入';
+    
+    // }
+    // console.log(data)
+    const userData = data.data
+    const userIdData = userData['id']
+    const userEmailData = userData['email']
+    const userNameData = userData['name']
+    console.log(userIdData,userNameData,userEmailData)
+    document.querySelector(".login-msg").innerHTML=`哈囉使用者，你id:${userIdData}你eamil:${userEmailData}你名字：${userNameData}`;
+    document.querySelector('.logout-btn').style.display="block"
+  }
+  catch{
+    console.error("catch了");
+  }
+}
+checkUserAuth();
+
+function logout(){
+  document.querySelector('.login-btn').style.display="block"
+  document.querySelector('.logout-btn').style.display="none"
+  localStorage.removeItem("token");
+  document.querySelector(".login-msg").innerHTML='登出成功';
+}
+// localStorage.removeItem("token");
+// ==========@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// ==========@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+// const issuedAt = decodedToken.iat; // 签发时间
+// const expiration = decodedToken.exp; // 过期时间
+
+// ==========@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// ==========@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+// console.error('HTTP error:', response.status);
+//         return Promise.reject('HTTP error');
+// =================== 9/20 =======================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // =====// ▼ ▼ ▼載入各個捷運站按鈕▼ ▼ ▼ ▼ ▼ =====// =====// =====// =====// =====
 fetch("http://54.65.60.124:3000/api/mrts")
   .then(res=>{

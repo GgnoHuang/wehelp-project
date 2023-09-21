@@ -1,10 +1,20 @@
+# book=[
+#     dict(id=row[0],author=row[1],
+#          language=row[2],title=row[3])
+#          for row in cursor.fetchall()
+# ]
+
+
+
 from flask import *
+from flask import request as req
 # from flask import jsonify
 # from collections import OrderedDict
 from flask_cors import CORS
 import mysql.connector
 import mysql.connector.pooling
 import json
+
 # ------------------------
 app=Flask(__name__,
         static_folder='static',
@@ -15,6 +25,7 @@ app.config["JSON_AS_ASCII"] = False
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.secret_key = "john"
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 dbconfig = {
     "host": "localhost",
     "user": "root",
@@ -26,25 +37,152 @@ dbconfig = {
 pool = mysql.connector.pooling.MySQLConnectionPool(**dbconfig)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-print(pool)
-
-# 用連接池的話這段不需要 mysql.connector.connect
-# conn = mysql.connector.connect(
-#     user = "root",
-#     password = "yourpassword",
-#     host = "localhost",
-#     database = "taipei_day_trip"
-# )
-# cursor = conn.cursor()
-# 用連接池的話這段不需要，不需要 mysql.connector.connect
-#  取而代之是 conn = pool.get_connection()
-
-# json_data = json.dumps(data, ensure_ascii=False, indent=2)
 
 
+import jwt
+import datetime
+
+# ======================   註冊會員    =========================================
+@app.route("/api/user",methods = ["POST"])
+def register():
+  err_res = { "error": True, "message": "發生錯誤" }#  或 err_res=dict(error=True,message="發生錯誤")
+  try:
+    conn = pool.get_connection()
+    if conn.is_connected():
+        print('連接池成功。')
+        cursor = conn.cursor()
+        reqData = request.get_json()
+        username = reqData['username']
+        useremail = reqData['useremail']
+        password = reqData['password']
+        cursor.execute("SELECT useremail FROM member WHERE useremail = %s", (useremail,))
+        result = cursor.fetchone()
+        if result:
+            cursor.close()
+            conn.close()
+            err_res["message"] = "此信箱已被註冊"
+            return Response(json.dumps(err_res, ensure_ascii=False), status=400, content_type='application/json; charset=utf-8')
+
+        cursor.execute("INSERT INTO member(username, useremail, password) VALUES(%s, %s, %s);", (username, useremail, password))
+        conn.commit() #本來是 con.commit()
+        cursor.close()
+        conn.close()
+        ok_res = { "ok": True }
+        return Response(json.dumps(ok_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
+    print('連接池失敗。')
+
+  except Exception as err :# 什麼情況下會進到except? mysql筆記裡面有！！
+    print(err)
+    cursor.close()
+    conn.close()
+    return Response(json.dumps(err_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
+
+# ======================   登入會員    ===============================
+@app.route("/api/user/auth", methods = ['GET','PUT'])
+def sign_in():
+  err_res = {"error": True,"message":"發生錯誤"}
+  secret_key = 'mysecret-key'
+  if req.method =='PUT':
+    # print(request==req)
+    try:
+      conn = pool.get_connection()
+      if conn.is_connected():
+        cursor = conn.cursor()
+        if req.is_json: # 確定他是一個json
+            req_json_data = req.get_json()
+            req_user_email = req_json_data.get("useremail", None)
+            req_password = req_json_data.get("password", None)
+            cursor.execute("SELECT id,username,useremail,password FROM member WHERE useremail=%s;", (req_user_email,))
+            sql_data = cursor.fetchall()
+            if sql_data:
+                sqlPassword = sql_data[0][3]
+                if req_password == sqlPassword:
+                    sql_user_id = sql_data[0][0]
+                    sql_user_name = sql_data[0][1]
+                    sql_user_email = sql_data[0][2]
+                    #         # header、payload、signature是後端處理之後變成token給前端
+
+                    issued_at = datetime.datetime.utcnow()
+                    # expiration = issued_at + datetime.timedelta(seconds=5) 
+                    expiration = issued_at + datetime.timedelta(days=7) 
+                    # payload = dict(id=sql_user_id, username=sql_user_name, useremail=sql_user_email)
+                    payload = {
+                        "id": sql_user_id,
+                        "username": sql_user_name,
+                        "useremail": sql_user_email,
+                        "iat": issued_at,
+                        "exp": expiration
+                    }
+                    token = jwt.encode(payload, secret_key, algorithm='HS256')
+                    # decode_token = jwt.decode(token, secret_key, algorithms=['HS256'])
+                    cursor.close()
+                    conn.close()
+                    token_res = { "token": token }
+                    return Response(json.dumps(token_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
+                else:
+                    cursor.close()
+                    conn.close()
+                    err_res['message']='密碼輸入錯誤'
+                    return Response(json.dumps(err_res, ensure_ascii=False), status=400, content_type='application/json; charset=utf-8')
+            else:
+                cursor.close()
+                conn.close()
+                err_res['message']='無此帳號'
+                return Response(json.dumps(err_res, ensure_ascii=False), status=400, content_type='application/json; charset=utf-8')  
+        else:
+            cursor.close()
+            conn.close()
+            err_res['message']='request資料格式錯誤'
+            return Response(json.dumps(err_res, ensure_ascii=False), status=400, content_type='application/json; charset=utf-8')
+    except Exception as err :
+        cursor.close()
+        conn.close()
+        err_res['message']='伺服器發生錯誤'
+        return Response(json.dumps(err_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
+    
+    # ============   頁面加載判斷是否為登入  ========================
+  if req.method =='GET':
+    # reqToken = None
+    try:
+      conn = pool.get_connection()
+      if conn.is_connected():
+        cursor = conn.cursor()
+        member_data_res = { "data": None }
+        # if 'Authorization' in req.headers:
+        reqToken = req.headers['Authorization'].split()[1]
+        # if reqToken == 'null':
+        #     print("前端沒token")
+        #     return Response(json.dumps(member_data_res, ensure_ascii=False), status=401, content_type='application/json; charset=utf-8')
+        #  return jsonify({'message': '令牌已过期'}), 401
+        decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
+        # if decoded_token['iat'] > decoded_token['exp']:
+        #     return Response(json.dumps(member_data_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
+        member_data_res = {
+            "data":{"id": decoded_token['id'],
+                    'name': decoded_token['username'],
+                    'email': decoded_token['useremail'],
+            }}
+        return Response(json.dumps(member_data_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
+    except Exception as err :
+        cursor.close()
+        conn.close()
+        print(err)
+        print('exceptㄌ')
+        return Response(json.dumps(member_data_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
 
 
-# Pages 
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route("/")
 def index():
 	return render_template("index.html")
@@ -63,10 +201,7 @@ def thankyou():
 
 @app.route("/api/attractions", methods = ["GET"])
 def api_attractions():
-    error_res = {
-        "error": True,
-        "message":"發生錯誤"
-    }
+    error_res = {"error": True,"message":"發生錯誤"}
     try:
         conn = pool.get_connection()
 

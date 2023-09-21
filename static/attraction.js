@@ -1,21 +1,74 @@
+// console.log(window.localStorage)
+
+// console.log(window.sessionStorage)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // =================fetch===================
 const pageId = location.href.split('/')[location.href.split('/').length-1]
-async function fetchData(){
+const attractionApiUrl = `http://54.65.60.124:3000/api/attraction/${pageId}`
+
+
+async function fetchData(url){
   try{
-    const res = await fetch(`http://54.65.60.124:3000/api/attraction/${pageId}`);
+    const res = await fetch(url);
+    if(!res.ok){
+      throw new Error(`fetch失敗，api地址為：${url}`)
+    }
     const data = await res.json();
     return data;
   }
   catch(err){
-    throw new Error('api/attraction/{attractionId} 請求失敗!');
+    console.error(err)
   }
 }
 // =================載入內容==================
 let nameData, catData, mrtData, descriptionData, addData, transportData, imgDatas
 async function useFetchData(){
   try{
-    const result = await fetchData();
+    const result = await fetchData(attractionApiUrl);
     nameData = result.data.name;
     catData = result.data.category;
     mrtData = result.data.mrt;
@@ -104,6 +157,7 @@ function loadData(){
         e.target.setAttribute("stroke", "white"); 
         imageIndex = index;
         carousel.style.transform = `translate(-${imageIndex*100}%)`;
+        console.log(`目前第${imageIndex}張`)
       });
     });
   };
@@ -115,6 +169,7 @@ function loadData(){
 let imgsCnt;
 const carousel = document.querySelector(".carousel")
 let imageIndex = 0;
+// 當 imageIndex = 0;時候`translate(-${imageIndex*100}%)`;就是`translate(0%)`;也就不會動
 let intervalId ;
 function autoSlide(){
   intervalId = setInterval(() => {
@@ -129,7 +184,7 @@ function slideImage(){
         dot.setAttribute("fill", "white"); 
         dot.setAttribute("stroke",null); 
   });
-  imageIndex++;
+  imageIndex ++;
   if(imageIndex == imgsCnt){
     imageIndex = 0;
   }
@@ -138,7 +193,7 @@ function slideImage(){
   currentBlackDot.setAttribute("fill", "black"); 
   currentBlackDot.setAttribute("stroke", "white"); 
   carousel.style.transform = `translate(-${imageIndex*100}%)`;
-  console.log(imageIndex)
+  console.log(`目前第${imageIndex}張`)
 }
 
 
@@ -156,15 +211,18 @@ imgBtns.forEach(btn =>{
     clearInterval(intervalId);
     if (e.target.className.includes('prev-btn')){
       imageIndex -= 2//  -2是因為 slideImage()等等會+1
-      if(imageIndex < 0){
-        imageIndex = -1 //-1之後讓他++變回0
+      if(imageIndex < -1){
+        imageIndex = imgsCnt-2 
       }
     }
     slideImage()
   })
 })
 
-autoSlide();//研究一下這個呼叫擺放的位置
+autoSlide();
+
+
+//研究一下這個呼叫擺放的位置
 
 //=================== radioStyleChange ===========================
 const timePickerLabel = document.querySelectorAll(".time-picker-label");

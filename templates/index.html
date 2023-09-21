@@ -87,6 +87,35 @@
     </footer>
   </div>
 
+  <div class="bg-modal">
+    <div class="register">
+      <div class="color"></div>
+      <p>註冊會員帳號</p>
+      <!-- <form action="/" class="register-form" method="POST" > -->
+        <input id="username" type="text" name="username" placeholder="輸入姓名">
+        <input id="useremail" type="email" name="useremail" placeholder="輸入電子郵件">
+        <input id="password" type="password" name="password" placeholder="輸入密碼">
+        <button class="submit-btn" onclick="register()">註冊新帳戶</button>
+      <!-- </form> -->
+      <p>已經有帳戶了？點此登入</p>
+      <p class="register-msg"></p>
+
+
+
+      <div class="login">
+        <p>登入</p>
+          <input class="login-email" type="email" placeholder="輸入電子郵件">
+          <input class="login-password" type="password" placeholder="輸入密碼">
+          <button class="login-btn" onclick="login()">按此登入</button>
+          <button class="logout-btn" onclick="logout()">登出</button>
+      </div>
+      <p class="login-msg"></p>
+    </div>
+
+  
+  </div>
+
+
   <script src="/static/js.js"></script>
 </body>
 </html>
