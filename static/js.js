@@ -70,7 +70,7 @@ function switchToRegister(){
 
 //--------- 註冊功能 -----------
 async function register(){
-  const apiUrl ='http://127.0.0.1:3000/api/user'
+  const apiUrl ='http://54.65.60.124:3000/api/user'
   const usernameInput = document.getElementById('username').value;
   const useremailInput = document.getElementById('useremail').value;
   const passwordInput = document.getElementById('password').value;
@@ -162,7 +162,7 @@ async function login(){
     return;
   };
   try{
-    const apiUrl ='http://127.0.0.1:3000/api/user/auth'
+    const apiUrl ='http://54.65.60.124:3000/api/auth'
     const res = await fetch(apiUrl,{
       method:'PUT',
       headers:{
@@ -248,7 +248,7 @@ async function checkUserAuth(){
   const token = localStorage.getItem('token')
   if( token == null ) { return } // 沒有token情況直接return就不fetch了
   try{
-    const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
+    const res = await fetch('http://54.65.60.124:3000/api/auth',{
       method:'GET',
       headers:{'Authorization': 'Bearer '+token}
     })

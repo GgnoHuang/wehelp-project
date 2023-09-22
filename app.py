@@ -1,11 +1,12 @@
 from flask import *
 from flask import request as req
-# from flask import jsonify
-# from collections import OrderedDict
 from flask_cors import CORS
 import mysql.connector
 import mysql.connector.pooling
 import json
+
+import jwt
+import datetime
 
 # ------------------------
 app=Flask(__name__,
@@ -23,15 +24,24 @@ dbconfig = {
     "password": "yourpassword",
     "database": "taipei_day_trip",
     "pool_name": "mypool",
-    "pool_size": 20,  # 池中連接的數量# 池中連接的數量
+    "pool_size": 20, 
 }
 pool = mysql.connector.pooling.MySQLConnectionPool(**dbconfig)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+@app.route("/")
+def index():
+	return render_template("index.html")
+@app.route("/attraction/<id>")
+def attraction(id):
+	return render_template("attraction.html")
+@app.route("/booking")
+def booking():
+	return render_template("booking.html")
+@app.route("/thankyou")
+def thankyou():
+	return render_template("thankyou.html")
 
-
-import jwt
-import datetime
 # ======================   註冊會員    =========================================
 @app.route("/api/user",methods = ["POST"])
 def register():
@@ -54,7 +64,7 @@ def register():
             return Response(json.dumps(err_res, ensure_ascii=False), status=400, content_type='application/json; charset=utf-8')
 
         cursor.execute("INSERT INTO member(username, useremail, password) VALUES(%s, %s, %s);", (username, useremail, password))
-        conn.commit() #本來是 con.commit()
+        conn.commit() 
         cursor.close()
         conn.close()
         ok_res = { "ok": True }
@@ -135,15 +145,8 @@ def sign_in():
       if conn.is_connected():
         cursor = conn.cursor()
         member_data_res = { "data": None }
-        # if 'Authorization' in req.headers:
         reqToken = req.headers['Authorization'].split()[1]
-        # if reqToken == 'null':
-        #     print("前端沒token")
-        #     return Response(json.dumps(member_data_res, ensure_ascii=False), status=401, content_type='application/json; charset=utf-8')
-        #  return jsonify({'message': '令牌已过期'}), 401
         decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
-        # if decoded_token['iat'] > decoded_token['exp']:
-        #     return Response(json.dumps(member_data_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
         member_data_res = {
             "data":{"id": decoded_token['id'],
                     'name': decoded_token['username'],
@@ -157,36 +160,7 @@ def sign_in():
         cursor.close()
         conn.close()
         print(err)
-        print('exceptㄌ')
         return Response(json.dumps(member_data_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@app.route("/")
-def index():
-	return render_template("index.html")
-@app.route("/attraction/<id>")
-def attraction(id):
-	return render_template("attraction.html")
-@app.route("/booking")
-def booking():
-	return render_template("booking.html")
-@app.route("/thankyou")
-def thankyou():
-	return render_template("thankyou.html")
-
-
 
 
 @app.route("/api/attractions", methods = ["GET"])
