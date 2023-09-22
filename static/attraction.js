@@ -395,7 +395,7 @@ function loadData(){
         e.target.setAttribute("stroke", "white"); 
         imageIndex = index;
         carousel.style.transform = `translate(-${imageIndex*100}%)`;
-        console.log(`目前第${imageIndex}張`)
+        // console.log(`目前第${imageIndex}張`)
       });
     });
   };
@@ -431,7 +431,7 @@ function slideImage(){
   currentBlackDot.setAttribute("fill", "black"); 
   currentBlackDot.setAttribute("stroke", "white"); 
   carousel.style.transform = `translate(-${imageIndex*100}%)`;
-  console.log(`目前第${imageIndex}張`)
+  // console.log(`目前第${imageIndex}張`)
 }
 
 
