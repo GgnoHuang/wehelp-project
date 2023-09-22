@@ -29,22 +29,30 @@ font-style: normal;
 font-family: Noto Sans TC;
 }
 
-.a{
+.nav-actions{
   display: flex;
 }
-.a div{
+.nav-actions div{
   display: flex;
   align-items: center;
   padding: 10px;
 }
-.a a{
-  color: var(--secondary-color-gray-70, #666);
+.nav-actions .logout-btn-hidden{
+  display: none;
+}
+.nav-actions .open-form-btn-hidden{
+  display: none;
+}
 
-font-family: Noto Sans TC;
-font-size: 16px;
-font-style: normal;
-font-weight: 500;
-line-height: 83.125% ;
+
+.nav-actions a{
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 83.125% ;
+  cursor: pointer;
 }
 
 /* ================================================== */
@@ -170,7 +178,7 @@ main{
 
 }
 .btn-1 img{
-  z-index: 990;
+  z-index: 9;
   cursor: pointer;
   margin: 9px 0px 9px 15px;
 }
@@ -181,7 +189,7 @@ main{
 }
 .btn-2 img{
 
-  z-index: 990;
+  z-index: 9;
   cursor: pointer;
   margin: 9px 15px 9px 0px;
 }
@@ -210,7 +218,7 @@ main{
   width: 100%;
 }
 .mask{
-  z-index: 99;
+  z-index: 9;
   width: 100%;
   height: 40px;
   position: absolute;
@@ -274,6 +282,197 @@ main{
   line-height: 13.3px;
 }
 
+/* =================== MODAL ====================================== */
+.bg-modal{
+  width: 100%;
+  height: 100%;
+  background-color:rgba(0, 0, 0,0);
+  position: fixed;
+  top: 0;
+  transition: all 0.7s ease;
+  pointer-events: none;  
+  z-index: 100;
+}
+
+.form-wrapper{
+  display: flex;
+  justify-content: center;
+  z-index: 101;
+  /* display: none; */
+  width: 100%;
+  height: 100%;
+  /* 不要用opacity不然子元素會被影響 */
+  position: fixed;
+  top: 0;
+  transition: all 0.3s ease;
+    /* display: none; */
+  pointer-events: none; 
+  transform:translateY(-200%)
+}
+.form-wrapper .member-form{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 340px;
+  height:fit-content;
+  position: relative;
+  top: 80px;
+  border-radius: 6px;
+  background: var(--White, #FFF);
+  box-shadow: 0px 4px 60px 0px #AAA;
+
+  /* opacity: 1; */
+  /* top: -100%; 移出視窗上方 */
+  transition: top 0.3s ease; /* 添加過渡效果 */
+}
+.member-form .close-btn{
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top:27px;
+  right: 17px;
+  cursor: pointer;
+  z-index: 20;
+  
+}
+
+.deco-bar{
+  border-radius: 6px 6px 0px 0px;
+  width: 100%;
+  height: 10px;
+  background-color: rgba(68, 136, 153, 1);
+}
+
+/* ============= 註冊 ================= */
+.member-form .register{
+  width: 310px;
+
+  margin: 15px 0px 15px 0px;
+  /* border: 2px rgb(47, 0, 255) solid; */
+  display: flex;
+  flex-direction: column;
+
+}
+.register .register-text{
+  margin-bottom: 15px;
+  height: 27px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px; 
+}
+.register input{
+  padding: 15px;
+  margin-bottom: 10px;
+  height: 47px;
+  border-radius: 5px;
+  border: 1px solid var(--Gray-500, #CCC);
+  background: var(--White, #FFF);
+
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 13.3px;
+}
+.username-field-hidden{
+  display: none
+}
+
+.register input::placeholder {
+  color: #757575
+}
+.register .member-btn,.login-btn,.yeslogout{
+  margin-bottom: 10px;
+  border-style:none;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  width: 310px;
+  height: 47px;
+  border-radius: 5px;
+  background: var(--primary-color-cyan-70, #489);
+  color: var(--additional-color-white, #FFF);
+  font-family: Noto Sans TC;
+  font-size: 19px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px; 
+}
+.member-btn-hidden, .login-btn-hidden,.yeslogout-hidden{
+  display: none;
+}
+
+.already,.dont-have{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 22px;
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 13.3px; /* 83.125% */
+}
+.already .click-to-login,.click-to-register{
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+.already-or-donthave-hidden{
+  display: none;
+}
+
+
+.click-to-login:hover {
+  color:rgba(68, 136, 153, 1);/* 鼠标悬停时的颜色 */
+}
+.click-to-register:hover {
+  color:rgba(68, 136, 153, 1);/* 鼠标悬停时的颜色 */
+}
+.system-msg{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 22px;
+  margin-top: 10px;
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 13.3px; /* 83.125% */
+  /* transition: all 0.2s ease; */
+  transition: opacity 0.5s ease-in-out;
+  opacity: 0;
+  color: rgb(227, 60, 60);
+
+}
+.system-msg:empty {
+  height: 0px; 
+  margin-top: 0px;/* 沒內容時設為0 */
+}
+
+/* ＝＝＝＝＝登入＝＝＝＝＝＝＝＝＝＝＝＝ */
+.login{
+  position: absolute;
+  display: none;
+}
+.fade {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+/* =================== moadal  =================== moadal  =================== moadal  =================== */
+/* =================== moadal  =================== moadal  =================== moadal  =================== */
+/* =================== moadal  =================== moadal  =================== moadal  =================== */
+
+
+
 /* =-=▼▼▼▼▼▼▼▼▼▼▼---低於1200---▼▼▼▼▼▼▼▼▼▼▼▼▼▼-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
 @media(max-width:1199px){
   .nav {
@@ -328,7 +527,6 @@ main{
     margin-top: 15px;
   }
 }
-
 
 /* =-=▼▼▼▼▼▼▼▼▼▼▼---低於768 -小於iPad Mini  --▼▼▼▼▼▼▼▼▼▼▼▼▼▼-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
 @media(max-width:375px){

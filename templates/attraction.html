@@ -9,6 +9,35 @@
 </head>
 
 <body>
+
+  <div class="bg-modal"></div>
+  <div class="form-wrapper">
+    <div class="member-form">
+      <div class="deco-bar"></div>
+      <img src="/static/close-btn.png" class="close-btn" alt="">
+      <div class="register">
+          <p class="register-text">登入會員帳號</p>
+          <input id="username" class="username-field-hidden" type="text" name="username" placeholder="輸入姓名">
+          <input id="useremail" type="email" name="useremail" placeholder="輸入電子郵件">
+          <input id="password" type="password" name="password" placeholder="輸入密碼">
+          <button class="member-btn member-btn-hidden" onclick="register()">註冊新帳戶</button>
+          <button class="login-btn" onclick="login()">登入</button>
+          <button class="yeslogout yeslogout-hidden" onclick="logout()">確定登出</button>
+        <!-- </form> -->
+          <p class="already already-or-donthave-hidden" >已經有帳戶了？<span class="click-to-login" onclick="switchToLogin()">點此登入</span></p>
+          <p class="dont-have">還沒有帳戶？<span class="click-to-register" onclick="switchToRegister()">點此註冊</span></p>
+  
+          <p class="system-msg"></p>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
   <header class="nav-wrapper">
     <div class="nav">
         <div class="taipei">
@@ -16,8 +45,9 @@
         </div>
 
         <div class="nav-actions">
-          <div><a href="#">預定行程</a></div>
-          <div><a href="#">登入/註冊</a></div>
+          <div><a>預定行程</a></div>
+          <div class="open-member-btn open-form-btn" onclick="openFrom()"><a>登入/註冊</a></div>
+          <div class="open-member-btn logout-btn logout-btn-hidden" onclick="confirmLogout()" ><a>登出系統</a></div>
         </div>
     </div>
   </header>
@@ -40,9 +70,9 @@
         </div>
 
         <div class="booking">
-            <p class="attraction-name">平安鐘</p>
+            <p class="attraction-name"></p>
 
-            <p class="attraction-class-mrt">公共藝術 at 忠孝復興</p>
+            <p class="attraction-class-mrt"></p>
 
             <div class="booking-detail">
               <p class="detail-1">訂購導覽行程</p>
@@ -108,13 +138,13 @@
 
     <div class="wrapper-2">
       <div class="attraction-info"><!-- 這個就不用flex了讓子元素自動width100% -->
-        <p class="description">平安鐘祈求大家的平安，這是為了紀念921地震週年的設計，在喧鬧的廣場上每個小時鳴鐘，保佑平安，祈禱臺灣不會再發生這樣的天災。雙手合十加上108個黃色的琉璃乳丁，隨著緩緩流下的水，在底下的一個小噴泉噴出。雙手合十的意義，一個是祈福，一個是包容，教我們要包容這樣的改變，撫平這樣的傷口。下面的水緩緩流出，代表著人的生命力是不斷地延續下去。緩緩地鐘聲，卻帶來心中的寧靜。 這個平安鐘是由建築師姚仁喜與琉璃創作家王俠軍共同設計，長6公尺、寬5公尺，以鑄銅製成，由法鼓山文教基金會全額出資。平安鐘點綴都市景觀，不時提醒大家，面對刻骨銘心的災難痛苦，更應該有謙卑的一顆心。</p>
+        <p class="description"></p>
 
         <p class="info-1">景點地址：</p>
-        <p class="address">臺北市 大安區忠孝東路4段</p>
+        <p class="address"></p>
 
         <p class="info-2">交通方式：</p>
-        <p class="transport">捷運站名：忠孝復興站4號出口1.公車：204、212、212直、232、232副、262、262(區間)、278、299、521、605、605(副)、605(新台五線)、667、903、忠孝新幹線至頂好市場站 2.車位：太平洋崇光百貨地下停車場或市民大道附近地下停車場</p>
+        <p class="transport"></p>
       </div>
     </div>
   </main>
