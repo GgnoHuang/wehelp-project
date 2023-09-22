@@ -12,12 +12,13 @@
   <header class="nav-wrapper">
     <div class="nav">
         <div class="taipei">
-          <a href="#">台北一日遊</a>
+          <a href="/">台北一日遊</a>
         </div>
 
-        <div class="a">
-          <div><a href="#">預定行程</a></div>
-          <div><a href="#">登入/註冊</a></div>
+        <div class="nav-actions">
+          <div><a>預定行程</a></div>
+          <div class="open-member-btn open-form-btn" onclick="openFrom()"><a>登入/註冊</a></div>
+          <div class="open-member-btn logout-btn logout-btn-hidden" onclick="confirmLogout()" ><a>登出系統</a></div>
         </div>
     </div>
   </header>
@@ -87,36 +88,27 @@
     </footer>
   </div>
 
-  <div class="bg-modal">
+
+  <div class="bg-modal"></div>
+  <div class="form-wrapper">
     <div class="member-form">
       <div class="deco-bar"></div>
       <img src="/static/close-btn.png" class="close-btn" alt="">
       <div class="register">
-          <p class="register-text">註冊會員帳號</p>
-          <input id="username" type="text" name="username" placeholder="輸入姓名">
+          <p class="register-text">登入會員帳號</p>
+          <input id="username" class="username-field-hidden" type="text" name="username" placeholder="輸入姓名">
           <input id="useremail" type="email" name="useremail" placeholder="輸入電子郵件">
           <input id="password" type="password" name="password" placeholder="輸入密碼">
-          <button class="submit-btn" onclick="register()">註冊新帳戶</button>
+          <button class="member-btn member-btn-hidden" onclick="register()">註冊新帳戶</button>
+          <button class="login-btn" onclick="login()">登入</button>
+          <button class="yeslogout yeslogout-hidden" onclick="logout()">確定登出</button>
         <!-- </form> -->
-          <p class="already">已經有帳戶了？<span class="click-to-login" href="">點此登入</span></p>
+          <p class="already already-or-donthave-hidden" >已經有帳戶了？<span class="click-to-login" onclick="switchToLogin()">點此登入</span></p>
+          <p class="dont-have">還沒有帳戶？<span class="click-to-register" onclick="switchToRegister()">點此註冊</span></p>
   
-          <p class="register-msg"></p>
+          <p class="system-msg"></p>
       </div>
-
-      <div class="login">
-        <p>登入</p>
-        <input class="login-email" type="email" placeholder="輸入電子郵件">
-        <input class="login-password" type="password" placeholder="輸入密碼">
-        <button class="login-btn" onclick="login()">登入</button>
-        <button class="logout-btn" onclick="logout()">登出</button>
-      </div>
-
     </div>
-
-
-    <!-- <p class="login-msg"></p> -->
-
-  
   </div>
 
 

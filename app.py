@@ -17,7 +17,6 @@ app.config["JSON_AS_ASCII"] = False
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.secret_key = "john"
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 dbconfig = {
     "host": "localhost",
     "user": "root",
@@ -33,7 +32,6 @@ pool = mysql.connector.pooling.MySQLConnectionPool(**dbconfig)
 
 import jwt
 import datetime
-
 # ======================   註冊會員    =========================================
 @app.route("/api/user",methods = ["POST"])
 def register():
@@ -64,20 +62,16 @@ def register():
     
     conn.close()
     print('連接池失敗。')
-
-  except Exception as err :# 什麼情況下會進到except? mysql筆記裡面有！！
+  except Exception as err :
     print(err)
-
     conn.close()
     return Response(json.dumps(err_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
-
 # ======================   登入會員    ===============================
 @app.route("/api/user/auth", methods = ['GET','PUT'])
 def sign_in():
   err_res = {"error": True,"message":"發生錯誤"}
   secret_key = 'mysecret-key'
   if req.method =='PUT':
-    # print(request==req)
     try:
       conn = pool.get_connection()
       if conn.is_connected():
@@ -94,12 +88,10 @@ def sign_in():
                     sql_user_id = sql_data[0][0]
                     sql_user_name = sql_data[0][1]
                     sql_user_email = sql_data[0][2]
-                    #         # header、payload、signature是後端處理之後變成token給前端
 
                     issued_at = datetime.datetime.utcnow()
                     # expiration = issued_at + datetime.timedelta(seconds=5) 
                     expiration = issued_at + datetime.timedelta(days=7) 
-                    # payload = dict(id=sql_user_id, username=sql_user_name, useremail=sql_user_email)
                     payload = {
                         "id": sql_user_id,
                         "username": sql_user_name,
@@ -128,6 +120,7 @@ def sign_in():
             conn.close()
             err_res['message']='request資料格式錯誤'
             return Response(json.dumps(err_res, ensure_ascii=False), status=400, content_type='application/json; charset=utf-8')
+      conn.close()      
     except Exception as err :
         cursor.close()
         conn.close()
@@ -156,7 +149,10 @@ def sign_in():
                     'name': decoded_token['username'],
                     'email': decoded_token['useremail'],
             }}
+        cursor.close()
+        conn.close()
         return Response(json.dumps(member_data_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
+      conn.close()
     except Exception as err :
         cursor.close()
         conn.close()

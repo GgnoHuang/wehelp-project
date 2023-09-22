@@ -29,22 +29,30 @@ font-style: normal;
 font-family: Noto Sans TC;
 }
 
-.a{
+.nav-actions{
   display: flex;
 }
-.a div{
+.nav-actions div{
   display: flex;
   align-items: center;
   padding: 10px;
 }
-.a a{
-  color: var(--secondary-color-gray-70, #666);
+.nav-actions .logout-btn-hidden{
+  display: none;
+}
+.nav-actions .open-form-btn-hidden{
+  display: none;
+}
 
-font-family: Noto Sans TC;
-font-size: 16px;
-font-style: normal;
-font-weight: 500;
-line-height: 83.125% ;
+
+.nav-actions a{
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 83.125% ;
+  cursor: pointer;
 }
 
 /* ================================================== */
@@ -274,27 +282,37 @@ main{
   line-height: 13.3px;
 }
 
-/* =================== 9/20 ======================================= */
-
+/* =================== MODAL ====================================== */
 .bg-modal{
+  width: 100%;
+  height: 100%;
+  background-color:rgba(0, 0, 0,0);
+  position: fixed;
+  top: 0;
+  transition: all 0.7s ease;
+  pointer-events: none;  
+  z-index: 100;
+}
+
+.form-wrapper{
+  display: flex;
+  justify-content: center;
+  z-index: 101;
   /* display: none; */
   width: 100%;
   height: 100%;
-  background-color:rgb(0, 0, 0,0.25);
   /* 不要用opacity不然子元素會被影響 */
   position: fixed;
   top: 0;
-  display: flex;
-  justify-content: center;
-  /* pointer-events: none; 變成底下的元素也可以點得到*/
+  transition: all 0.3s ease;
+    /* display: none; */
+  pointer-events: none; 
+  transform:translateY(-200%)
 }
-.bg-modal .member-form{
+.form-wrapper .member-form{
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-
-  border: 3px rgb(119, 0, 255) solid;
-
   width: 340px;
   height:fit-content;
   position: relative;
@@ -308,18 +326,17 @@ main{
   transition: top 0.3s ease; /* 添加過渡效果 */
 }
 .member-form .close-btn{
-  border: 1px red solid;
   width: 16px;
   height: 16px;
   position: absolute;
   top:27px;
   right: 17px;
   cursor: pointer;
-  z-index: 99;
+  z-index: 20;
+  
 }
 
 .deco-bar{
-  border: 1px red solid;
   border-radius: 6px 6px 0px 0px;
   width: 100%;
   height: 10px;
@@ -328,40 +345,26 @@ main{
 
 /* ============= 註冊 ================= */
 .member-form .register{
-  border: 1px rgb(0, 255, 68) solid;
   width: 310px;
 
   margin: 15px 0px 15px 0px;
   /* border: 2px rgb(47, 0, 255) solid; */
   display: flex;
   flex-direction: column;
-  /* display: none; */
-/* ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩ */
-/* ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩ */
-/* ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩ */
-/* ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩ */
-/* ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩ */
-/* ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩ */
-/* ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩ */
-/* ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩ */
-/* ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩ */
 
 }
 .register .register-text{
-  border: 1px red solid;
   margin-bottom: 15px;
   height: 27px;
-  /* border: 1px green solid; */
   justify-content: center;
   align-items: center;
   display: flex;
   color: var(--secondary-color-gray-70, #666);
-  /* Header 3 - Blod 24(24) */
   font-family: Noto Sans TC;
   font-size: 24px;
   font-style: normal;
   font-weight: 700;
-  line-height: 24px; /* 100% */
+  line-height: 24px; 
 }
 .register input{
   padding: 15px;
@@ -371,17 +374,20 @@ main{
   border: 1px solid var(--Gray-500, #CCC);
   background: var(--White, #FFF);
 
-  /* Body - Med 16(13.3) */
   font-family: Noto Sans TC;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: 13.3px; /* 83.125% */
+  line-height: 13.3px;
 }
+.username-field-hidden{
+  display: none
+}
+
 .register input::placeholder {
   color: #757575
 }
-.register .submit-btn{
+.register .member-btn,.login-btn,.yeslogout{
   margin-bottom: 10px;
   border-style:none;
   cursor: pointer;
@@ -391,22 +397,22 @@ main{
   border-radius: 5px;
   background: var(--primary-color-cyan-70, #489);
   color: var(--additional-color-white, #FFF);
-  /* Button - Reg 19(16) */
   font-family: Noto Sans TC;
   font-size: 19px;
   font-style: normal;
   font-weight: 400;
-  line-height: 16px; /* 84.211% */
+  line-height: 16px; 
+}
+.member-btn-hidden, .login-btn-hidden,.yeslogout-hidden{
+  display: none;
 }
 
-
-.already{
+.already,.dont-have{
   display: flex;
   justify-content: center;
   align-items: center;
 
   height: 22px;
-  border: 1px red solid;
   color: var(--secondary-color-gray-70, #666);
   font-family: Noto Sans TC;
   font-size: 16px;
@@ -414,19 +420,26 @@ main{
   font-weight: 500;
   line-height: 13.3px; /* 83.125% */
 }
-.already .click-to-login{
+.already .click-to-login,.click-to-register{
   cursor: pointer;
   transition: all 0.4s ease;
 }
+.already-or-donthave-hidden{
+  display: none;
+}
+
+
 .click-to-login:hover {
   color:rgba(68, 136, 153, 1);/* 鼠标悬停时的颜色 */
 }
-.register-msg{
+.click-to-register:hover {
+  color:rgba(68, 136, 153, 1);/* 鼠标悬停时的颜色 */
+}
+.system-msg{
   display: flex;
   justify-content: center;
   align-items: center;
   height: 22px;
-  border: 1px red solid;
   margin-top: 10px;
   color: var(--secondary-color-gray-70, #666);
   font-family: Noto Sans TC;
@@ -434,43 +447,30 @@ main{
   font-style: normal;
   font-weight: 500;
   line-height: 13.3px; /* 83.125% */
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */
+  transition: opacity 0.5s ease-in-out;
+  opacity: 0;
+  color: rgb(227, 60, 60);
+
 }
-.register-msg:empty {
+.system-msg:empty {
   height: 0px; 
-  margin-top: 0px;/* 在没有文本内容时将 margin 设置为零 */
+  margin-top: 0px;/* 沒內容時設為0 */
 }
-
-
 
 /* ＝＝＝＝＝登入＝＝＝＝＝＝＝＝＝＝＝＝ */
 .login{
-  border: 2px red solid;
   position: absolute;
   display: none;
-/* ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩ */
-/* ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩ */
-/* ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩ */
-/* ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩ */
-/* ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩ */
-/* ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩ */
-/* ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩ */
-/* ▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩▩ */
 }
-
 .fade {
   opacity: 0;
   transition: opacity 0.3s ease;
 }
-.member-form input{
-  display: block;
-}
-.logout-btn{
-  display: none;
-}
+/* =================== moadal  =================== moadal  =================== moadal  =================== */
+/* =================== moadal  =================== moadal  =================== moadal  =================== */
+/* =================== moadal  =================== moadal  =================== moadal  =================== */
 
-
-/* ===================以上 9/20 ======================================= */
 
 
 /* =-=▼▼▼▼▼▼▼▼▼▼▼---低於1200---▼▼▼▼▼▼▼▼▼▼▼▼▼▼-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */

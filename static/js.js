@@ -1,65 +1,103 @@
-const closeBtn = document.querySelector('.close-btn');
-const loginFrom= document.querySelector('.login');
-const registerFrom= document.querySelector('.register');
+// ======== Member System  Modal  ====================
+// ======== Member System  Modal  ====================
 
-closeBtn.addEventListener('click',()=>{
-  
-})
-
-
-
-const clickToLogin= document.querySelector('.click-to-login');
-clickToLogin.addEventListener('click',()=>{
-  loginFrom.setAttribute('style','display:block')
-  registerFrom.setAttribute('style','display:none')
-})
-
-
-
-
-
-
-
-// =================== 9/20 =======================================
-const modal = document.querySelector('.bg-modal');
-function openModal() {
-  // modal.style.pointerEvents = 'auto';
+function openFrom(){
   document.body.style.overflow = 'hidden';
-    /* pointer-events: none; 變成底下的元素也可以點得到*/
+  document.querySelector('.form-wrapper')
+  .setAttribute('style','pointer-events: auto;transform:translateY(0%)')
+  document.querySelector('.bg-modal').style.backgroundColor = "rgba(0, 0, 0, 0.25)";
 }
-function closeModal() {
-  // modal.style.display = 'block';
-  modal.style.pointerEvents = 'none';
-      /* pointer-events: none; 變成底下的元素也可以點得到*/
-  // document.body.style.overflow = 'hidden';
+
+
+const closeBtn = document.querySelector('.close-btn');
+closeBtn.addEventListener('click',closeForm)
+function closeForm(){
+  document.querySelector('.form-wrapper')
+  .setAttribute('style','pointer-events: none;transform:translateY(-200%)')
+  document.body.style.overflow = 'visible';
+  document.querySelector('.bg-modal').style.backgroundColor = "rgba(0, 0, 0, 0)";
+  document.getElementById('username').value="";
+  document.getElementById('useremail').value="";
+  document.getElementById('password').value="";
+  document.querySelector(".system-msg").innerHTML="";
 }
-openModal()
 
-// ================註冊=====================================
+function switchToLogin(){
+  const usernameInputBox = document.getElementById("username"); 
+  usernameInputBox.classList.add('username-field-hidden')
+  
+  const registerText= document.querySelector(".register-text"); 
+  registerText.innerHTML='登入會員帳號'
 
+  const already= document.querySelector(".already"); 
+  const donthave =document.querySelector(".dont-have"); 
+  already.classList.add('already-or-donthave-hidden');
+  donthave.classList.remove('already-or-donthave-hidden');
+
+  const loginBtn=document.querySelector('.login-btn');
+  const memberBtn=document.querySelector('.member-btn');
+  loginBtn.classList.remove('member-btn-hidden');
+  memberBtn.classList.add('member-btn-hidden');
+
+  document.getElementById('username').value="";
+  document.getElementById('useremail').value="";
+  document.getElementById('password').value="";
+  document.querySelector(".system-msg").innerHTML="";
+}
+
+function switchToRegister(){
+  const usernameInputBox = document.getElementById("username"); 
+  usernameInputBox.classList.remove("username-field-hidden")
+  
+  const registerText= document.querySelector(".register-text"); 
+  registerText.innerHTML='註冊會員帳號'
+
+  const already= document.querySelector(".already"); 
+  const donthave =document.querySelector(".dont-have"); 
+  already.classList.remove('already-or-donthave-hidden');//
+  donthave.classList.add('already-or-donthave-hidden');
+
+  const loginBtn=document.querySelector('.login-btn');
+  const memberBtn=document.querySelector('.member-btn');
+  loginBtn.classList.add('member-btn-hidden');
+  memberBtn.classList.remove('member-btn-hidden');
+
+  document.getElementById('username').value="";
+  document.getElementById('useremail').value="";
+  document.getElementById('password').value="";
+  document.querySelector(".system-msg").innerHTML=''
+}
+
+//--------- 註冊功能 -----------
 async function register(){
   const apiUrl ='http://127.0.0.1:3000/api/user'
-  const usernameInput = document.getElementById('username').value
-  const useremailInput = document.getElementById('useremail').value
-  const passwordInput = document.getElementById('password').value
-  const registerMsg = document.querySelector(".register-msg")
-
+  const usernameInput = document.getElementById('username').value;
+  const useremailInput = document.getElementById('useremail').value;
+  const passwordInput = document.getElementById('password').value;
+  const systemMsg = document.querySelector(".system-msg");
+  systemMsg.style.color="rgb(227, 60, 60)";
+  systemMsg.innerHTML="";
+  systemMsg.style.opacity=0;
   if(usernameInput == "" || useremailInput == "" || passwordInput == ""){
-    registerMsg.innerHTML='請填寫每個欄位'
+    systemMsg.innerHTML='請填寫每個欄位';
+    systemMsg.style.opacity=1;
     return;
   };
   if(usernameInput != usernameInput.trim() || useremailInput != useremailInput.trim() || passwordInput!=passwordInput.trim()){
-    registerMsg.innerHTML='請勿輸入空格'
+    systemMsg.innerHTML='請勿輸入空格';
+    systemMsg.style.opacity=1;
     return;
   };
   const passwordpattern = /^[a-zA-Z0-9]+$/;
   if(!passwordpattern.test(passwordInput)){
-    registerMsg.innerHTML='僅能輸入英文及數字'
+    systemMsg.innerHTML='僅能輸入英文及數字';
+    systemMsg.style.opacity=1;
     return;
   };
   const emailPattern = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
   if(!emailPattern.test(useremailInput)){
-    registerMsg.innerHTML='請輸入正確的電子信箱格式'
+    systemMsg.innerHTML='請輸入正確的電子信箱格式';
+    systemMsg.style.opacity=1
     return;
   };// ------------------------
   try{
@@ -77,135 +115,167 @@ async function register(){
 
     if (!response.ok) {
       let errData = await response.json()
-
-      registerMsg.innerHTML=errData.message;
+      systemMsg.innerHTML=errData.message;
+      systemMsg.style.opacity=1;
       // alert(errData)
       // document.querySelector(".register-success").innerHTML=errData
-
       throw new Error(errData.message);
-      // Promise 被拒绝： 如果在 Promise 对象中使用 reject() 方法来拒绝 Promise，它将触发 catch 块。
-      // 手动抛出的错误： 您可以使用 throw 语句在代码中手动抛出错误，然后在 catch 块中捕获它们。
     }
     const data = await response.json();
     console.log(data)
-    registerMsg.innerHTML="註冊成功！"
+    systemMsg.innerHTML="註冊成功！";
+    systemMsg.style.color="rgb(69, 199, 89)";
+    systemMsg.style.opacity=1;
     document.getElementById('username').value="";
     document.getElementById('useremail').value="";
     document.getElementById('password').value="";
   }catch(err){
-    // document.querySelector(".register-success").innerHTML="不明錯誤"
     console.error(`請求失敗：${err}`)
   }
 }
 
+////--------- 登入功能 -----------
 async function login(){
-  const loginEmailInput = document.querySelector('.login-email').value
-  const loginPasswordInput = document.querySelector('.login-password').value
-  const loginMsg = document.querySelector(".login-msg")
+  const useremailInput = document.getElementById('useremail').value
+  const passwordInput = document.getElementById('password').value
+  const systemMsg = document.querySelector(".system-msg")
+  if(useremailInput == "" || passwordInput == ""){
+    systemMsg.innerHTML='請填寫每個欄位';
+    systemMsg.style.opacity=1;
+    return;
+  };
+  if(useremailInput != useremailInput.trim() || passwordInput!=passwordInput.trim()){
+    systemMsg.innerHTML='請勿輸入空格';
+    systemMsg.style.opacity=1;
+    return;
+  };
+  const passwordpattern = /^[a-zA-Z0-9]+$/;
+  if(!passwordpattern.test(passwordInput)){
+    systemMsg.innerHTML='僅能輸入英文及數字';
+    systemMsg.style.opacity=1;
+    return;
+  };
+  const emailPattern = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+  if(!emailPattern.test(useremailInput)){
+    systemMsg.innerHTML='請輸入正確的電子信箱格式';
+    systemMsg.style.opacity=1;
+    return;
+  };
   try{
     const apiUrl ='http://127.0.0.1:3000/api/user/auth'
     const res = await fetch(apiUrl,{
       method:'PUT',
       headers:{
-        // 'Accept': 'application/json', //???????????????????
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        "useremail": loginEmailInput,
-        "password": loginPasswordInput
+        "useremail": useremailInput,
+        "password": passwordInput
       })
     })
     if(!res.ok){
-      // const errData = await response.response.json()
-      // loginMsg.innerHTML=errData.message
       const data = await res.json();
-      // console.error(data)
       errData = data.message;
-      loginMsg.innerHTML = errData;
+      systemMsg.innerHTML = errData;
+      systemMsg.style.opacity=1;
       throw new Error(errData);
     }
     const data = await res.json();
+    console.log(data)
     const token = data.token
     localStorage.setItem('token', token);
-    loginMsg.innerHTML='登入成功，取得token';
+    // systemMsg.innerHTML='登入成功';
+    // systemMsg.style.color="rgb(69, 199, 89)"
+    // systemMsg.style.opacity=1;
+    document.getElementById('useremail').value="";
+    document.getElementById('password').value="";
 
-    document.querySelector('.login-btn').style.display="none"
-    document.querySelector('.logout-btn').style.display="block"
-    document.querySelector('.login-email').value="";
-    document.querySelector('.login-password').value="";
-    checkUserAuth()
+    document.querySelector('.open-form-btn').classList.add("open-form-btn-hidden");//登入註冊選單按鈕消失
+    document.querySelector('.logout-btn').classList.remove("logout-btn-hidden");//登出按鈕出現
+
+    document.getElementById('useremail').value="";
+    document.getElementById('password').value="";
+
+    location.reload();
   }
   catch(err){
     console.error(err);
   }
 }
+// function loginSuccess(){
+//   document.body.style.overflow = 'hidden';
+//   document.querySelector('.form-wrapper')
+//   .setAttribute('style','pointer-events: auto;transform:translateY(0%)')
+//   document.querySelector('.bg-modal').style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+// }
 
 
+function confirmLogout(){
+  document.body.style.overflow = 'hidden';
+  document.querySelector('.form-wrapper')
+  .setAttribute('style','pointer-events: auto;transform:translateY(0%)')
+  document.querySelector('.bg-modal').style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+  
+  document.getElementById("username").classList.add("username-field-hidden")
+  document.getElementById("useremail").classList.add("username-field-hidden")
+  document.getElementById("password").classList.add("username-field-hidden")
+    
+  const registerText= document.querySelector(".register-text"); 
+  registerText.innerHTML='確定要登出嗎？'
+
+  document.querySelector(".already").classList.add('already-or-donthave-hidden');
+  document.querySelector(".dont-have").classList.add('already-or-donthave-hidden');
+
+  document.querySelector('.login-btn').classList.add('member-btn-hidden');
+  document.querySelector('.member-btn').classList.add('member-btn-hidden');
+
+  document.querySelector('.yeslogout').classList.remove('yeslogout-hidden');
+  document.querySelector(".system-msg").innerHTML=''
+}
+
+function logout(){
+  localStorage.removeItem("token");
+  document.querySelector('.open-form-btn').classList.remove("open-form-btn-hidden");//登入註冊選單按鈕消失
+  document.querySelector('.logout-btn').classList.add("logout-btn-hidden");//登出按鈕出現
+  document.querySelector('.yeslogout').classList.add('logout-btn-hidden');
+
+  location.reload();
+}
+// -----------  確認會員狀態 -----------------
 async function checkUserAuth(){
-  document.querySelector('.login-btn').style.display = "none"
-  document.querySelector('.logout-btn').style.display = "none"
+  document.querySelector('.open-form-btn').classList.remove("open-form-btn-hidden");//登入註冊選單按鈕出現
+  document.querySelector('.logout-btn').classList.add("logout-btn-hidden");//登出按鈕消失
   const token = localStorage.getItem('token')
-  if(token == null){ // 沒有token情況直接return就不fetch了
-    document.querySelector('.login-btn').style.display="block"
-    document.querySelector('.logout-btn').style.display="none"
-    return
-  }
+  if( token == null ) { return } // 沒有token情況直接return就不fetch了
   try{
     const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
       method:'GET',
       headers:{'Authorization': 'Bearer '+token}
     })
-    if(!res.ok){ //有token但過期，api判斷token過期 會進入except，得到500狀態碼所以!res.ok
-      console.log('用戶未登入')
-      document.querySelector('.login-btn').style.display = "block"
+    if(!res.ok){ //有token但過期，api判斷token過期 得到500狀態碼所以!res.ok，進入except，
+      console.error('用戶未登入');
       localStorage.removeItem("token");
       return;
     }
     const data = await res.json();
-    console.log(data)
-    // if(data.data == null){
-    //   console.log(data)
-    //   console.log(`${data.data}～～～${data.data == null}`)
-
-    //   // document.querySelector(".login-msg").innerHTML='已過期請重新登入';
-    
-    // }
-    // console.log(data)
+    if(data.data == null){
+      console.log(data)
+      return
+    }else if(data.data!==null){
     const userData = data.data
     const userIdData = userData['id']
     const userEmailData = userData['email']
     const userNameData = userData['name']
     console.log(userIdData,userNameData,userEmailData)
-    document.querySelector(".login-msg").innerHTML=`哈囉使用者，你id:${userIdData}你eamil:${userEmailData}你名字：${userNameData}`;
-    document.querySelector('.logout-btn').style.display="block"
+    document.querySelector('.open-form-btn').classList.add("open-form-btn-hidden");//登入註冊選單按鈕出現
+    document.querySelector('.logout-btn').classList.remove("logout-btn-hidden");//登出按鈕消失
+    }
   }
   catch{
-    console.error("catch了");
+    console.error("catch");
   }
 }
 checkUserAuth();
-
-function logout(){
-  document.querySelector('.login-btn').style.display="block"
-  document.querySelector('.logout-btn').style.display="none"
-  localStorage.removeItem("token");
-  document.querySelector(".login-msg").innerHTML='登出成功';
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // =====// ▼ ▼ ▼載入各個捷運站按鈕▼ ▼ ▼ ▼ ▼ =====// =====// =====// =====// =====
