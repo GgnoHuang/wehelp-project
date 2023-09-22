@@ -169,7 +169,7 @@ async function login(){
   };
 
   try{
-    const apiUrl ='http://54.65.60.124:3000/api/auth'
+    const apiUrl ='http://54.65.60.124:3000/api/user/auth'
     const res = await fetch(apiUrl,{
       method:'PUT',
       headers:{
@@ -253,7 +253,7 @@ async function checkUserAuth(){
     return
   }
   try{
-    const res = await fetch('http://54.65.60.124:3000/api/auth',{
+    const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
       method:'GET',
       headers:{'Authorization': 'Bearer '+token}
     })
