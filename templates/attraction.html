@@ -45,7 +45,7 @@
         </div>
 
         <div class="nav-actions">
-          <div><a>預定行程</a></div>
+          <div onclick="mybooking()"><a>預定行程</a></div>
           <div class=" open-form-btn" onclick="openFrom()"><a>登入/註冊</a></div>
           <div class=" logout-btn logout-btn-hidden" onclick="logout()" ><a>登出系統</a></div>
         </div>
@@ -82,7 +82,7 @@
               <div class="date-picker">
                 <p>選擇日期：</p>
                 <div class="calendar">
-                  <input type="date">
+                  <input type="date" class="user-booking-date">
                 </div>
               </div>
               
@@ -126,7 +126,7 @@
                 <p class="price">請選擇時間</p>
               </div>
 
-              <div class="booking-btn">
+              <div class="booking-btn" onclick="startBooking()">
                 <p>
                   開始預約行程
                 </p>

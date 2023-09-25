@@ -1,9 +1,43 @@
 
 
+// 要用前端還後端決定要跳轉？
 
-
-
-
+async function mybooking(){
+  const token = localStorage.getItem('token')
+  if(token == null){
+    openFrom();
+    return; // 沒有token情況直接return就不fetch了
+  } 
+  try{
+    // const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
+    const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
+      method:'GET',
+      headers:{'Authorization': 'Bearer '+token}
+    })
+    if(!res.ok){ //有token但過期，api判斷token過期 得到500狀態碼所以!res.ok，進入except，
+      console.error('用戶未登入');
+      localStorage.removeItem("token");
+      openFrom();
+      return;
+    }
+    const data = await res.json();
+    console.log(data)
+    if(data.data == null){
+      console.log(data)
+      return;
+    }
+    else if(data.data != null){
+      // 只要有點可能null，我就不給執行
+    // 只要有一點點的可能性是null那就不讓執行
+      
+      // 發送請求booking api請求
+      window.location.href = "http://127.0.0.1:3000/booking";
+    }
+  }
+  catch{
+    console.error("catch");
+  }
+}
 
 
 
@@ -206,7 +240,6 @@ async function login(){
     console.error(err);
   }
 }
-
 
 function logout(){
   document.body.style.overflow = 'hidden';

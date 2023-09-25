@@ -7,7 +7,6 @@ import json
 
 import jwt
 import datetime
-
 # ------------------------
 app=Flask(__name__,
         static_folder='static',
@@ -28,10 +27,113 @@ dbconfig = {
 }
 pool = mysql.connector.pooling.MySQLConnectionPool(**dbconfig)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # son_dumps(dict)时，如果dict包含有汉字，
+    # 一定加上ensure_ascii=False。否则按参数默认值True，
+    # 意思是保证dumps之后的结果里所有的字符都能够被ascii表示，
+    # 汉字在ascii的字符集里面，因此经过dumps以后的str里，汉字会变成对应的unicode。
 
-# @app.route("/api/booking",methods = ["GET","POST","DELETE"])
-# def booking():
-#     return
+@app.route("/api/booking", methods = ["GET", "POST", "DELETE"])
+def api_booking():
+    err_res = { "error": True, "message": "發生錯誤" }#  或 err_res=dict(error=True,message="發生錯誤")
+    try:
+        conn = pool.get_connection()
+        if conn.is_connected():
+            cursor = conn.cursor()
+            
+            if req.method == 'POST':
+                if not req.is_json: # 確定他是一個json
+                    conn.close()
+                    err_res["message"] = "request body必須為json格式"
+                    return Response(json.dumps(err_res, ensure_ascii=False), status=400, content_type='application/json; charset=utf-8')
+                reqData = request.get_json()
+                print(f"前端傳來的：{reqData}")
+
+                reqToken = req.headers['Authorization'].split()[1]
+
+                secret_key = 'mysecret-key'
+                decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
+                memberid=decoded_token['id']
+                print(f"會員id：{memberid}")
+
+                attractionId=reqData['attractionId']
+                date=reqData['date']
+                time=reqData['time']
+                price=reqData['price']
+                print(memberid,attractionId,date,time,price)
+
+                cursor.execute("DELETE FROM orders WHERE member_id = %s;",(memberid,))# 先清空這位會員預訂的
+                conn.commit() 
+                cursor.execute(
+                    "INSERT INTO orders(member_id, place_id, travel_date, time_slot, price) VALUES(%s, %s, STR_TO_DATE(%s,'%Y-%m-%d'), %s, %s);",
+                    (memberid, attractionId, date, time, price))
+                conn.commit() 
+
+                conn.close()
+                ok_res = { "ok": True }
+                return Response(json.dumps(ok_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
+            
+            if req.method == 'GET':
+                reqToken = req.headers['Authorization'].split()[1]
+
+                secret_key = 'mysecret-key'
+                decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
+                memberid=decoded_token['id']
+                print(f"會員id：{memberid}")
+                print(f"會員id：{decoded_token['username']}")
+
+                cursor.execute("SELECT orders.place_id, places.name, places.address,(SELECT url FROM images i WHERE i.place_id = places.id LIMIT 1) AS url,orders.travel_date, orders.time_slot, orders.price FROM orders INNER JOIN places ON orders.place_id = places.id WHERE orders.member_id = %s;",
+                            (memberid,))
+                sql_booking_data = cursor.fetchone()
+
+                print(sql_booking_data[4].strftime("%Y-%-m-%-d"))
+
+                booking_res = {
+                    "data": {
+                        "attraction": {
+                        "id": sql_booking_data[0],
+                        "name": sql_booking_data[1],
+                        "address": sql_booking_data[2],
+                        "image":sql_booking_data[3],
+                        },
+                        "date": sql_booking_data[4].strftime("%Y-%-m-%-d"),
+                        "time": sql_booking_data[5],
+                        "price":sql_booking_data[6],
+                }}
+                print(sql_booking_data)
+                conn.close()
+                return Response(json.dumps(booking_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
+            if req.method == 'DELETE':
+                conn.close()
+                return Response(json.dumps(err_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
+        conn.close()
+    except Exception as err :
+        print(err)
+        conn.close()
+        return Response(json.dumps(err_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -147,10 +249,8 @@ def sign_in():
         conn.close()
         err_res['message']='伺服器發生錯誤'
         return Response(json.dumps(err_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
-    
-    # ============   頁面加載判斷是否為登入  ========================
+    # ============   取得當前登入的會員資料  ========================
   if req.method =='GET':
-    # reqToken = None
     try:
       conn = pool.get_connection()
       if conn.is_connected():
@@ -159,7 +259,6 @@ def sign_in():
         reqToken = req.headers['Authorization'].split()[1]
 
         decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
-        
         member_data_res = {
             "data":{"id": decoded_token['id'],
                     'name': decoded_token['username'],
@@ -344,14 +443,7 @@ def api_attractions():
         print(err)
         cursor.close()
         conn.close()
-
-
         return Response(json.dumps(error_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
-    # son_dumps(dict)时，如果dict包含有汉字，
-    # 一定加上ensure_ascii=False。否则按参数默认值True，
-    # 意思是保证dumps之后的结果里所有的字符都能够被ascii表示，
-    # 汉字在ascii的字符集里面，因此经过dumps以后的str里，汉字会变成对应的unicode。
-
 
 
 @app.route("/api/attraction/<id>")
@@ -360,7 +452,6 @@ def api_attraction_id(id):
         "error": True,
         "message":"伺服器發生錯誤"
     }
-
     try:
         conn = pool.get_connection()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
