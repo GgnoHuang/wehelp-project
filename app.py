@@ -29,6 +29,17 @@ dbconfig = {
 pool = mysql.connector.pooling.MySQLConnectionPool(**dbconfig)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+# @app.route("/api/booking",methods = ["GET","POST","DELETE"])
+# def booking():
+#     return
+
+
+
+
+
+
+
+
 @app.route("/")
 def index():
 	return render_template("index.html")
@@ -100,7 +111,7 @@ def sign_in():
                     sql_user_email = sql_data[0][2]
 
                     issued_at = datetime.datetime.utcnow()
-                    # expiration = issued_at + datetime.timedelta(seconds=5) 
+                    # expiration = issued_at + datetime.timedelta(seconds=10) 
                     expiration = issued_at + datetime.timedelta(days=7) 
                     payload = {
                         "id": sql_user_id,
@@ -146,7 +157,9 @@ def sign_in():
         cursor = conn.cursor()
         member_data_res = { "data": None }
         reqToken = req.headers['Authorization'].split()[1]
+
         decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
+        
         member_data_res = {
             "data":{"id": decoded_token['id'],
                     'name': decoded_token['username'],

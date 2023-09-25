@@ -22,7 +22,7 @@
           <input id="password" type="password" name="password" placeholder="輸入密碼">
           <button class="member-btn member-btn-hidden" onclick="register()">註冊新帳戶</button>
           <button class="login-btn" onclick="login()">登入</button>
-          <button class="yeslogout yeslogout-hidden" onclick="logout()">確定登出</button>
+          <button class="confirm-logout confirm-logout-hidden" onclick="confirmLogout()">確定登出</button>
         <!-- </form> -->
           <p class="already already-or-donthave-hidden" >已經有帳戶了？<span class="click-to-login" onclick="switchToLogin()">點此登入</span></p>
           <p class="dont-have">還沒有帳戶？<span class="click-to-register" onclick="switchToRegister()">點此註冊</span></p>
@@ -46,8 +46,8 @@
 
         <div class="nav-actions">
           <div><a>預定行程</a></div>
-          <div class="open-member-btn open-form-btn" onclick="openFrom()"><a>登入/註冊</a></div>
-          <div class="open-member-btn logout-btn logout-btn-hidden" onclick="confirmLogout()" ><a>登出系統</a></div>
+          <div class=" open-form-btn" onclick="openFrom()"><a>登入/註冊</a></div>
+          <div class=" logout-btn logout-btn-hidden" onclick="logout()" ><a>登出系統</a></div>
         </div>
     </div>
   </header>

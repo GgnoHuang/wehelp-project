@@ -213,7 +213,7 @@ async function login(){
 // =======================================
 
 
-function confirmLogout(){
+function logout(){
   document.body.style.overflow = 'hidden';
   document.querySelector('.form-wrapper')
   .setAttribute('style','pointer-events: auto;transform:translateY(0%)')
@@ -232,15 +232,15 @@ function confirmLogout(){
   document.querySelector('.login-btn').classList.add('member-btn-hidden');
   document.querySelector('.member-btn').classList.add('member-btn-hidden');
 
-  document.querySelector('.yeslogout').classList.remove('yeslogout-hidden');
+  document.querySelector('.confirm-logout').classList.remove('confirm-logout-hidden');
   document.querySelector(".system-msg").innerHTML=''
 }
 
-function logout(){
+function confirmLogout(){
   localStorage.removeItem("token");
   document.querySelector('.open-form-btn').classList.remove("open-form-btn-hidden");//登入註冊選單按鈕消失
   document.querySelector('.logout-btn').classList.add("logout-btn-hidden");//登出按鈕出現
-  document.querySelector('.yeslogout').classList.add('logout-btn-hidden');
+  document.querySelector('.confirm-logout').classList.add('logout-btn-hidden');
   checkUserAuth();
   location.reload();
 }

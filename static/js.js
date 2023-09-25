@@ -1,3 +1,12 @@
+
+
+
+
+
+
+
+
+
 // ======== Member System  Modal  ====================
 // ======== Member System  Modal  ====================
 
@@ -70,34 +79,32 @@ function switchToRegister(){
 
 //--------- 註冊功能 -----------
 async function register(){
-  const apiUrl ='http://54.65.60.124:3000/api/user'
+  // const apiUrl ='http://54.65.60.124:3000/api/user'
+  const apiUrl ='http://127.0.0.1:3000/api/user'
+
   const usernameInput = document.getElementById('username').value;
   const useremailInput = document.getElementById('useremail').value;
   const passwordInput = document.getElementById('password').value;
   const systemMsg = document.querySelector(".system-msg");
   systemMsg.style.color="rgb(227, 60, 60)";
   systemMsg.innerHTML="";
-  systemMsg.style.opacity=0;
+  /*這邊css中使用了 .system-msg:empty{} */
   if(usernameInput == "" || useremailInput == "" || passwordInput == ""){
     systemMsg.innerHTML='請填寫每個欄位';
-    systemMsg.style.opacity=1;
     return;
   };
   if(usernameInput != usernameInput.trim() || useremailInput != useremailInput.trim() || passwordInput!=passwordInput.trim()){
     systemMsg.innerHTML='請勿輸入空格';
-    systemMsg.style.opacity=1;
     return;
   };
   const passwordpattern = /^[a-zA-Z0-9]+$/;
   if(!passwordpattern.test(passwordInput)){
     systemMsg.innerHTML='僅能輸入英文及數字';
-    systemMsg.style.opacity=1;
     return;
   };
   const emailPattern = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
   if(!emailPattern.test(useremailInput)){
     systemMsg.innerHTML='請輸入正確的電子信箱格式';
-    systemMsg.style.opacity=1
     return;
   };// ------------------------
   try{
@@ -116,7 +123,6 @@ async function register(){
     if (!response.ok) {
       let errData = await response.json()
       systemMsg.innerHTML=errData.message;
-      systemMsg.style.opacity=1;
       // alert(errData)
       // document.querySelector(".register-success").innerHTML=errData
       throw new Error(errData.message);
@@ -125,7 +131,6 @@ async function register(){
     console.log(data)
     systemMsg.innerHTML="註冊成功！";
     systemMsg.style.color="rgb(69, 199, 89)";
-    systemMsg.style.opacity=1;
     document.getElementById('username').value="";
     document.getElementById('useremail').value="";
     document.getElementById('password').value="";
@@ -139,30 +144,30 @@ async function login(){
   const useremailInput = document.getElementById('useremail').value
   const passwordInput = document.getElementById('password').value
   const systemMsg = document.querySelector(".system-msg")
+  systemMsg.innerHTML=""
+   /*這邊css中使用了 .system-msg:empty{} */
   if(useremailInput == "" || passwordInput == ""){
     systemMsg.innerHTML='請填寫每個欄位';
-    systemMsg.style.opacity=1;
     return;
   };
   if(useremailInput != useremailInput.trim() || passwordInput!=passwordInput.trim()){
     systemMsg.innerHTML='請勿輸入空格';
-    systemMsg.style.opacity=1;
     return;
   };
   const passwordpattern = /^[a-zA-Z0-9]+$/;
   if(!passwordpattern.test(passwordInput)){
     systemMsg.innerHTML='僅能輸入英文及數字';
-    systemMsg.style.opacity=1;
     return;
   };
   const emailPattern = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
   if(!emailPattern.test(useremailInput)){
     systemMsg.innerHTML='請輸入正確的電子信箱格式';
-    systemMsg.style.opacity=1;
     return;
   };
   try{
-    const apiUrl ='http://54.65.60.124:3000/api/user/auth'
+
+    // const apiUrl ='http://54.65.60.124:3000/api/user/auth'
+    const apiUrl ='http://127.0.0.1:3000/api/user/auth'
     const res = await fetch(apiUrl,{
       method:'PUT',
       headers:{
@@ -177,7 +182,6 @@ async function login(){
       const data = await res.json();
       errData = data.message;
       systemMsg.innerHTML = errData;
-      systemMsg.style.opacity=1;
       throw new Error(errData);
     }
     const data = await res.json();
@@ -202,15 +206,9 @@ async function login(){
     console.error(err);
   }
 }
-// function loginSuccess(){
-//   document.body.style.overflow = 'hidden';
-//   document.querySelector('.form-wrapper')
-//   .setAttribute('style','pointer-events: auto;transform:translateY(0%)')
-//   document.querySelector('.bg-modal').style.backgroundColor = "rgba(0, 0, 0, 0.25)";
-// }
 
 
-function confirmLogout(){
+function logout(){
   document.body.style.overflow = 'hidden';
   document.querySelector('.form-wrapper')
   .setAttribute('style','pointer-events: auto;transform:translateY(0%)')
@@ -229,15 +227,15 @@ function confirmLogout(){
   document.querySelector('.login-btn').classList.add('member-btn-hidden');
   document.querySelector('.member-btn').classList.add('member-btn-hidden');
 
-  document.querySelector('.yeslogout').classList.remove('yeslogout-hidden');
+  document.querySelector('.confirm-logout').classList.remove('confirm-logout-hidden');
   document.querySelector(".system-msg").innerHTML=''
 }
 
-function logout(){
+function confirmLogout(){
   localStorage.removeItem("token");
   document.querySelector('.open-form-btn').classList.remove("open-form-btn-hidden");//登入註冊選單按鈕消失
   document.querySelector('.logout-btn').classList.add("logout-btn-hidden");//登出按鈕出現
-  document.querySelector('.yeslogout').classList.add('logout-btn-hidden');
+  document.querySelector('.confirm-logout').classList.add('logout-btn-hidden');
 
   location.reload();
 }
@@ -248,7 +246,8 @@ async function checkUserAuth(){
   const token = localStorage.getItem('token')
   if( token == null ) { return } // 沒有token情況直接return就不fetch了
   try{
-    const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
+    // const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
+    const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
       method:'GET',
       headers:{'Authorization': 'Bearer '+token}
     })
