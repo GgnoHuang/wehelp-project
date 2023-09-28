@@ -211,7 +211,7 @@ body {
 /* =================== moadal  =================== moadal  =================== moadal  =================== */
 .nav-wrapper {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   display: flex;
   justify-content: center;
   height: 54px;
@@ -272,7 +272,7 @@ body {
 }
 .hello p {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   width: 1000px;
   padding: 6px 0px 5px 0px;
   color: var(--secondary-color-gray-70, #666);
@@ -290,7 +290,7 @@ body {
 }
 .place-info-area-wrapper .place-info-area {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   display: flex;
   width: 980px;
   height: 200px;
@@ -298,7 +298,7 @@ body {
 }
 .place-info-area-wrapper .place-info-area .place-img {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   width: 250px;
   height: 200px;
   margin-right: 30px;
@@ -311,7 +311,7 @@ body {
 }
 .place-info-area-wrapper .place-info-area .place-booking-info {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   width: 700px;
   position: relative;
 }
@@ -326,7 +326,7 @@ body {
 }
 .place-info-area-wrapper .place-info-area .place-booking-info .place-name {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   display: flex;
   align-items: center;
   height: 24px;
@@ -341,7 +341,7 @@ body {
 }
 .place-info-area-wrapper .place-info-area .place-booking-info .booking-info {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   display: flex;
   height: 24px;
   padding: 5px 0px;
@@ -349,7 +349,7 @@ body {
 }
 .place-info-area-wrapper .place-info-area .place-booking-info .booking-info .key {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   color: var(--secondary-color-gray-70, #666);
   font-family: Noto Sans TC;
   font-size: 16px;
@@ -360,7 +360,7 @@ body {
 }
 .place-info-area-wrapper .place-info-area .place-booking-info .booking-info .value {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   color: var(--secondary-color-gray-70, #666);
   font-family: Noto Sans TC;
   font-size: 16px;
@@ -386,17 +386,17 @@ body {
   justify-content: center;
   margin-bottom: 40px;
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
 }
 .contact-info-wrapper .contact-info {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   width: 980px;
 }
 
 .your-contact-info {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   height: 24px;
   margin-bottom: 20px;
   display: flex;
@@ -457,17 +457,17 @@ body {
   justify-content: center;
   margin-bottom: 40px;
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
 }
 .credit-info-wrapper .credit-info {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   width: 980px;
 }
 
 .your-credit-info {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   height: 24px;
   margin-bottom: 20px;
   display: flex;
@@ -482,14 +482,14 @@ body {
 
 .credit-key {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   display: flex;
   height: 38px;
   margin-bottom: 15px;
 }
 .credit-key p {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   align-self: center;
   color: var(--secondary-color-gray-70, #666);
   /* Body - Med 16(13.3) */
@@ -523,17 +523,17 @@ body {
   justify-content: center;
   margin-bottom: 40px;
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
 }
 .confirm-booking-wrapper .confirm-booking {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   width: 980px;
   height: 100px;
 }
 .confirm-booking-wrapper .confirm-booking p {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   display: flex;
   align-items: center;
   justify-content: end;
@@ -548,13 +548,13 @@ body {
 }
 .confirm-booking-wrapper .confirm-booking .okk {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   display: flex;
   justify-content: end;
 }
 .confirm-booking-wrapper .confirm-booking .okk .ok {
   border: red solid;
-  border-width: 0px;
+  border-width: 1px;
   cursor: pointer;
   border-radius: 5px;
   background: var(--primary-color-cyan-70, #489);
@@ -568,6 +568,25 @@ body {
   font-style: normal;
   font-weight: 400;
   line-height: 16px; /* 84.211% */
+}
+
+.footer {
+  border: red solid;
+  border-width: 5px;
+  height: 104px;
+  background-color: rgb(117, 117, 117);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer p {
+  color: var(--additional-color-white, #FFF);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 13.3px;
 }
 
 /* =-=▼▼▼▼▼▼▼▼▼▼▼---低於1200---▼▼▼▼▼▼▼▼▼▼▼▼▼▼-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */

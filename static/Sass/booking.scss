@@ -5,7 +5,7 @@
   text-decoration: none;
 }
 
-@mixin border($px: 0px,$color:red) {
+@mixin border($px: 1px,$color:red) {
   border:$color solid;
   border-width: $px;
 }
@@ -464,9 +464,6 @@ body{
 
 // ------------------------------
 
-
-
-
 .credit-info-wrapper{
   display: flex;
   justify-content: center;
@@ -584,10 +581,37 @@ body{
 }
 
 
+// ------------  f o o t e r  -------------
+.footer{
+  @include border(5px);
+  height: 104px;
+
+  background-color: rgba(117, 117, 117, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.footer p{
+  color: var(--additional-color-white, #FFF);
+  font-family: Noto Sans TC;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 13.3px;
+}
 
 
-
-
+// --------------------------------------------
+@media(max-width:375px){
+  // .footer-wrapper{
+  //   display: flex;
+  //   justify-content: center;
+  // }
+  // .footer{
+  //   width: 360px;
+  // }
+  // 應該不用設定這樣吧？footer都是怎麼拉就變多大吧
+}
 
 
 

@@ -1,6 +1,4 @@
-function mybooking(){
-  location.reload();
-}
+function mybooking(){ location.reload(); }
 
 // ================ modal =======================================
 function openFrom(){
@@ -221,6 +219,7 @@ function logout(){
   document.querySelector('.member-btn').classList.add('member-btn-hidden');
 
   document.querySelector('.confirm-logout').classList.remove('confirm-logout-hidden');
+  document.querySelector('.confirm-logout').style.margin = "0";
   document.querySelector('.confirm-delete').classList.add('confirm-delete-hidden');
 
   document.querySelector(".system-msg").innerHTML=''
@@ -236,25 +235,6 @@ function confirmLogout(){
   // location.reload();
 }
 // ===================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -310,11 +290,25 @@ async function loadBookingInfo(){
     })
     if (!res.ok){
       let errData = await res.json()
+      if(errData.error){
+        console.log('這邊開始寫讓頁面清空的代碼');
+        const bd=document.querySelector("body")
+        bd.removeChild(document.querySelector(".place-info-area-wrapper"));
+        bd.removeChild(document.querySelector(".contact-info-wrapper"));
+        bd.removeChild(document.querySelector(".credit-info-wrapper"));
+        bd.removeChild(document.querySelector(".confirm-booking-wrapper"));
+        document.querySelectorAll(".separator").forEach(separator=>{
+          bd.removeChild(separator);
+        });
+        console.log( window.innerHeight)
+
+      }
       throw new Error(errData.message);
     }
     const data = await res.json();
+    console.log(1111111111)
     console.log(data);
-
+    console.log(1111111111)
     const attractionName = data.data.attraction.name;
     const attractionAdd = data.data.attraction.address;
     const attractionImg = data.data.attraction.image;
@@ -342,7 +336,6 @@ loadBookingInfo();
 
 
 
-
 function deleteBooking(){
   document.body.style.overflow = 'hidden';
   document.querySelector('.form-wrapper')
@@ -364,11 +357,10 @@ function deleteBooking(){
 
   document.querySelector('.confirm-logout').classList.add('confirm-logout-hidden');
   document.querySelector('.confirm-delete').classList.remove('confirm-delete-hidden');
+  document.querySelector('.confirm-delete').style.margin = "0";
 
   document.querySelector(".system-msg").innerHTML=''
 }
-
-
 
 
 async function confirmDeleteBooking(){

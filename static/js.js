@@ -265,6 +265,7 @@ function logout(){
   document.querySelector('.member-btn').classList.add('member-btn-hidden');
 
   document.querySelector('.confirm-logout').classList.remove('confirm-logout-hidden');
+  document.querySelector('.confirm-logout').style.margin = "0";
   document.querySelector(".system-msg").innerHTML=''
 }
 
@@ -405,8 +406,15 @@ function handleIntersection(entries){
             io.disconnect();
             console.log('nextPage為null，停止觀測')
           }
-          if(imgZone.innerHTML==""){
-            imgZone.innerHTML=` <h3>查無景點資料</h3>`
+          if(imgZone.innerHTML==""){ //沒搜到
+            if(document.querySelector(".no-search-result")==null){
+              const NewDiv = document.createElement('div');
+              NewDiv.className='no-search-result';
+              NewDiv.innerHTML="找不到符合搜尋的結果";
+              document.querySelector(".mainwrapper").appendChild(NewDiv)
+            }
+          }else if(document.querySelector(".no-search-result")!=null){
+            document.querySelector(".mainwrapper").removeChild(document.querySelector(".no-search-result"))
           }
         })
         .catch(error => {

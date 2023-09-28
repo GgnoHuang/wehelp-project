@@ -111,70 +111,6 @@ async function startBooking(){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 async function mybooking(){
   const token = localStorage.getItem('token')
   if(token == null){
@@ -450,6 +386,7 @@ function logout(){
   document.querySelector('.member-btn').classList.add('member-btn-hidden');
 
   document.querySelector('.confirm-logout').classList.remove('confirm-logout-hidden');
+  document.querySelector('.confirm-logout').style.margin = "0";
   document.querySelector(".system-msg").innerHTML=''
 }
 

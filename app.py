@@ -73,9 +73,7 @@ def api_booking():
                 return Response(json.dumps(ok_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
             
             if req.method == 'GET':
-                err_res["message"]='沒有訂購的資料'
                 reqToken = req.headers['Authorization'].split()[1]
-
                 secret_key = 'mysecret-key'
                 decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
                 memberid = decoded_token['id']
@@ -85,9 +83,12 @@ def api_booking():
                 cursor.execute("SELECT orders.place_id, places.name, places.address,(SELECT url FROM images i WHERE i.place_id = places.id LIMIT 1) AS url,orders.travel_date, orders.time_slot, orders.price FROM orders INNER JOIN places ON orders.place_id = places.id WHERE orders.member_id = %s;",
                             (memberid,))
                 sql_booking_data = cursor.fetchone()
-
+                print(sql_booking_data)
+                if sql_booking_data == None:
+                    err_res["message"]='沒有訂購的資料'
+                    conn.close()
+                    return Response(json.dumps(err_res, ensure_ascii=False), status=400, content_type='application/json; charset=utf-8')
                 print(sql_booking_data[4].strftime("%Y-%-m-%-d"))
-
                 booking_res = {
                     "data": {
                         "attraction": {
@@ -100,6 +101,7 @@ def api_booking():
                         "time": sql_booking_data[5],
                         "price":sql_booking_data[6],
                 }}
+
                 print(sql_booking_data)
                 conn.close()
                 return Response(json.dumps(booking_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
