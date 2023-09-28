@@ -1,3 +1,6 @@
+function mybooking(){
+  location.reload();
+}
 
 // ================ modal =======================================
 function openFrom(){
@@ -218,6 +221,8 @@ function logout(){
   document.querySelector('.member-btn').classList.add('member-btn-hidden');
 
   document.querySelector('.confirm-logout').classList.remove('confirm-logout-hidden');
+  document.querySelector('.confirm-delete').classList.add('confirm-delete-hidden');
+
   document.querySelector(".system-msg").innerHTML=''
 }
 
@@ -305,10 +310,8 @@ async function loadBookingInfo(){
     })
     if (!res.ok){
       let errData = await res.json()
-      console.log('response不ok')
       throw new Error(errData.message);
     }
-
     const data = await res.json();
     console.log(data);
 
@@ -331,36 +334,64 @@ async function loadBookingInfo(){
     document.querySelector(".add").innerHTML=attractionAdd;
 
     console.log(attractionName,attractionAdd,attractionImg,bookingDate,bookingTime,bookingPrice);
-  }catch{
-    console.log("catch");
+  }catch(err){
+    console.log(err);
   }
 }
 loadBookingInfo();
-// try{
-//   const currentUrl = window.location.href;
-//   console.log(currentUrl)
-//   // const response = await fetch(apiUrl,{
-//   //   method:'POST',
-//   //   headers:{
-//   //     'Content-Type': 'application/json'
-//   //   },
-//   //   body: JSON.stringify({
-
-//   //     "attractionId": 10,
-//   //     "date": userInput,
-//   //     "time": "afternoon",
-//   //     "price": 2500
-//   //   })
-//   // })
-//   if (!response.ok) {
-//     let errData = await response.json()
-
-//     throw new Error(errData.message);
-//   }
-//   // const data = await response.json();
 
 
-// }catch(err){
-//   // document.querySelector(".register-success").innerHTML="不明錯誤"
-//   console.error(`請求失敗：${err}`)
-// }
+
+
+function deleteBooking(){
+  document.body.style.overflow = 'hidden';
+  document.querySelector('.form-wrapper')
+  .setAttribute('style','pointer-events: auto;transform:translateY(0%)')
+  document.querySelector('.bg-modal').style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+  
+  document.getElementById("username").classList.add("username-field-hidden")
+  document.getElementById("useremail").classList.add("username-field-hidden")
+  document.getElementById("password").classList.add("username-field-hidden")
+    
+  const registerText= document.querySelector(".register-text"); 
+  registerText.innerHTML='確定要刪除行程嗎？'
+
+  document.querySelector(".already").classList.add('already-or-donthave-hidden');
+  document.querySelector(".dont-have").classList.add('already-or-donthave-hidden');
+
+  document.querySelector('.login-btn').classList.add('member-btn-hidden');
+  document.querySelector('.member-btn').classList.add('member-btn-hidden');
+
+  document.querySelector('.confirm-logout').classList.add('confirm-logout-hidden');
+  document.querySelector('.confirm-delete').classList.remove('confirm-delete-hidden');
+
+  document.querySelector(".system-msg").innerHTML=''
+}
+
+
+
+
+async function confirmDeleteBooking(){
+  const token = localStorage.getItem('token')
+  if(token == null){
+    console.log('沒有token登入');
+    window.location.href = "http://127.0.0.1:3000/";
+    return;
+  }
+  try{
+    const res = await fetch("http://127.0.0.1:3000/api/booking",{
+      method:'DELETE',
+      headers:{'Authorization': 'Bearer '+token,},
+    })
+    if (!res.ok){
+      let errData = await res.json()
+      console.log('response is not ok')
+      throw new Error(errData.message);
+    }
+    const data = await res.json();
+    console.log(data)
+  }catch{
+    console.log("catch");
+  }
+  location.reload();
+}

@@ -73,11 +73,12 @@ def api_booking():
                 return Response(json.dumps(ok_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
             
             if req.method == 'GET':
+                err_res["message"]='沒有訂購的資料'
                 reqToken = req.headers['Authorization'].split()[1]
 
                 secret_key = 'mysecret-key'
                 decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
-                memberid=decoded_token['id']
+                memberid = decoded_token['id']
                 print(f"會員id：{memberid}")
                 print(f"會員id：{decoded_token['username']}")
 
@@ -103,8 +104,15 @@ def api_booking():
                 conn.close()
                 return Response(json.dumps(booking_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
             if req.method == 'DELETE':
+                reqToken = req.headers['Authorization'].split()[1]
+                secret_key = 'mysecret-key'
+                decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
+                memberid = decoded_token['id']
+                cursor.execute("DELETE FROM orders WHERE member_id = %s;",(memberid,))# 先清空這位會員預訂的
+                conn.commit() 
                 conn.close()
-                return Response(json.dumps(err_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
+                ok_res = { "ok": True }
+                return Response(json.dumps(ok_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
         conn.close()
     except Exception as err :
         print(err)

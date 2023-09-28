@@ -121,7 +121,7 @@ body {
   color: #757575;
 }
 
-.register .member-btn, .login-btn, .confirm-logout {
+.register .member-btn, .login-btn, .confirm-logout, .confirm-delete {
   margin-bottom: 10px;
   border-style: none;
   cursor: pointer;
@@ -138,7 +138,7 @@ body {
   line-height: 16px;
 }
 
-.member-btn-hidden, .login-btn-hidden, .confirm-logout-hidden {
+.member-btn-hidden, .login-btn-hidden, .confirm-logout-hidden, .confirm-delete-hidden {
   display: none;
 }
 
@@ -313,6 +313,16 @@ body {
   border: red solid;
   border-width: 0px;
   width: 700px;
+  position: relative;
+}
+.place-info-area-wrapper .place-info-area .place-booking-info .delete-btn {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 30px;
+  height: 30px;
+  z-index: 9;
+  cursor: pointer;
 }
 .place-info-area-wrapper .place-info-area .place-booking-info .place-name {
   border: red solid;
@@ -545,6 +555,7 @@ body {
 .confirm-booking-wrapper .confirm-booking .okk .ok {
   border: red solid;
   border-width: 0px;
+  cursor: pointer;
   border-radius: 5px;
   background: var(--primary-color-cyan-70, #489);
   padding: 10px 20px;

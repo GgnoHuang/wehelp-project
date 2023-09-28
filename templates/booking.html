@@ -22,6 +22,7 @@
           <button class="member-btn member-btn-hidden" onclick="register()">註冊新帳戶</button>
           <button class="login-btn" onclick="login()">登入</button>
           <button class="confirm-logout confirm-logout-hidden" onclick="confirmLogout()">確定登出</button>
+          <button class="confirm-delete confirm-delete-hidden" onclick="confirmDeleteBooking()">確定刪除</button>
         <!-- </form> -->
           <p class="already already-or-donthave-hidden" >已經有帳戶了？<span class="click-to-login" onclick="switchToLogin()">點此登入</span></p>
           <p class="dont-have">還沒有帳戶？<span class="click-to-register" onclick="switchToRegister()">點此註冊</span></p>
@@ -39,7 +40,7 @@
         </div>
 
         <div class="nav-actions">
-          <div class="booking-btn" onclick="booking()"><a>預定行程</a></div>
+          <div class="booking-btn" onclick="mybooking()"><a>預定行程</a></div>
           <div class="open-form-btn" onclick="openFrom()"><a>登入/註冊</a></div>
           <div class="logout-btn logout-btn-hidden" onclick="logout()" ><a>登出系統</a></div>
         </div>
@@ -58,6 +59,7 @@
       </div>
 
       <div class="place-booking-info">
+        <img class="delete-btn" src="/static/delete.png" onclick="deleteBooking()" alt="">
         <!-- <p class="place-name">
           台北一日遊：平安鐘
         </p> -->
@@ -65,7 +67,7 @@
           台北一日遊：
           <span class="place-name-span"></span>
         </p>
-
+      
         <div class="booking-info">
           <p class="key">日期：</p>
           <p class="value date"></p>

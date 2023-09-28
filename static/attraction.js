@@ -30,29 +30,31 @@
 // const startBooking = document.querySelector(".booking-btn")
 
 async function startBooking(){
-    const selectedValue = document.querySelector('input[name="time-picker"]:checked');
-    if(selectedValue == null){
-      alert('請選擇上午或下午')
-      return
-    }else if(selectedValue != null){
-      console.log(`你選擇的時段為：${selectedValue.value}`)
-    }
-    // const a = document.querySelector('input[name="time-picker"]').value
-    const userBookingDate = document.querySelector(".user-booking-date").value;
-    console.log(`你選擇的日期為：${userBookingDate}`)
-    if(userBookingDate == ""){
-      alert("請選擇日期")
-      return
-    }
-    let price = document.querySelector(".price").innerHTML;
-    price = parseInt(price.match(/\d+/)[0], 10);
     // ----------------------------------------
     const token = localStorage.getItem('token')
     if(token == null){ // 沒有token情況直接return就不fetch了
-      alert('請先進行登入')
-      return
+      // alert('請先進行登入')
+      const systemMsg = document.querySelector(".system-msg")
+      systemMsg.innerHTML='預定行程前請先登入會員';
+      systemMsg.style.opacity=1;
+      openFrom();
+      return;
       // 如果不在前端阻擋，那也要設計後端阻擋沒有token的使用者
     }else if(token != null){
+      const selectedValue = document.querySelector('input[name="time-picker"]:checked');
+      if(selectedValue == null){
+        alert('請選擇上午或下午')
+        return
+      }
+      // const a = document.querySelector('input[name="time-picker"]').value
+      const userBookingDate = document.querySelector(".user-booking-date").value;
+      if(userBookingDate == ""){
+        alert("請選擇日期");
+        return;
+      }
+      let price = document.querySelector(".price").innerHTML;
+      price = parseInt(price.match(/\d+/)[0], 10);
+      // ------------------------
       try{
         const currentUrl = location.href;
         const currentAttractionId = currentUrl.split('/')[currentUrl.split('/').length-1]
@@ -117,40 +119,6 @@ async function startBooking(){
 
 
 
-// // =================fetch===================
-// const pageIdddd = location.href.split('/')[location.href.split('/').length-1]
-// const attractionApiUrllllll = `http://54.65.60.124:3000/api/attraction/${pageId}`
-// async function fetchData(url){
-//   try{
-//     const res = await fetch(url);
-//     if(!res.ok){
-//       throw new Error(`fetch失敗，api地址為：${url}`)
-//     }
-//     const data = await res.json();
-//     return data;
-//   }
-//   catch(err){
-//     console.error(err)
-//   }
-// }
-// =================載入內容==================
-// let nameData, catData, mrtData, descriptionData, addData, transportData, imgDatas
-// async function useFetchData(){
-//   try{
-//     const result = await fetchData(attractionApiUrl);
-//     nameData = result.data.name;
-//     catData = result.data.category;
-//     mrtData = result.data.mrt;
-//     descriptionData = result.data.description;
-//     addData = result.data.address;
-//     transportData = result.data.transport;    
-//     imgDatas = result.data.images
-
-//     loadData();
-//   }catch (err) {
-//     console.log(err);
-//   }
-// }
 
 
 
@@ -210,6 +178,9 @@ async function startBooking(){
 async function mybooking(){
   const token = localStorage.getItem('token')
   if(token == null){
+    const systemMsg = document.querySelector(".system-msg")
+    systemMsg.innerHTML='預定行程前請先登入會員';
+    systemMsg.style.opacity=1;
     openFrom();
     return; // 沒有token情況直接return就不fetch了
   } 
@@ -222,6 +193,10 @@ async function mybooking(){
     if(!res.ok){ //有token但過期，api判斷token過期 得到500狀態碼所以!res.ok，進入except，
       console.error('用戶未登入');
       localStorage.removeItem("token");
+
+      const systemMsg = document.querySelector(".system-msg")
+      systemMsg.innerHTML='預定行程前請先登入會員';
+      systemMsg.style.opacity=1;
       openFrom();
       return;
     }

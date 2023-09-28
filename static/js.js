@@ -5,6 +5,9 @@
 async function mybooking(){
   const token = localStorage.getItem('token')
   if(token == null){
+    const systemMsg = document.querySelector(".system-msg")
+    systemMsg.innerHTML='預定行程前請先登入會員';
+    systemMsg.style.opacity=1;
     openFrom();
     return; // 沒有token情況直接return就不fetch了
   } 
@@ -17,6 +20,9 @@ async function mybooking(){
     if(!res.ok){ //有token但過期，api判斷token過期 得到500狀態碼所以!res.ok，進入except，
       console.error('用戶未登入');
       localStorage.removeItem("token");
+      const systemMsg = document.querySelector(".system-msg")
+      systemMsg.innerHTML='預定行程前請先登入會員';
+      systemMsg.style.opacity=1;
       openFrom();
       return;
     }
@@ -29,8 +35,6 @@ async function mybooking(){
     else if(data.data != null){
       // 只要有點可能null，我就不給執行
     // 只要有一點點的可能性是null那就不讓執行
-      
-      // 發送請求booking api請求
       window.location.href = "http://127.0.0.1:3000/booking";
     }
   }
