@@ -1,33 +1,4 @@
 
-// // ===================================
-// async function checkUser(){
-
-//   try{
-//     const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
-//       method:'GET',
-//       headers:{'Authorization': 'Bearer '+token}
-//     })
-//     if(!res.ok){ //有token但過期，api判斷token過期 會進入except，得到500狀態碼所以!res.ok
-//       console.log('未登入')
-//       localStorage.removeItem("token");
-//       return;
-//     }
-//     const data = await res.json();
-//     if(data.data == null){
-//       return
-//     }else if(data.data!=null){
-//       console.log(data.data)
-
-//     const userData = data.data
-//     const userIdData = userData['id']
-//     const userEmailData = userData['email']
-//     const userNameData = userData['name']
-//     }
-//   }
-//   catch{console.error("catch了");}
-// }
-
-// const startBooking = document.querySelector(".booking-btn")
 
 async function startBooking(){
     // ----------------------------------------
@@ -43,7 +14,7 @@ async function startBooking(){
     }else if(token != null){
       const selectedValue = document.querySelector('input[name="time-picker"]:checked');
       if(selectedValue == null){
-        alert('請選擇上午或下午')
+        alert('請選擇時段')
         return
       }
       // const a = document.querySelector('input[name="time-picker"]').value
@@ -83,25 +54,6 @@ async function startBooking(){
         // -------------------------
         window.location.href = "http://127.0.0.1:3000/booking";
 
-          // ---------------先確認會員身份-------------------------
-          // let userIdData;
-          // const res1 = await fetch('http://54.65.60.124:3000/api/user/auth',{
-          //   method:'GET',
-          //   headers:{'Authorization': 'Bearer '+token}
-          // })
-          // if(!res1.ok){ //有token但過期，api判斷token過期 會進入except，得到500狀態碼所以!res.ok
-          //   localStorage.removeItem("token");
-          //   throw new Error("用戶未登入");
-          // }
-          // const data1 = await res1.json();
-          // if(data1.data == null){
-          //   localStorage.removeItem("token");
-          //   throw new Error("用戶未登入");
-          // }else if(data1.data!=null){
-          //   const userData = data1.data
-          //   userIdData = userData['id']
-          // }
-          // console.log(`用戶id為：${userIdData}`)
       }catch(err){
         console.error(`請求失敗：${err}`)
       }
@@ -143,10 +95,7 @@ async function mybooking(){
       return;
     }
     else if(data.data != null){
-      // 你只要有點可能，我就不給執行
-    // 只要有一點點的可能性是null那就不讓執行
-      
-      // 發送請求booking api請求
+      // 你只要有點可能，我就不給執行// 只要有一點點的可能性是null那就不讓執行
       window.location.href = "http://127.0.0.1:3000/booking";
     }
   }

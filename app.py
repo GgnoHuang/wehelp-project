@@ -6,6 +6,7 @@ import mysql.connector.pooling
 import json
 
 import jwt
+from jwt.exceptions import ExpiredSignatureError
 import datetime
 # ------------------------
 app=Flask(__name__,
@@ -26,12 +27,22 @@ dbconfig = {
     "pool_size": 20, 
 }
 pool = mysql.connector.pooling.MySQLConnectionPool(**dbconfig)
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    # son_dumps(dict)时，如果dict包含有汉字，
-    # 一定加上ensure_ascii=False。否则按参数默认值True，
-    # 意思是保证dumps之后的结果里所有的字符都能够被ascii表示，
-    # 汉字在ascii的字符集里面，因此经过dumps以后的str里，汉字会变成对应的unicode。
 
+# ----------------------------------------------------------------------------------
+@app.route("/")
+def index():
+	return render_template("index.html")
+@app.route("/attraction/<id>")
+def attraction(id):
+	return render_template("attraction.html")
+@app.route("/booking")
+def booking():
+	return render_template("booking.html")
+@app.route("/thankyou")
+def thankyou():
+	return render_template("thankyou.html")
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @app.route("/api/booking", methods = ["GET", "POST", "DELETE"])
 def api_booking():
     err_res = { "error": True, "message": "發生錯誤" }#  或 err_res=dict(error=True,message="發生錯誤")
@@ -46,19 +57,17 @@ def api_booking():
                     err_res["message"] = "request body必須為json格式"
                     return Response(json.dumps(err_res, ensure_ascii=False), status=400, content_type='application/json; charset=utf-8')
                 reqData = request.get_json()
-                print(f"前端傳來的：{reqData}")
-
+                # print(f"前端傳來的：{reqData}")
                 reqToken = req.headers['Authorization'].split()[1]
-
                 secret_key = 'mysecret-key'
                 decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
                 memberid=decoded_token['id']
                 print(f"會員id：{memberid}")
 
-                attractionId=reqData['attractionId']
-                date=reqData['date']
-                time=reqData['time']
-                price=reqData['price']
+                attractionId = reqData['attractionId']
+                date = reqData['date']
+                time = reqData['time']
+                price = reqData['price']
                 print(memberid,attractionId,date,time,price)
 
                 cursor.execute("DELETE FROM orders WHERE member_id = %s;",(memberid,))# 先清空這位會員預訂的
@@ -77,18 +86,16 @@ def api_booking():
                 secret_key = 'mysecret-key'
                 decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
                 memberid = decoded_token['id']
-                print(f"會員id：{memberid}")
-                print(f"會員id：{decoded_token['username']}")
 
                 cursor.execute("SELECT orders.place_id, places.name, places.address,(SELECT url FROM images i WHERE i.place_id = places.id LIMIT 1) AS url,orders.travel_date, orders.time_slot, orders.price FROM orders INNER JOIN places ON orders.place_id = places.id WHERE orders.member_id = %s;",
                             (memberid,))
                 sql_booking_data = cursor.fetchone()
-                print(sql_booking_data)
+
                 if sql_booking_data == None:
                     err_res["message"]='沒有訂購的資料'
                     conn.close()
                     return Response(json.dumps(err_res, ensure_ascii=False), status=400, content_type='application/json; charset=utf-8')
-                print(sql_booking_data[4].strftime("%Y-%-m-%-d"))
+                # print(sql_booking_data[4].strftime("%Y-%-m-%-d"))
                 booking_res = {
                     "data": {
                         "attraction": {
@@ -101,8 +108,6 @@ def api_booking():
                         "time": sql_booking_data[5],
                         "price":sql_booking_data[6],
                 }}
-
-                print(sql_booking_data)
                 conn.close()
                 return Response(json.dumps(booking_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
             if req.method == 'DELETE':
@@ -110,60 +115,27 @@ def api_booking():
                 secret_key = 'mysecret-key'
                 decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
                 memberid = decoded_token['id']
-                cursor.execute("DELETE FROM orders WHERE member_id = %s;",(memberid,))# 先清空這位會員預訂的
+                cursor.execute("DELETE FROM orders WHERE member_id = %s;",(memberid,))
                 conn.commit() 
                 conn.close()
                 ok_res = { "ok": True }
                 return Response(json.dumps(ok_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
         conn.close()
-    except Exception as err :
-        print(err)
+    except ExpiredSignatureError:
         conn.close()
+        print('jwt已失效')
+        err_res['message']='jwt已失效'
+        return Response(json.dumps(err_res, ensure_ascii=False), status=403, content_type='application/json; charset=utf-8') 
+    except jwt.exceptions.PyJWTError :
+        conn.close()
+        print('jwt錯誤')
+        err_res['message']='jwt錯誤'
+        return Response(json.dumps(err_res, ensure_ascii=False), status=403, content_type='application/json; charset=utf-8') 
+    except Exception as err :
+        conn.close()
+        print(err)
+        err_res['message']= err
         return Response(json.dumps(err_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@app.route("/")
-def index():
-	return render_template("index.html")
-@app.route("/attraction/<id>")
-def attraction(id):
-	return render_template("attraction.html")
-@app.route("/booking")
-def booking():
-	return render_template("booking.html")
-@app.route("/thankyou")
-def thankyou():
-	return render_template("thankyou.html")
 
 # ======================   註冊會員    =========================================
 @app.route("/api/user",methods = ["POST"])
@@ -181,14 +153,12 @@ def register():
         cursor.execute("SELECT useremail FROM member WHERE useremail = %s", (useremail,))
         result = cursor.fetchone()
         if result:
-            cursor.close()
             conn.close()
             err_res["message"] = "此信箱已被註冊"
             return Response(json.dumps(err_res, ensure_ascii=False), status=400, content_type='application/json; charset=utf-8')
 
         cursor.execute("INSERT INTO member(username, useremail, password) VALUES(%s, %s, %s);", (username, useremail, password))
         conn.commit() 
-        cursor.close()
         conn.close()
         ok_res = { "ok": True }
         return Response(json.dumps(ok_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
@@ -234,28 +204,28 @@ def sign_in():
                     }
                     token = jwt.encode(payload, secret_key, algorithm='HS256')
                     # decode_token = jwt.decode(token, secret_key, algorithms=['HS256'])
-                    cursor.close()
                     conn.close()
                     token_res = { "token": token }
                     return Response(json.dumps(token_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
                 else:
-                    cursor.close()
                     conn.close()
                     err_res['message']='密碼輸入錯誤'
                     return Response(json.dumps(err_res, ensure_ascii=False), status=400, content_type='application/json; charset=utf-8')
             else:
-                cursor.close()
                 conn.close()
                 err_res['message']='無此帳號'
                 return Response(json.dumps(err_res, ensure_ascii=False), status=400, content_type='application/json; charset=utf-8')  
         else:
-            cursor.close()
             conn.close()
             err_res['message']='request資料格式錯誤'
             return Response(json.dumps(err_res, ensure_ascii=False), status=400, content_type='application/json; charset=utf-8')
       conn.close()      
+    except jwt.exceptions.PyJWTError :
+        conn.close()
+        print('jwt錯誤')
+        err_res['message']='jwt錯誤'
+        return Response(json.dumps(err_res, ensure_ascii=False), status=403, content_type='application/json; charset=utf-8') 
     except Exception as err :
-        cursor.close()
         conn.close()
         err_res['message']='伺服器發生錯誤'
         return Response(json.dumps(err_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
@@ -278,8 +248,12 @@ def sign_in():
         conn.close()
         return Response(json.dumps(member_data_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
       conn.close()
+    except jwt.exceptions.PyJWTError :
+        conn.close()
+        print('jwt錯誤')
+        err_res['message']='jwt錯誤'
+        return Response(json.dumps(err_res, ensure_ascii=False), status=403, content_type='application/json; charset=utf-8') 
     except Exception as err :
-        cursor.close()
         conn.close()
         print(err)
         return Response(json.dumps(member_data_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
@@ -451,7 +425,6 @@ def api_attractions():
         
     except Exception as err :# 什麼情況下會進到except? mysql筆記裡面有！！
         print(err)
-        cursor.close()
         conn.close()
         return Response(json.dumps(error_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
 
@@ -471,11 +444,9 @@ def api_attraction_id(id):
 
             cursor.execute("SELECT * FROM places WHERE id = %s", (id,))
             result = cursor.fetchone()
-            # print(result)
             if result==None:
                 error_res["message"]="查無景點"
 
-                cursor.close()
                 conn.close()
                 return Response(json.dumps(error_res, ensure_ascii=False), status=400, content_type='application/json; charset=utf-8')
             id, name, category, description, address, transport, mrt, lat, lng = result
@@ -498,13 +469,11 @@ def api_attraction_id(id):
 
             json_data = json.dumps(data, ensure_ascii=False, sort_keys=False, indent=3)
 
-            cursor.close()
             conn.close()
             return Response(json_data, status=200,content_type='application/json; charset=utf-8')
     except Exception as err:# 什麼情況下會進到except? mysql筆記裡面有
         print("except了")
         print(err)
-        cursor.close()
         conn.close()
         return Response(json.dumps(error_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
 
@@ -536,14 +505,11 @@ def api_mrts():
 
             json_data = json.dumps(data, ensure_ascii=False, sort_keys=False, indent=3)
 
-            cursor.close()
             conn.close()
             return Response(json_data, status=200,content_type='application/json; charset=utf-8')
     except:
-        print("except了")
-        cursor.close()
+        print("except")
         conn.close()
-
         return Response(json.dumps(error_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
 
 

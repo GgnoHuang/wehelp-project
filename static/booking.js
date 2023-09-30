@@ -1,34 +1,3 @@
-// const bd=document.querySelector("body");
-// bd.removeChild(document.querySelector(".place-info-area-wrapper"));
-
-// bd.removeChild(document.querySelector(".contact-info-wrapper"));
-// bd.removeChild(document.querySelector(".credit-info-wrapper"));
-// bd.removeChild(document.querySelector(".confirm-booking-wrapper"));
-
-
-// document.querySelectorAll(".separator").forEach(separator=>{
-//   bd.removeChild(separator);
-// });
-
-
-// document.querySelector("html").classList.add("no-booking-result-html")
-// document.querySelector("body").classList.add("no-booking-result-body")
-// document.querySelector(".footer-wrapper").classList.add("no-booking-result-footer-wrapper")
-// console.log("沒行程")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function mybooking(){ location.reload(); }
 
@@ -319,12 +288,15 @@ async function loadBookingInfo(){
   try{
     const res = await fetch("http://127.0.0.1:3000/api/booking",{
       method:'GET',
-      headers:{'Authorization': 'Bearer '+token,},
+      headers:{
+        'Authorization': 'Bearer '+token,
+        // 'Authorization': 'Bearer '+'adsfadsf345'
+      },
     })
     if (!res.ok){
       let errData = await res.json()
       if(errData.error){
-        console.log('這邊開始寫讓頁面清空的代碼');
+        // 頁面清空
         const bd=document.querySelector("body");
         bd.removeChild(document.querySelector(".place-info-area-wrapper"));
         bd.removeChild(document.querySelector(".contact-info-wrapper"));
@@ -336,7 +308,7 @@ async function loadBookingInfo(){
         document.querySelector("html").classList.add("no-booking-result-html")
         document.querySelector("body").classList.add("no-booking-result-body")
         document.querySelector(".footer-wrapper").classList.add("no-booking-result-footer-wrapper")
-        console.log("沒行程")
+        console.log("沒有訂購的行程")
         document.querySelector(".no-booking-text").classList.remove("username-field-hidden")
 
       }
@@ -371,7 +343,7 @@ async function loadBookingInfo(){
 
     console.log(attractionName,attractionAdd,attractionImg,bookingDate,bookingTime,bookingPrice);
   }catch(err){
-    console.log(err);
+    console.error(err);
   }
 }
 loadBookingInfo();
