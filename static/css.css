@@ -109,6 +109,15 @@ font-family: Noto Sans TC;
   border-radius: 5px 0px 0px 5px ;
   width: 400px;
   height: 46px;
+  padding: 15px;
+  color: var(--secondary-color-gray-50, #757575);
+
+/* Body - Bold 16(13.3) */
+font-family: Noto Sans TC;
+font-size: 16px;
+font-style: normal;
+font-weight: 700;
+line-height: 13.3px; /* 83.125% */
 }
 .btn-wrapper{
   width: 60px;
@@ -118,7 +127,9 @@ font-family: Noto Sans TC;
   display: flex;
   padding: 8px 15px;
 }
-
+.submit-btn{
+  cursor: pointer;
+}
 /* ================================================== *//* ================================================== */
 /* ================================================== *//* ================================================== */
 
@@ -188,13 +199,24 @@ main{
   height: 100%;
 }
 .btn-2 img{
-
   z-index: 9;
   cursor: pointer;
   margin: 9px 15px 9px 0px;
 }
 
 /* ================================================== *//* ================================================== */
+.no-search-result{
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--secondary-color-gray-70, #666);
+  font-family: Noto Sans TC;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px; 
+}
 .img-zone{
   display: grid;
   grid-template-columns: repeat(4,1fr);
@@ -387,7 +409,7 @@ main{
 .register input::placeholder {
   color: #757575
 }
-.register .member-btn,.login-btn,.yeslogout{
+.register .member-btn,.login-btn,.confirm-logout{
   margin-bottom: 10px;
   border-style:none;
   cursor: pointer;
@@ -403,7 +425,7 @@ main{
   font-weight: 400;
   line-height: 16px; 
 }
-.member-btn-hidden, .login-btn-hidden,.yeslogout-hidden{
+.member-btn-hidden, .login-btn-hidden,.confirm-logout-hidden{
   display: none;
 }
 
@@ -447,16 +469,18 @@ main{
   font-style: normal;
   font-weight: 500;
   line-height: 13.3px; /* 83.125% */
-  /* transition: all 0.2s ease; */
-  transition: opacity 0.5s ease-in-out;
-  opacity: 0;
   color: rgb(227, 60, 60);
-
+  transition: opacity 0.3s ease-in-out;
+  opacity: 1;
 }
+
 .system-msg:empty {
   height: 0px; 
   margin-top: 0px;/* 沒內容時設為0 */
+  opacity: 0;
 }
+/* .system-msg:empty{} */
+
 
 /* ＝＝＝＝＝登入＝＝＝＝＝＝＝＝＝＝＝＝ */
 .login{
@@ -555,6 +579,7 @@ main{
   }
   .three input{
     width: 230px;
+   
   }
   .img-zone{
     grid-template-columns: repeat(1,1fr);

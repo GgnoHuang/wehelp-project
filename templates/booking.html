@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="stylesheet" href="/static/Sass/booking.css">
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,5 +9,161 @@
 </head>
 <body>
   
+  <div class="bg-modal"></div>
+  <div class="form-wrapper">
+    <div class="member-form">
+      <div class="deco-bar"></div>
+      <img src="/static/close-btn.png" class="close-btn" alt="">
+      <div class="register">
+          <p class="register-text">登入會員帳號</p>
+          <input id="username" class="username-field-hidden" type="text" name="username" placeholder="輸入姓名">
+          <input id="useremail" type="email" name="useremail" placeholder="輸入電子郵件">
+          <input id="password" type="password" name="password" placeholder="輸入密碼">
+          <button class="member-btn member-btn-hidden" onclick="register()">註冊新帳戶</button>
+          <button class="login-btn" onclick="login()">登入</button>
+          <button class="confirm-logout confirm-logout-hidden" onclick="confirmLogout()">確定登出</button>
+          <button class="confirm-delete confirm-delete-hidden" onclick="confirmDeleteBooking()">確定刪除</button>
+        <!-- </form> -->
+          <p class="already already-or-donthave-hidden" >已經有帳戶了？<span class="click-to-login" onclick="switchToLogin()">點此登入</span></p>
+          <p class="dont-have">還沒有帳戶？<span class="click-to-register" onclick="switchToRegister()">點此註冊</span></p>
+  
+          <p class="system-msg"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ------------------------------------------------ -->
+  <header class="nav-wrapper">
+    <div class="nav">
+        <div class="taipei">
+          <a href="/">台北一日遊</a>
+        </div>
+
+        <div class="nav-actions">
+          <div class="booking-btn" onclick="mybooking()"><a>預定行程</a></div>
+          <div class="open-form-btn" onclick="openFrom()"><a>登入/註冊</a></div>
+          <div class="logout-btn logout-btn-hidden" onclick="logout()" ><a>登出系統</a></div>
+        </div>
+    </div>
+  </header>
+  <div class="separator"></div>
+
+  <div class="hello">
+    <p class="p-1">您好，<span class="hello-username">會員</span>，待預定的行程如下：</p>
+    <p class="no-booking-text">目前沒有任何待預訂的行程</p>
+  </div>
+
+  <div class="place-info-area-wrapper">
+    <div class="place-info-area">
+      <div class="place-img">
+        <img class="place-img-src" src="/" alt="">
+      </div>
+
+      <div class="place-booking-info">
+        <img class="delete-btn" src="/static/delete.png" onclick="deleteBooking()" alt="">
+        <!-- <p class="place-name">
+          台北一日遊：平安鐘
+        </p> -->
+        <p class="place-name">
+          台北一日遊：
+          <span class="place-name-span"></span>
+        </p>
+      
+        <div class="booking-info">
+          <p class="key">日期：</p>
+          <p class="value date"></p>
+        </div>
+        <div class="booking-info">
+          <p class="key">時間：</p>
+          <p class="value time"></p>
+        </div>
+        <div class="booking-info"> 
+          <p class="key">費用：</p>
+          <!-- <p class="value">新台幣2000元</p> -->
+          <p class="value">新台幣<span class="price"></span>元</p>
+        </div>
+        <div class="booking-info">
+          <p class="key">地點：</p>
+          <p class="value"><span class="add"></span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!----------------------------->
+  <div class="separator"></div>
+  <!----------------------------->
+  <div class="contact-info-wrapper">
+    <div class="contact-info">
+      <p class="your-contact-info">
+        您的聯絡資訊
+      </p>
+    
+      <div class="contact-key">
+        <p>聯絡姓名：</p>
+        <input type="text">
+      </div>
+
+      <div class="contact-key">
+        <p>聯絡信箱：</p>
+        <input type="text">
+      </div>
+      
+      <div class="contact-key">
+        <p>手機號碼：</p>
+        <input type="text">
+      </div>
+
+      <p class="please-keep-phone">
+        請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。
+      </p>
+
+    </div>
+  </div>
+    <!----------------------------->
+    <div class="separator"></div>
+    <!----------------------------->
+    <div class="credit-info-wrapper">
+      <div class="credit-info">
+        <p class="your-credit-info">
+          信用卡付款資訊
+        </p>
+      
+        <div class="credit-key">
+          <p>卡片號碼：</p>
+          <input type="password" placeholder="**** **** **** ****">
+        </div>
+  
+        <div class="credit-key">
+          <p>過期時間：</p>
+          <input type="text" placeholder="MM / YY">
+        </div>
+        
+        <div class="credit-key credit-key-1">
+          <p>驗證密碼：</p>
+          <input type="text" placeholder="CVV">
+        </div>
+      </div>
+    </div>
+
+    <!----------------------------->
+    <div class="separator"></div>
+    <!----------------------------->
+    <div class="confirm-booking-wrapper">
+      <div class="confirm-booking">
+        <p>總價：新台幣<span class="price-2"></span>元</p>
+        <div class="okk">
+          <div class="ok">確認訂購並付款</div>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <footer class="footer">
+        <p>COPYRIGHT © 2021 台北一日遊</p>
+      </footer>
+    </div>
+
+    <script src="/static/booking.js"></script>
 </body>
 </html>

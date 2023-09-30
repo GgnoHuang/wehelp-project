@@ -1,3 +1,119 @@
+// const Ip ='http://127.0.0.1:3000/';
+const Ip ='http://54.65.60.124:3000/';
+
+
+
+async function startBooking(){
+    // ----------------------------------------
+    const token = localStorage.getItem('token')
+    if(token == null){ // 沒有token情況直接return就不fetch了
+      // alert('請先進行登入')
+      const systemMsg = document.querySelector(".system-msg")
+      systemMsg.innerHTML='預定行程前請先登入會員';
+      systemMsg.style.opacity=1;
+      openFrom();
+      return;
+      // 如果不在前端阻擋，那也要設計後端阻擋沒有token的使用者
+    }else if(token != null){
+      const selectedValue = document.querySelector('input[name="time-picker"]:checked');
+      if(selectedValue == null){
+        alert('請選擇時段')
+        return
+      }
+      // const a = document.querySelector('input[name="time-picker"]').value
+      const userBookingDate = document.querySelector(".user-booking-date").value;
+      if(userBookingDate == ""){
+        alert("請選擇日期");
+        return;
+      }
+      let price = document.querySelector(".price").innerHTML;
+      price = parseInt(price.match(/\d+/)[0], 10);
+      // ------------------------
+      try{
+        const currentUrl = location.href;
+        const currentAttractionId = currentUrl.split('/')[currentUrl.split('/').length-1]
+        console.log(`景點id為：${currentAttractionId}`)
+        // ------------------把預定資料傳到後端＆資料庫--------------------------
+        // const res2 = await fetch("http://127.0.0.1:3000/api/booking",{
+        const res2 = await fetch(`${Ip}api/booking`,{
+        // const res2 = await fetch("http://54.65.60.124:3000/api/booking",{
+          method:'POST',
+          headers:{
+            'Authorization': 'Bearer '+token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            "attractionId": currentAttractionId,
+            "date": userBookingDate,
+            "time": selectedValue.value,
+            "price": price
+          })
+        })
+        if (!res2.ok){
+          let errData = await res2.json()
+          console.log('response不ok')
+          throw new Error(errData.message);
+        }
+        const data2 = await res2.json();
+        console.log(data2)
+        // -------------------------
+        // window.location.href = "http://127.0.0.1:3000/booking";
+        window.location.href = `${Ip}booking`;
+        // window.location.href = "http://54.65.60.124:3000/booking";
+
+      }catch(err){
+        console.error(`請求失敗：${err}`)
+      }
+    }
+}
+
+
+
+
+async function mybooking(){
+  const token = localStorage.getItem('token')
+  if(token == null){
+    const systemMsg = document.querySelector(".system-msg")
+    systemMsg.innerHTML='預定行程前請先登入會員';
+    systemMsg.style.opacity=1;
+    openFrom();
+    return; // 沒有token情況直接return就不fetch了
+  } 
+  try{
+    // const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
+    // const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
+    const res = await fetch(`${Ip}api/user/auth`,{
+      method:'GET',
+      headers:{'Authorization': 'Bearer '+token}
+    })
+    if(!res.ok){ //有token但過期，api判斷token過期 得到500狀態碼所以!res.ok，進入except，
+      console.error('用戶未登入');
+      localStorage.removeItem("token");
+
+      const systemMsg = document.querySelector(".system-msg")
+      systemMsg.innerHTML='預定行程前請先登入會員';
+      systemMsg.style.opacity=1;
+      openFrom();
+      return;
+    }
+    const data = await res.json();
+    console.log(data)
+    if(data.data == null){
+      console.log(data)
+      return;
+    }
+    else if(data.data != null){
+      // 你只要有點可能，我就不給執行// 只要有一點點的可能性是null那就不讓執行
+      // window.location.href = "http://127.0.0.1:3000/booking";
+      window.location.href = `${Ip}booking`;
+      // window.location.href = "http://54.65.60.124:3000/booking";
+    }
+  }
+  catch{
+    console.error("catch");
+  }
+}
+
 // ================ modal =======================================
 
 function openFrom(){
@@ -49,7 +165,6 @@ function switchToRegister(){
   const usernameInputBox = document.getElementById("username"); 
   usernameInputBox.classList.remove("username-field-hidden")
   
-
   const registerText= document.querySelector(".register-text"); 
   registerText.innerHTML='註冊會員帳號'
 
@@ -63,9 +178,6 @@ function switchToRegister(){
   loginBtn.classList.add('member-btn-hidden');
   memberBtn.classList.remove('member-btn-hidden');
 
-
-  console.log(234565345)
-
   document.getElementById('username').value="";
   document.getElementById('useremail').value="";
   document.getElementById('password').value="";
@@ -75,7 +187,8 @@ function switchToRegister(){
 // ================註冊=====================================
 
 async function register(){
-  const apiUrl ='http://54.65.60.124:3000/api/user'
+  // const apiUrl ='http://54.65.60.124:3000/api/user'
+  const apiUrl =`${Ip}api/user`
   const usernameInput = document.getElementById('username').value;
   const useremailInput = document.getElementById('useremail').value;
   const passwordInput = document.getElementById('password').value;
@@ -125,7 +238,7 @@ async function register(){
       throw new Error(errData.message);
     }
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     systemMsg.innerHTML="註冊成功！"
     systemMsg.style.color="rgb(69, 199, 89)";
     systemMsg.style.opacity=1;
@@ -169,7 +282,8 @@ async function login(){
   };
 
   try{
-    const apiUrl ='http://54.65.60.124:3000/api/user/auth'
+    // const apiUrl ='http://54.65.60.124:3000/api/user/auth'
+    const apiUrl =`${Ip}api/user/auth`
     const res = await fetch(apiUrl,{
       method:'PUT',
       headers:{
@@ -189,7 +303,7 @@ async function login(){
     }
     
     const data = await res.json();
-    console.log(data)
+    // console.log(data)
     const token = data.token
     localStorage.setItem('token', token);
     // systemMsg.innerHTML='登入成功';
@@ -213,7 +327,7 @@ async function login(){
 // =======================================
 
 
-function confirmLogout(){
+function logout(){
   document.body.style.overflow = 'hidden';
   document.querySelector('.form-wrapper')
   .setAttribute('style','pointer-events: auto;transform:translateY(0%)')
@@ -232,15 +346,16 @@ function confirmLogout(){
   document.querySelector('.login-btn').classList.add('member-btn-hidden');
   document.querySelector('.member-btn').classList.add('member-btn-hidden');
 
-  document.querySelector('.yeslogout').classList.remove('yeslogout-hidden');
+  document.querySelector('.confirm-logout').classList.remove('confirm-logout-hidden');
+  document.querySelector('.confirm-logout').style.margin = "0";
   document.querySelector(".system-msg").innerHTML=''
 }
 
-function logout(){
+function confirmLogout(){
   localStorage.removeItem("token");
-  document.querySelector('.open-form-btn').classList.remove("open-form-btn-hidden");//登入註冊選單按鈕消失
-  document.querySelector('.logout-btn').classList.add("logout-btn-hidden");//登出按鈕出現
-  document.querySelector('.yeslogout').classList.add('logout-btn-hidden');
+  document.querySelector('.open-form-btn').classList.remove("open-form-btn-hidden");//登入註冊選單按鈕出現
+  document.querySelector('.logout-btn').classList.add("logout-btn-hidden");//登出按鈕消失
+  document.querySelector('.confirm-logout').classList.add('logout-btn-hidden');
   checkUserAuth();
   location.reload();
 }
@@ -253,7 +368,8 @@ async function checkUserAuth(){
     return
   }
   try{
-    const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
+    // const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
+    const res = await fetch(`${Ip}api/user/auth`,{
       method:'GET',
       headers:{'Authorization': 'Bearer '+token}
     })
@@ -274,8 +390,8 @@ async function checkUserAuth(){
     const userEmailData = userData['email']
     const userNameData = userData['name']
     console.log(userIdData,userNameData,userEmailData)
-    document.querySelector('.open-form-btn').classList.add("open-form-btn-hidden");//登入註冊選單按鈕出現
-    document.querySelector('.logout-btn').classList.remove("logout-btn-hidden");//登出按鈕消失
+    document.querySelector('.open-form-btn').classList.add("open-form-btn-hidden");//登入註冊選單按鈕消失
+    document.querySelector('.logout-btn').classList.remove("logout-btn-hidden");//登出按鈕出現
     }
   }
   catch{
@@ -288,6 +404,13 @@ checkUserAuth();
 
 // =================fetch===================
 const pageId = location.href.split('/')[location.href.split('/').length-1]
+// 把目前所在的url尾端的數字（景點的對應id）取出
+// 這個id拿來給後端的動態路由使用 /api/attraction/<id>
+// 以下操作為：使用fetch從 /api/attraction/<id> 取得資料庫中的景點資訊，再用資料渲染頁面
+// 所以id的流動過程為：
+// 1.首頁在創建並渲染景點圖卡時，事件監聽使點擊的時候跳轉到url = location.href+ 'attraction/' + idData
+// 2.
+// 3.
 const attractionApiUrl = `http://54.65.60.124:3000/api/attraction/${pageId}`
 async function fetchData(url){
   try{
@@ -314,6 +437,7 @@ async function useFetchData(){
     addData = result.data.address;
     transportData = result.data.transport;    
     imgDatas = result.data.images
+    // console.log(nameData,catData,mrtData,descriptionData,addData,transportData,imgDatas)
 
     loadData();
   }catch (err) {
