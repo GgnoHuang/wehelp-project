@@ -586,10 +586,10 @@ main{
 
 
 .click-to-login:hover {
-  color:rgba(68, 136, 153, 1);/* 鼠标悬停时的颜色 */
+  color:rgba(68, 136, 153, 1);
 }
 .click-to-register:hover {
-  color:rgba(68, 136, 153, 1);/* 鼠标悬停时的颜色 */
+  color:rgba(68, 136, 153, 1);
 }
 .system-msg{
   display: flex;
@@ -657,10 +657,11 @@ main{
   }
 
 }
-@media(max-width:932px){
+@media(max-width:927px){
   .detail-2{
-    line-height:23px;
+    line-height:normal;
     height: 48px;
+    /* border: 1px solid red; */
   }
 }
 /* =-=▼▼▼▼▼▼▼▼▼▼▼---低於768 -小於iPad Mini  --▼▼▼▼▼▼▼▼▼▼▼▼▼▼-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */

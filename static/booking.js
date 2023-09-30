@@ -1,3 +1,35 @@
+// const bd=document.querySelector("body");
+// bd.removeChild(document.querySelector(".place-info-area-wrapper"));
+
+// bd.removeChild(document.querySelector(".contact-info-wrapper"));
+// bd.removeChild(document.querySelector(".credit-info-wrapper"));
+// bd.removeChild(document.querySelector(".confirm-booking-wrapper"));
+
+
+// document.querySelectorAll(".separator").forEach(separator=>{
+//   bd.removeChild(separator);
+// });
+
+
+// document.querySelector("html").classList.add("no-booking-result-html")
+// document.querySelector("body").classList.add("no-booking-result-body")
+// document.querySelector(".footer-wrapper").classList.add("no-booking-result-footer-wrapper")
+// console.log("沒行程")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function mybooking(){ location.reload(); }
 
 // ================ modal =======================================
@@ -200,10 +232,11 @@ async function login(){
 }
 // =======================================
 function logout(){
-  document.body.style.overflow = 'hidden';
-  document.querySelector('.form-wrapper')
-  .setAttribute('style','pointer-events: auto;transform:translateY(0%)')
-  document.querySelector('.bg-modal').style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+  // document.body.style.overflow = 'hidden';
+  // document.querySelector('.form-wrapper')
+  // .setAttribute('style','pointer-events: auto;transform:translateY(0%)')
+  // document.querySelector('.bg-modal').style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+  openFrom();
   
   document.getElementById("username").classList.add("username-field-hidden")
   document.getElementById("useremail").classList.add("username-field-hidden")
@@ -292,7 +325,7 @@ async function loadBookingInfo(){
       let errData = await res.json()
       if(errData.error){
         console.log('這邊開始寫讓頁面清空的代碼');
-        const bd=document.querySelector("body")
+        const bd=document.querySelector("body");
         bd.removeChild(document.querySelector(".place-info-area-wrapper"));
         bd.removeChild(document.querySelector(".contact-info-wrapper"));
         bd.removeChild(document.querySelector(".credit-info-wrapper"));
@@ -300,15 +333,24 @@ async function loadBookingInfo(){
         document.querySelectorAll(".separator").forEach(separator=>{
           bd.removeChild(separator);
         });
-        console.log( window.innerHeight)
+        document.querySelector("html").classList.add("no-booking-result-html")
+        document.querySelector("body").classList.add("no-booking-result-body")
+        document.querySelector(".footer-wrapper").classList.add("no-booking-result-footer-wrapper")
+        console.log("沒行程")
+        document.querySelector(".no-booking-text").classList.remove("username-field-hidden")
 
       }
       throw new Error(errData.message);
     }
+    document.querySelector(".no-booking-text").classList.add("username-field-hidden")
+
+    // document.querySelector("html").classList.remove("no-booking-result-html")
+    // document.querySelector("body").classList.remove("no-booking-result-body")
+    // document.querySelector(".footer-wrapper").classList.remove("no-booking-result-footer-wrapper")
+    // 上面這個不用加
+    console.log("有行程")
     const data = await res.json();
-    console.log(1111111111)
-    console.log(data);
-    console.log(1111111111)
+
     const attractionName = data.data.attraction.name;
     const attractionAdd = data.data.attraction.address;
     const attractionImg = data.data.attraction.image;
@@ -337,11 +379,11 @@ loadBookingInfo();
 
 
 function deleteBooking(){
-  document.body.style.overflow = 'hidden';
-  document.querySelector('.form-wrapper')
-  .setAttribute('style','pointer-events: auto;transform:translateY(0%)')
-  document.querySelector('.bg-modal').style.backgroundColor = "rgba(0, 0, 0, 0.25)";
-  
+  // document.body.style.overflow = 'hidden';
+  // document.querySelector('.form-wrapper')
+  // .setAttribute('style','pointer-events: auto;transform:translateY(0%)')
+  // document.querySelector('.bg-modal').style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+  openFrom();
   document.getElementById("username").classList.add("username-field-hidden")
   document.getElementById("useremail").classList.add("username-field-hidden")
   document.getElementById("password").classList.add("username-field-hidden")
