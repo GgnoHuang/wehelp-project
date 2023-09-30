@@ -1,3 +1,6 @@
+// const Ip ='http://127.0.0.1:3000/';
+const Ip ='http://54.65.60.124:3000/';
+
 
 
 async function startBooking(){
@@ -31,7 +34,9 @@ async function startBooking(){
         const currentAttractionId = currentUrl.split('/')[currentUrl.split('/').length-1]
         console.log(`景點id為：${currentAttractionId}`)
         // ------------------把預定資料傳到後端＆資料庫--------------------------
-        const res2 = await fetch("http://127.0.0.1:3000/api/booking",{
+        // const res2 = await fetch("http://127.0.0.1:3000/api/booking",{
+        const res2 = await fetch(`${Ip}api/booking`,{
+        // const res2 = await fetch("http://54.65.60.124:3000/api/booking",{
           method:'POST',
           headers:{
             'Authorization': 'Bearer '+token,
@@ -52,7 +57,9 @@ async function startBooking(){
         const data2 = await res2.json();
         console.log(data2)
         // -------------------------
-        window.location.href = "http://127.0.0.1:3000/booking";
+        // window.location.href = "http://127.0.0.1:3000/booking";
+        window.location.href = `${Ip}booking`;
+        // window.location.href = "http://54.65.60.124:3000/booking";
 
       }catch(err){
         console.error(`請求失敗：${err}`)
@@ -74,7 +81,8 @@ async function mybooking(){
   } 
   try{
     // const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
-    const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
+    // const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
+    const res = await fetch(`${Ip}api/user/auth`,{
       method:'GET',
       headers:{'Authorization': 'Bearer '+token}
     })
@@ -96,7 +104,9 @@ async function mybooking(){
     }
     else if(data.data != null){
       // 你只要有點可能，我就不給執行// 只要有一點點的可能性是null那就不讓執行
-      window.location.href = "http://127.0.0.1:3000/booking";
+      // window.location.href = "http://127.0.0.1:3000/booking";
+      window.location.href = `${Ip}booking`;
+      // window.location.href = "http://54.65.60.124:3000/booking";
     }
   }
   catch{
@@ -177,7 +187,8 @@ function switchToRegister(){
 // ================註冊=====================================
 
 async function register(){
-  const apiUrl ='http://54.65.60.124:3000/api/user'
+  // const apiUrl ='http://54.65.60.124:3000/api/user'
+  const apiUrl =`${Ip}api/user`
   const usernameInput = document.getElementById('username').value;
   const useremailInput = document.getElementById('useremail').value;
   const passwordInput = document.getElementById('password').value;
@@ -271,7 +282,8 @@ async function login(){
   };
 
   try{
-    const apiUrl ='http://54.65.60.124:3000/api/user/auth'
+    // const apiUrl ='http://54.65.60.124:3000/api/user/auth'
+    const apiUrl =`${Ip}api/user/auth`
     const res = await fetch(apiUrl,{
       method:'PUT',
       headers:{
@@ -356,7 +368,8 @@ async function checkUserAuth(){
     return
   }
   try{
-    const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
+    // const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
+    const res = await fetch(`${Ip}api/user/auth`,{
       method:'GET',
       headers:{'Authorization': 'Bearer '+token}
     })

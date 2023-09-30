@@ -1,5 +1,42 @@
+// const Ip ='http://127.0.0.1:3000/';
+const Ip ='http://54.65.60.124:3000/';
 
-function mybooking(){ location.reload(); }
+
+async function mybooking(){ 
+  const token = localStorage.getItem('token')
+  if(token == null){
+    // window.location.href = "http://54.65.60.124:3000/";
+    window.location.href = Ip
+  } 
+  try{
+    // const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
+    // const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
+    const res = await fetch(`${Ip}api/user/auth`,{
+      method:'GET',
+      headers:{'Authorization': 'Bearer '+token}
+    })
+    if(!res.ok){ //有token但過期，api判斷token過期 得到500狀態碼所以!res.ok，進入except，
+      console.error('用戶未登入');
+      localStorage.removeItem("token");
+      // window.location.href = "http://54.65.60.124:3000/";
+      window.location.href = Ip;
+    }
+    const data = await res.json();
+    console.log(data)
+    if(data.data == null){
+      console.log(data)
+      return;
+    }
+    else if(data.data != null){
+      // window.location.href = "http://127.0.0.1:3000/booking";
+      window.location.href = `${Ip}booking`
+      // window.location.href = "http://54.65.60.124:3000/booking";
+    }
+  }
+  catch{
+    console.error("catch");
+  }
+}
 
 // ================ modal =======================================
 function openFrom(){
@@ -68,7 +105,8 @@ function switchToRegister(){
 }
 // ================註冊=====================================
 async function register(){
-  const apiUrl ='http://54.65.60.124:3000/api/user'
+  // const apiUrl ='http://54.65.60.124:3000/api/user'
+  const apiUrl =`${Ip}api/user`
   const usernameInput = document.getElementById('username').value;
   const useremailInput = document.getElementById('useremail').value;
   const passwordInput = document.getElementById('password').value;
@@ -158,7 +196,8 @@ async function login(){
   };
 
   try{
-    const apiUrl ='http://54.65.60.124:3000/api/user/auth'
+    // const apiUrl ='http://54.65.60.124:3000/api/user/auth'
+    const apiUrl =`${Ip}api/user/auth`
     const res = await fetch(apiUrl,{
       method:'PUT',
       headers:{
@@ -233,7 +272,9 @@ function confirmLogout(){
   document.querySelector('.logout-btn').classList.add("logout-btn-hidden");//登出按鈕出現
   document.querySelector('.confirm-logout').classList.add('logout-btn-hidden');
   // checkUserAuth();
-  window.location.href = "http://127.0.0.1:3000/";
+  // window.location.href = "http://127.0.0.1:3000/";
+  window.location.href = Ip;
+  // window.location.href = "http://54.65.60.124:3000/";
   // location.reload();
 }
 // ===================================
@@ -249,13 +290,17 @@ async function checkUserAuth(){
   if( token == null ) { return } // 沒有token情況直接return就不fetch了
   try{
     // const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
-    const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
+    // const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
+    const res = await fetch(`${Ip}api/user/auth`,{
       method:'GET',
       headers:{'Authorization': 'Bearer '+token}
     })
     if(!res.ok){ //有token但過期，api判斷token過期 得到500狀態碼所以!res.ok，進入except，
       console.error('用戶未登入');
       localStorage.removeItem("token");
+      window.location.href = Ip;
+      // window.location.href = "http://54.65.60.124:3000/";
+      // window.location.href = "http://127.0.0.1:3000/";
       return;
     }
     const data = await res.json();
@@ -282,15 +327,18 @@ async function loadBookingInfo(){
   const token = localStorage.getItem('token')
   if(token == null){
     console.log('沒有token登入');
-    window.location.href = "http://127.0.0.1:3000/";
+    // window.location.href = "http://127.0.0.1:3000/";
+    window.location.href = Ip;
+    // window.location.href = "http://54.65.60.124:3000/";
     return;
   }
   try{
-    const res = await fetch("http://127.0.0.1:3000/api/booking",{
+    // const res = await fetch("http://127.0.0.1:3000/api/booking",{
+    // const res = await fetch("http://54.65.60.124:3000/api/booking",{
+    const res = await fetch(`${Ip}api/booking`,{
       method:'GET',
       headers:{
         'Authorization': 'Bearer '+token,
-        // 'Authorization': 'Bearer '+'adsfadsf345'
       },
     })
     if (!res.ok){
@@ -315,11 +363,10 @@ async function loadBookingInfo(){
       throw new Error(errData.message);
     }
     document.querySelector(".no-booking-text").classList.add("username-field-hidden")
-
     // document.querySelector("html").classList.remove("no-booking-result-html")
     // document.querySelector("body").classList.remove("no-booking-result-body")
     // document.querySelector(".footer-wrapper").classList.remove("no-booking-result-footer-wrapper")
-    // 上面這個不用加
+    // 上面這個不用加，跳轉後dom會自己重新整理
     console.log("有行程")
     const data = await res.json();
 
@@ -351,10 +398,6 @@ loadBookingInfo();
 
 
 function deleteBooking(){
-  // document.body.style.overflow = 'hidden';
-  // document.querySelector('.form-wrapper')
-  // .setAttribute('style','pointer-events: auto;transform:translateY(0%)')
-  // document.querySelector('.bg-modal').style.backgroundColor = "rgba(0, 0, 0, 0.25)";
   openFrom();
   document.getElementById("username").classList.add("username-field-hidden")
   document.getElementById("useremail").classList.add("username-field-hidden")
@@ -381,11 +424,15 @@ async function confirmDeleteBooking(){
   const token = localStorage.getItem('token')
   if(token == null){
     console.log('沒有token登入');
-    window.location.href = "http://127.0.0.1:3000/";
+    // window.location.href = "http://127.0.0.1:3000/";
+    window.location.href = Ip;
+    // window.location.href = "http://54.65.60.124:3000/";
     return;
   }
   try{
-    const res = await fetch("http://127.0.0.1:3000/api/booking",{
+    // const res = await fetch("http://127.0.0.1:3000/api/booking",{
+    // const res = await fetch("http://54.65.60.124:3000/api/booking",{
+    const res = await fetch(`${Ip}api/booking`,{
       method:'DELETE',
       headers:{'Authorization': 'Bearer '+token,},
     })

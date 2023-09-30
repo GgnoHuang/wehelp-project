@@ -1,3 +1,7 @@
+// const Ip ='http://127.0.0.1:3000/';
+const Ip ='http://54.65.60.124:3000/';
+
+
 
 
 // 要用前端還後端決定要跳轉？
@@ -13,7 +17,8 @@ async function mybooking(){
   } 
   try{
     // const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
-    const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
+    // const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
+    const res = await fetch(`${Ip}api/user/auth`,{
       method:'GET',
       headers:{'Authorization': 'Bearer '+token}
     })
@@ -35,7 +40,9 @@ async function mybooking(){
     else if(data.data != null){
       // 只要有點可能null，我就不給執行
     // 只要有一點點的可能性是null那就不讓執行
-      window.location.href = "http://127.0.0.1:3000/booking";
+      // window.location.href = "http://127.0.0.1:3000/booking";
+      window.location.href =  `${Ip}booking`;
+      // window.location.href = "http://54.65.60.124:3000/booking";
     }
   }
   catch{
@@ -118,7 +125,8 @@ function switchToRegister(){
 //--------- 註冊功能 -----------
 async function register(){
   // const apiUrl ='http://54.65.60.124:3000/api/user'
-  const apiUrl ='http://127.0.0.1:3000/api/user'
+  // const apiUrl ='http://127.0.0.1:3000/api/user'
+  const apiUrl = `${Ip}api/user`
 
   const usernameInput = document.getElementById('username').value;
   const useremailInput = document.getElementById('useremail').value;
@@ -205,7 +213,8 @@ async function login(){
   try{
 
     // const apiUrl ='http://54.65.60.124:3000/api/user/auth'
-    const apiUrl ='http://127.0.0.1:3000/api/user/auth'
+    // const apiUrl ='http://127.0.0.1:3000/api/user/auth'
+    const apiUrl = `${Ip}api/user/auth`
     const res = await fetch(apiUrl,{
       method:'PUT',
       headers:{
@@ -285,7 +294,8 @@ async function checkUserAuth(){
   if( token == null ) { return } // 沒有token情況直接return就不fetch了
   try{
     // const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
-    const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
+    // const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
+    const res = await fetch( `${Ip}api/user/auth`,{
       method:'GET',
       headers:{'Authorization': 'Bearer '+token}
     })
