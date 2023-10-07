@@ -7,7 +7,12 @@ import json
 
 import jwt
 from jwt.exceptions import ExpiredSignatureError
+
 import datetime
+
+import requests
+from requests.exceptions import RequestException
+
 # ------------------------
 app=Flask(__name__,
         static_folder='static',
@@ -43,6 +48,146 @@ def thankyou():
 	return render_template("thankyou.html")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+@app.route("/api/orders", methods = ["POST"])
+def orderpost():
+    err_res = {"error": True,"message":"發生錯誤"}
+    if not req.is_json: # 確定他是一個json
+        err_res["message"] = "request body必須為json格式"
+        return Response(json.dumps(err_res, ensure_ascii=False), status=400, content_type='application/json; charset=utf-8')
+    try:
+        conn = pool.get_connection()
+        if conn.is_connected():
+            cursor = conn.cursor()
+
+            reqToken = req.headers['Authorization'].split()[1]
+            secret_key = 'mysecret-key'
+            decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
+            member_id = decoded_token['id']
+
+            req_json_data = req.get_json()
+            place_id = req_json_data['order']['trip']['attraction']['id']
+            date = req_json_data['order']['trip']['date']
+            time = req_json_data['order']['trip']['time']
+            price = req_json_data['order']['price']
+            contact_name = req_json_data['order']['contact']['name']
+            contact_email = req_json_data['order']['contact']['email']
+            contact_phone = req_json_data['order']['contact']['phone']
+            
+            if '' in contact_name:
+                print('空格')
+
+            def generate_order_number(member_id):
+                current_time = datetime.datetime.now()
+                timestamp = current_time.strftime('%Y%m%d%H%M%S%f')  # 包含微秒，以確保唯一性
+                payment_order_num = f"{timestamp}-{member_id:04d}"
+                return payment_order_num
+            payment_order_num = generate_order_number(member_id)
+            print(f"訂單編號：{payment_order_num}") 
+    
+            cursor.execute("""INSERT INTO payment_order(
+                payment_order_num, member_id, place_id, travel_date, time_slot, price, contact_name, contact_email, contact_phone) 
+                VALUES(%s, %s, %s, STR_TO_DATE(%s,'%Y-%m-%d'), %s, %s, %s, %s, %s);""",
+                (payment_order_num,member_id, place_id, date, time, price,contact_name,contact_email,contact_phone))
+            conn.commit() 
+
+            # 例如，如果 %s 中的字符串是 '2023-10-15'，
+            # 則 STR_TO_DATE(%s, '%Y-%m-%d') 將解析這個字符串，
+            # 並將其轉換為對應的日期值，即 2023 年 10 月 15 日。
+            # 在這個示例中，我們使用了包含年、月、日、時、分、秒和微秒的時間戳記，以確保生成的訂單編號是唯一的。然後，我們將會員ID添加到最後，以建立最終的訂單編號。
+            # 這樣的方法將生成基於時間和會員ID的唯一訂單編號，而不依賴於每天的訂單數量。請注意，微秒部分（%f）是為了確保即使在同一秒內生成多個訂單，它們仍然是唯一的。
+
+            tappay_api_url = 'https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime'
+            MyPartnerKey = "partner_XSHeU7xfaEjCrv4ib00GBJ8NC9L4Cvm8he4RfQH5BdQE2dLCM4brZq73"
+            headers = {
+                "Content-Type": "application/json",
+                "x-api-key": MyPartnerKey
+            }
+            prime = req_json_data.get("prime", None)
+            tappay_api_data = {
+                "prime": prime,
+                "partner_key": MyPartnerKey,
+                "merchant_id": "Isaac_TAISHIN",
+                "details": '台北一日遊',
+                "amount":req_json_data['order']['price'],
+                "cardholder": {
+                    "phone_number": req_json_data['order']['contact']['phone'],
+                    "name": req_json_data['order']['contact']['name'],
+                    "email": req_json_data['order']['contact']['email']
+                },
+            }
+            response = requests.post(tappay_api_url, json=tappay_api_data, headers=headers)
+            tappay_api_res = response.json()
+
+            payment_status_res = {
+                "data": {
+                    "number": payment_order_num,
+                    "payment": {
+                        "status": 0,
+                        "message": "付款成功"
+                    }
+                }
+            }
+            if tappay_api_res['status'] != 0:
+                print("Tap Pay Server交易失敗")
+                payment_status_res["data"]['payment']['status'] = f"TapPay api status:{tappay_api_res['status']}"  
+                payment_status_res["data"]['payment']['message'] = f"TapPay api msg:{tappay_api_res['msg']}"       
+                conn.close()  
+                return Response(json.dumps(payment_status_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
+            elif tappay_api_res['status'] == 0:
+                query = "UPDATE payment_order SET is_paid = %s WHERE payment_order_num = %s"
+                cursor.execute(query, (1, payment_order_num))
+                conn.commit() 
+                print('Tap Pay Server交易成功')
+                conn.close()  
+                return Response(json.dumps(payment_status_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
+        else:
+            conn.close()
+            err_res['message']='connection pool失敗'
+            return Response(json.dumps(err_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8') 
+    except ExpiredSignatureError:
+        conn.close()
+        print('jwt已失效')
+        err_res['message']='jwt已失效'
+        return Response(json.dumps(err_res, ensure_ascii=False), status=403, content_type='application/json; charset=utf-8') 
+    except jwt.exceptions.PyJWTError :
+        conn.close()
+        print('jwt錯誤')
+        err_res['message']='jwt錯誤'
+        return Response(json.dumps(err_res, ensure_ascii=False), status=403, content_type='application/json; charset=utf-8') 
+    except RequestException as err:
+        conn.close()
+        print(err)
+        err_res['message']= err
+        return Response(json.dumps(err_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8') 
+    except Exception as err :
+        conn.close()
+        print(err)
+        err_res['message']= err
+        return Response(json.dumps(err_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
+
+
+
+
+
+@app.route("/api/orders/<orderNumber>", methods = ["GET"])
+def orderget():
+    error_res = {"error": True,"message":"發生錯誤"}
+    print(1)
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route("/api/booking", methods = ["GET", "POST", "DELETE"])
 def api_booking():
     err_res = { "error": True, "message": "發生錯誤" }#  或 err_res=dict(error=True,message="發生錯誤")

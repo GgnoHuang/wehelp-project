@@ -1,16 +1,233 @@
-// const Ip ='http://127.0.0.1:3000/';
-const Ip ='http://54.65.60.124:3000/';
+const Ip ='http://127.0.0.1:3000/';
+// const Ip ='http://54.65.60.124:3000/';
 
+
+// -----------------------------------
+// -----------------------------------
+
+TPDirect.setupSDK(137160, 'app_mqFIelg6b1mfWMejRa8GDUyBf9AERCV5qwOf9GnRGKSngdUg2Osa23nXNKgY', 'sandbox')
+
+
+let fields = {
+  number: {
+      // css selector
+      element: '#card-number',
+      placeholder: '**** **** **** ****'
+  },
+  expirationDate: {
+      // DOM object
+      element: document.getElementById('card-expiration-date'),
+      placeholder: 'MM / YY'
+  },
+  ccv: {
+      element: '#card-ccv',
+      placeholder: '後三碼 CVV'
+  }
+}
+
+TPDirect.card.setup({
+  fields: fields,
+  styles: {
+      // Style all elements
+      'input': {
+          'color': 'gray'
+      },
+      // Styling ccv field
+      'input.ccv': {
+          // 'font-size': '16px'
+      },
+      // Styling expiration-date field
+      'input.expiration-date': {
+          // 'font-size': '16px'
+      },
+      // Styling card-number field
+      'input.card-number': {
+          // 'font-size': '16px'
+      },
+      // style focus state
+      ':focus': {
+          // 'color': 'black'
+      },
+      // style valid state
+      '.valid': {
+          'color': 'green'
+      },
+      // style invalid state
+      '.invalid': {
+          'color': 'red'
+      },
+      // Media queries
+      // Note that these apply to the iframe, not the root window.
+      '@media screen and (max-width: 400px)': {
+          'input': {
+              'color': 'orange'
+          }
+      }
+  },
+  // 此設定會顯示卡號輸入正確後，會顯示前六後四碼信用卡卡號
+  isMaskCreditCardNumber: true,
+  maskCreditCardNumberRange: {
+      beginIndex: 6, 
+      endIndex: 11
+  }
+})
+
+
+TPDirect.card.onUpdate(function (update) {
+  // update.canGetPrime === true
+  // --> you can call TPDirect.card.getPrime()
+  var submitButton = document.querySelector('#submit')
+  if (update.canGetPrime) {
+    console.log(update.canGetPrime)
+    alert(update.canGetPrime)
+    submitButton.removeAttribute('disabled')
+    // Enable submit Button to get prime.
+    // submitButton.removeAttribute('disabled')
+  } else {
+    submitButton.setAttribute('disabled', true)
+    console.log(update.canGetPrime)
+
+    // Disable submit Button to get prime.
+    // submitButton.setAttribute('disabled', true)
+  }
+                                        
+  // cardTypes = ['mastercard', 'visa', 'jcb', 'amex', 'unknown']
+  if (update.cardType === 'visa') {
+    // Handle card type visa.
+  }
+
+  // number 欄位是錯誤的
+  if (update.status.number === 2) {
+    // setNumberFormGroupToError()
+  } else if (update.status.number === 0) {
+    // setNumberFormGroupToSuccess()
+  } else {
+    // setNumberFormGroupToNormal()
+  }
+
+  if (update.status.expiry === 2) {
+    // setNumberFormGroupToError()
+  } else if (update.status.expiry === 0) {
+    // setNumberFormGroupToSuccess()
+  } else {
+    // setNumberFormGroupToNormal()
+  }
+
+  if (update.status.ccv === 2) {
+    // setNumberFormGroupToError()
+  } else if (update.status.ccv === 0) {
+    // setNumberFormGroupToSuccess()
+  } else {
+    // setNumberFormGroupToNormal()
+  }
+})
+
+// -----------------------------------
+
+
+document.querySelector('#submit').addEventListener('click', function(event){
+  const token = localStorage.getItem('token')
+    if(token == null){
+      alert('請先登入');
+      window.location.href = Ip;
+      return;
+    }
+  const inputContactName = document.getElementById('input-username').value;
+  const inputContactEmail = document.getElementById('input-useremail').value;
+  const inputContactPhone = document.getElementById('input-userphone').value;
+  if(inputContactName == "" || inputContactEmail == "" || inputContactPhone == ""){
+    // systemMsg.innerHTML='請填寫每個欄位';
+    alert('請填寫每個欄位')
+    // systemMsg.style.opacity=1;
+    return;
+  };
+  if (/\s/.test(inputContactName) || /\s/.test(inputContactEmail) || /\s/.test(inputContactPhone)) {
+    alert('請勿輸入空格');
+    return;
+  }
+  const phoneNumPattern = /^[0-9+-]+$/;
+  if (!phoneNumPattern.test(inputContactPhone)) {
+    alert('請輸入正確的電話號碼格式');
+    return;
+  }
+  const emailPattern = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+  if(!emailPattern.test(inputContactEmail)){
+    // systemMsg.innerHTML='請輸入正確的電子信箱格式';
+    // systemMsg.style.opacity=1;
+    alert('請輸入正確的電子信箱格式')
+    return;
+  };// 
+
+  TPDirect.card.getPrime(async function(result){
+    try{
+      if (TPDirect.card.getTappayFieldsStatus().canGetPrime == false) {
+        throw new Error('prime獲取失敗');
+      }
+      if (result.status != 0) {
+        throw new Error(`get prime error:${result.msg}`);
+      }
+    }catch(err){
+      console.error(`發生錯誤${err}`);
+      return;
+    }  
+    // console.log(result)
+    // console.log(result.status)
+    console.log('get prime 成功，prime: ' + result.card.prime)
+
+    let myprime = result.card.prime
+
+    const apiUrl ='http://127.0.0.1:3000/api/orders'
+    try{
+      const res = await fetch(apiUrl,{
+        method:'POST',
+        headers:{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer '+token
+        },
+        body: JSON.stringify({
+          "prime": myprime,
+          "order": {
+            "price": fetchBookingData.price,
+            "trip": {
+              "attraction": {
+                "id": fetchBookingData.attraction.id,
+                "name": fetchBookingData.attraction.name,
+                "address": fetchBookingData.attraction.address,
+                "image": fetchBookingData.attraction.image
+              },
+              "date": fetchBookingData.date,
+              "time": fetchBookingData.time
+            },
+            "contact": {
+              "name": document.getElementById('input-username').value,
+              "email": document.getElementById('input-useremail').value,
+              "phone": document.getElementById('input-userphone').value
+            }
+          }
+        })
+      })
+      if(!res.ok){ 
+        let errData = await res.json()
+        throw new Error(errData.message);
+      }
+      const data = await res.json();
+      console.log(data);
+    }catch(err){
+      console.error(`請求失敗：${err}`)
+    }
+  })
+})
+// -----------------------------------
+
+// console.log(TPDirect)
 
 async function mybooking(){ 
   const token = localStorage.getItem('token')
   if(token == null){
-    // window.location.href = "http://54.65.60.124:3000/";
-    window.location.href = Ip
+    window.location.href = Ip;
+    return;
   } 
   try{
-    // const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
-    // const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
     const res = await fetch(`${Ip}api/user/auth`,{
       method:'GET',
       headers:{'Authorization': 'Bearer '+token}
@@ -18,7 +235,6 @@ async function mybooking(){
     if(!res.ok){ //有token但過期，api判斷token過期 得到500狀態碼所以!res.ok，進入except，
       console.error('用戶未登入');
       localStorage.removeItem("token");
-      // window.location.href = "http://54.65.60.124:3000/";
       window.location.href = Ip;
     }
     const data = await res.json();
@@ -28,9 +244,7 @@ async function mybooking(){
       return;
     }
     else if(data.data != null){
-      // window.location.href = "http://127.0.0.1:3000/booking";
       window.location.href = `${Ip}booking`
-      // window.location.href = "http://54.65.60.124:3000/booking";
     }
   }
   catch{
@@ -283,14 +497,15 @@ function confirmLogout(){
 
 // ~~~~~~~~~~~~~~~~~~~~確定會員身份，取得會員姓名~~~~~~~~~~~~~~~~~~~~~~~
 let userNameData;
+let userData;
 async function checkUserAuth(){
   document.querySelector('.open-form-btn').classList.remove("open-form-btn-hidden");//登入註冊選單按鈕出現
   document.querySelector('.logout-btn').classList.add("logout-btn-hidden");//登出按鈕消失
   const token = localStorage.getItem('token')
-  if( token == null ) { return } // 沒有token情況直接return就不fetch了
+  if( token == null ) { 
+    window.location.href = Ip;
+    return } // 沒有token情況直接return就不fetch了
   try{
-    // const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
-    // const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
     const res = await fetch(`${Ip}api/user/auth`,{
       method:'GET',
       headers:{'Authorization': 'Bearer '+token}
@@ -299,8 +514,6 @@ async function checkUserAuth(){
       console.error('用戶未登入');
       localStorage.removeItem("token");
       window.location.href = Ip;
-      // window.location.href = "http://54.65.60.124:3000/";
-      // window.location.href = "http://127.0.0.1:3000/";
       return;
     }
     const data = await res.json();
@@ -308,10 +521,12 @@ async function checkUserAuth(){
       console.log(data)
       return
     }else if(data.data!==null){
-    const userData = data.data
+    userData = data.data
 
     userNameData = userData['name']
     document.querySelector(".hello-username").innerHTML=userNameData;
+    document.getElementById('input-username').value= userData['name']
+    document.getElementById('input-useremail').value= userData['email']
 
     document.querySelector('.open-form-btn').classList.add("open-form-btn-hidden");//登入註冊選單按鈕消失
     document.querySelector('.logout-btn').classList.remove("logout-btn-hidden");//登出按鈕出現
@@ -323,28 +538,23 @@ async function checkUserAuth(){
 }
 checkUserAuth();
 // -----------------預訂頁面資料加載--------------------
+let fetchBookingData;
 async function loadBookingInfo(){
   const token = localStorage.getItem('token')
   if(token == null){
     console.log('沒有token登入');
-    // window.location.href = "http://127.0.0.1:3000/";
     window.location.href = Ip;
-    // window.location.href = "http://54.65.60.124:3000/";
     return;
   }
   try{
-    // const res = await fetch("http://127.0.0.1:3000/api/booking",{
-    // const res = await fetch("http://54.65.60.124:3000/api/booking",{
     const res = await fetch(`${Ip}api/booking`,{
       method:'GET',
-      headers:{
-        'Authorization': 'Bearer '+token,
-      },
+      headers:{'Authorization': 'Bearer '+token}
     })
     if (!res.ok){
       let errData = await res.json()
       if(errData.error){
-        // 頁面清空
+        // 如果沒有行程，頁面清空
         const bd=document.querySelector("body");
         bd.removeChild(document.querySelector(".place-info-area-wrapper"));
         bd.removeChild(document.querySelector(".contact-info-wrapper"));
@@ -369,7 +579,7 @@ async function loadBookingInfo(){
     // 上面這個不用加，跳轉後dom會自己重新整理
     console.log("有行程")
     const data = await res.json();
-
+    fetchBookingData = data.data;
     const attractionName = data.data.attraction.name;
     const attractionAdd = data.data.attraction.address;
     const attractionImg = data.data.attraction.image;
@@ -424,17 +634,13 @@ async function confirmDeleteBooking(){
   const token = localStorage.getItem('token')
   if(token == null){
     console.log('沒有token登入');
-    // window.location.href = "http://127.0.0.1:3000/";
     window.location.href = Ip;
-    // window.location.href = "http://54.65.60.124:3000/";
     return;
   }
   try{
-    // const res = await fetch("http://127.0.0.1:3000/api/booking",{
-    // const res = await fetch("http://54.65.60.124:3000/api/booking",{
     const res = await fetch(`${Ip}api/booking`,{
       method:'DELETE',
-      headers:{'Authorization': 'Bearer '+token,},
+      headers:{'Authorization': 'Bearer '+token}
     })
     if (!res.ok){
       let errData = await res.json()

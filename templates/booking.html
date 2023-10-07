@@ -100,17 +100,17 @@
     
       <div class="contact-key">
         <p>聯絡姓名：</p>
-        <input type="text">
+        <input type="text" id="input-username">
       </div>
 
       <div class="contact-key">
         <p>聯絡信箱：</p>
-        <input type="text">
+        <input type="text" id="input-useremail">
       </div>
       
       <div class="contact-key">
         <p>手機號碼：</p>
-        <input type="text">
+        <input type="text" id="input-userphone">
       </div>
 
       <p class="please-keep-phone">
@@ -127,21 +127,50 @@
         <p class="your-credit-info">
           信用卡付款資訊
         </p>
-      
-        <div class="credit-key">
+
+
+        <div class="tpfield" id="card-number"></div>
+        <div class="tpfield" id="card-expiration-date"></div>
+        <div class="tpfield" id="card-ccv"></div>
+
+
+        <style>
+          .tpfield {
+              height: 40px;
+              width: 300px;
+              border: 1px solid gray;
+              margin: 5px 0;
+              padding: 5px;
+          }
+        </style>
+
+        <!-- <div class="form-group card-number-group">
+          <label for="card-number" class="control-label"><span id="cardtype"></span>卡號</label>
+          <div class="form-control card-number"></div>
+          </div>
+          <div class="form-group expiration-date-group">
+          <label for="expiration-date" class="control-label">卡片到期日</label>
+          <div class="form-control expiration-date" id="tappay-expiration-date"></div>
+          </div>
+          <div class="form-group ccv-group">
+          <label for="ccv" class="control-label">卡片後三碼</label>
+          <div class="form-control ccv"></div>
+          </div>
+       -->
+        <!-- <div class="credit-key">
           <p>卡片號碼：</p>
-          <input type="password" placeholder="**** **** **** ****">
+          <input class="tpfield" id="card-number" type="password" placeholder="**** **** **** ****">
         </div>
   
         <div class="credit-key">
           <p>過期時間：</p>
-          <input type="text" placeholder="MM / YY">
+          <input class="tpfield" id="card-expiration-date" type="text" placeholder="MM / YY">
         </div>
         
         <div class="credit-key credit-key-1">
           <p>驗證密碼：</p>
-          <input type="text" placeholder="CVV">
-        </div>
+          <input class="tpfield" id="card-ccv" type="text" placeholder="CVV">
+        </div> -->
       </div>
     </div>
 
@@ -152,7 +181,7 @@
       <div class="confirm-booking">
         <p>總價：新台幣<span class="price-2"></span>元</p>
         <div class="okk">
-          <div class="ok">確認訂購並付款</div>
+          <div class="ok" id="submit">確認訂購並付款</div>
         </div>
         
       </div>
@@ -164,6 +193,99 @@
       </footer>
     </div>
 
+    <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.17.0"></script>
+
+
     <script src="/static/booking.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script> -->
+
+  
+    <!-- jquery -->
+
+
+
+<!-- 
+    <script>
+      var statusTable = {
+          '0': '欄位已填好，並且沒有問題',
+          '1': '欄位還沒有填寫',
+          '2': '欄位有錯誤，此時在 CardView 裡面會用顯示 errorColor',
+          '3': '使用者正在輸入中',
+      }
+      var defaultCardViewStyle = {
+          color: 'rgb(0,0,0)',
+          fontSize: '15px',
+          lineHeight: '24px',
+          fontWeight: '300',
+          errorColor: 'red',
+          placeholderColor: ''
+      }
+      var config = { 
+          isUsedCcv: false,
+          // 此設定會顯示卡號輸入正確後，會顯示前六後四碼信用卡卡號
+          isMaskCreditCardNumber: true,
+          maskCreditCardNumberRange: {
+              beginIndex: 6, 
+              endIndex: 11
+          }
+      }
+      TPDirect.card.setup('#tappay-iframe', defaultCardViewStyle, config)
+      TPDirect.card.onUpdate(function (update) {
+
+          var submitButton = document.querySelector('#submit')
+          var cardViewContainer = document.querySelector('#tappay-iframe')
+
+          if (update.canGetPrime) {
+              submitButton.removeAttribute('disabled')
+          } else {
+              submitButton.setAttribute('disabled', true)
+          }
+
+          var message = document.querySelector('#message')
+
+          message.innerHTML = `
+              canGetPrime: ${update.canGetPrime} \n
+              cardNumberStatus: ${statusTable[update.status.number]} \n
+              cardExpiryStatus: ${statusTable[update.status.expiry]} \n
+              ccvStatus: ${statusTable[update.status.ccv]}
+          `.replace(/    /g, '')
+
+          if (update.hasError) {
+              message.classList.add('error')
+              message.classList.remove('info')
+          } else {
+              message.classList.remove('error')
+              message.classList.add('info')
+          }
+      })
+      document.querySelector('#submit').addEventListener('click', function(event) {
+          TPDirect.card.getPrime(function(result) {
+              document.querySelector('#result').innerHTML  = JSON.stringify(result, null, 4)
+
+              var command = `
+              Use following command to send to server \n\n
+              curl -X POST https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime \\
+              -H 'content-type: application/json' \\
+              -H 'x-api-key: partner_6ID1DoDlaPrfHw6HBZsULfTYtDmWs0q0ZZGKMBpp4YICWBxgK97eK3RM' \\
+              -d '{
+                  "partner_key": "partner_6ID1DoDlaPrfHw6HBZsULfTYtDmWs0q0ZZGKMBpp4YICWBxgK97eK3RM",
+                  "prime": "${result.card.prime}",
+                  "amount": "1",
+                  "merchant_id": "GlobalTesting_CTBC",
+                  "details": "Some item",
+                  "cardholder": {
+                      "phone_number": "+886923456789",
+                      "name": "王小明",
+                      "email": "LittleMing@Wang.com",
+                      "zip_code": "100",
+                      "address": "台北市天龍區芝麻街1號1樓",
+                      "national_id": "A123456789"
+                  }
+              }'`.replace(/                /g, '')
+
+              document.querySelector('#curl').innerHTML = command
+          })
+      })
+    </script> -->
 </body>
 </html>
