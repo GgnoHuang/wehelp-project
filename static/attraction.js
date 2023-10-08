@@ -1,5 +1,5 @@
-const Ip ='http://127.0.0.1:3000/';
-// const Ip ='http://54.65.60.124:3000/';
+// const Ip ='http://127.0.0.1:3000/';
+const Ip ='http://54.65.60.124:3000/';
 
 async function startBooking(){
     // ----------------------------------------
