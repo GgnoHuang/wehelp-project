@@ -1,8 +1,6 @@
 // const Ip ='http://127.0.0.1:3000/';
 const Ip ='http://54.65.60.124:3000/';
 
-
-
 async function startBooking(){
     // ----------------------------------------
     const token = localStorage.getItem('token')
@@ -34,9 +32,7 @@ async function startBooking(){
         const currentAttractionId = currentUrl.split('/')[currentUrl.split('/').length-1]
         console.log(`景點id為：${currentAttractionId}`)
         // ------------------把預定資料傳到後端＆資料庫--------------------------
-        // const res2 = await fetch("http://127.0.0.1:3000/api/booking",{
         const res2 = await fetch(`${Ip}api/booking`,{
-        // const res2 = await fetch("http://54.65.60.124:3000/api/booking",{
           method:'POST',
           headers:{
             'Authorization': 'Bearer '+token,
@@ -56,19 +52,13 @@ async function startBooking(){
         }
         const data2 = await res2.json();
         console.log(data2)
-        // -------------------------
-        // window.location.href = "http://127.0.0.1:3000/booking";
-        window.location.href = `${Ip}booking`;
-        // window.location.href = "http://54.65.60.124:3000/booking";
 
+        window.location.href = `${Ip}booking`;
       }catch(err){
         console.error(`請求失敗：${err}`)
       }
     }
 }
-
-
-
 
 async function mybooking(){
   const token = localStorage.getItem('token')
@@ -80,8 +70,6 @@ async function mybooking(){
     return; // 沒有token情況直接return就不fetch了
   } 
   try{
-    // const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
-    // const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
     const res = await fetch(`${Ip}api/user/auth`,{
       method:'GET',
       headers:{'Authorization': 'Bearer '+token}
@@ -104,12 +92,9 @@ async function mybooking(){
     }
     else if(data.data != null){
       // 你只要有點可能，我就不給執行// 只要有一點點的可能性是null那就不讓執行
-      // window.location.href = "http://127.0.0.1:3000/booking";
       window.location.href = `${Ip}booking`;
-      // window.location.href = "http://54.65.60.124:3000/booking";
     }
-  }
-  catch{
+  }catch{
     console.error("catch");
   }
 }
@@ -135,8 +120,6 @@ function closeForm(){
   document.getElementById('password').value="";
   document.querySelector(".system-msg").innerHTML="";
 }
-
-
 
 function switchToLogin(){
   const usernameInputBox = document.getElementById("username"); 
@@ -326,7 +309,6 @@ async function login(){
 }
 // =======================================
 
-
 function logout(){
   document.body.style.overflow = 'hidden';
   document.querySelector('.form-wrapper')
@@ -411,12 +393,13 @@ const pageId = location.href.split('/')[location.href.split('/').length-1]
 // 1.首頁在創建並渲染景點圖卡時，事件監聽使點擊的時候跳轉到url = location.href+ 'attraction/' + idData
 // 2.
 // 3.
-const attractionApiUrl = `http://54.65.60.124:3000/api/attraction/${pageId}`
+const attractionApiUrl = `${Ip}api/attraction/${pageId}`
 async function fetchData(url){
   try{
     const res = await fetch(url);
     if(!res.ok){
-      throw new Error(`fetch失敗，api地址為：${url}`)
+      const errData = await res.json();
+      throw new Error(errData.message)
     }
     const data = await res.json();
     return data;

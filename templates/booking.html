@@ -23,6 +23,7 @@
           <button class="login-btn" onclick="login()">登入</button>
           <button class="confirm-logout confirm-logout-hidden" onclick="confirmLogout()">確定登出</button>
           <button class="confirm-delete confirm-delete-hidden" onclick="confirmDeleteBooking()">確定刪除</button>
+          <button class="confirm-transaction confirm-transaction-hidden" onclick="confirmTransaction()">確認</button>
         <!-- </form> -->
           <p class="already already-or-donthave-hidden" >已經有帳戶了？<span class="click-to-login" onclick="switchToLogin()">點此登入</span></p>
           <p class="dont-have">還沒有帳戶？<span class="click-to-register" onclick="switchToRegister()">點此註冊</span></p>
@@ -100,17 +101,17 @@
     
       <div class="contact-key">
         <p>聯絡姓名：</p>
-        <input type="text">
+        <input type="text" id="input-username">
       </div>
 
       <div class="contact-key">
         <p>聯絡信箱：</p>
-        <input type="text">
+        <input type="text" id="input-useremail">
       </div>
       
       <div class="contact-key">
         <p>手機號碼：</p>
-        <input type="text">
+        <input type="text" id="input-userphone">
       </div>
 
       <p class="please-keep-phone">
@@ -127,21 +128,25 @@
         <p class="your-credit-info">
           信用卡付款資訊
         </p>
-      
+
         <div class="credit-key">
           <p>卡片號碼：</p>
-          <input type="password" placeholder="**** **** **** ****">
+          <div class="tpfield" id="card-number"></div>
         </div>
-  
+
         <div class="credit-key">
           <p>過期時間：</p>
-          <input type="text" placeholder="MM / YY">
+          <div class="tpfield" id="card-expiration-date"></div>
         </div>
         
         <div class="credit-key credit-key-1">
           <p>驗證密碼：</p>
-          <input type="text" placeholder="CVV">
+          <div class="tpfield" id="card-ccv"></div>
+
         </div>
+
+        <p class="yourcardgood "></p>
+
       </div>
     </div>
 
@@ -152,7 +157,7 @@
       <div class="confirm-booking">
         <p>總價：新台幣<span class="price-2"></span>元</p>
         <div class="okk">
-          <div class="ok">確認訂購並付款</div>
+          <div class="ok" id="submit">確認訂購並付款</div>
         </div>
         
       </div>
@@ -164,6 +169,10 @@
       </footer>
     </div>
 
+    <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.17.0"></script>
+
     <script src="/static/booking.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script> -->
+
 </body>
 </html>
