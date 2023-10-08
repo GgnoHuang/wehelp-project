@@ -23,6 +23,7 @@
           <button class="login-btn" onclick="login()">登入</button>
           <button class="confirm-logout confirm-logout-hidden" onclick="confirmLogout()">確定登出</button>
           <button class="confirm-delete confirm-delete-hidden" onclick="confirmDeleteBooking()">確定刪除</button>
+          <button class="confirm-transaction confirm-transaction-hidden" onclick="confirmTransaction()">確認</button>
         <!-- </form> -->
           <p class="already already-or-donthave-hidden" >已經有帳戶了？<span class="click-to-login" onclick="switchToLogin()">點此登入</span></p>
           <p class="dont-have">還沒有帳戶？<span class="click-to-register" onclick="switchToRegister()">點此註冊</span></p>
@@ -128,21 +129,50 @@
           信用卡付款資訊
         </p>
 
+        <div class="credit-key">
+          <p>卡片號碼：</p>
+          <div class="tpfield" id="card-number"></div>
+          <!-- <input type="password" placeholder="**** **** **** ****"> -->
+        </div>
 
-        <div class="tpfield" id="card-number"></div>
-        <div class="tpfield" id="card-expiration-date"></div>
-        <div class="tpfield" id="card-ccv"></div>
+        <div class="credit-key">
+          <p>過期時間：</p>
+          <div class="tpfield" id="card-expiration-date"></div>
+          <!-- <input type="text" placeholder="MM / YY"> -->
+        </div>
+        
+        <div class="credit-key credit-key-1">
+          <p>驗證密碼：</p>
+          <div class="tpfield" id="card-ccv"></div>
+
+        </div>
+
+        <p class="yourcardgood "></p>
 
 
-        <style>
-          .tpfield {
-              height: 40px;
-              width: 300px;
-              border: 1px solid gray;
-              margin: 5px 0;
-              padding: 5px;
-          }
-        </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <!-- <div class="form-group card-number-group">
           <label for="card-number" class="control-label"><span id="cardtype"></span>卡號</label>

@@ -2,11 +2,9 @@ const Ip ='http://127.0.0.1:3000/';
 // const Ip ='http://54.65.60.124:3000/';
 
 
-// -----------------------------------
-// -----------------------------------
-
+// ====================================================================
+// ====================  TPDirect  setup  =============================
 TPDirect.setupSDK(137160, 'app_mqFIelg6b1mfWMejRa8GDUyBf9AERCV5qwOf9GnRGKSngdUg2Osa23nXNKgY', 'sandbox')
-
 
 let fields = {
   number: {
@@ -21,7 +19,7 @@ let fields = {
   },
   ccv: {
       element: '#card-ccv',
-      placeholder: '後三碼 CVV'
+      placeholder: 'CVV'
   }
 }
 
@@ -72,91 +70,39 @@ TPDirect.card.setup({
   }
 })
 
-
 TPDirect.card.onUpdate(function (update) {
   // update.canGetPrime === true
   // --> you can call TPDirect.card.getPrime()
   var submitButton = document.querySelector('#submit')
   if (update.canGetPrime) {
     console.log(update.canGetPrime)
-    alert(update.canGetPrime)
+    document.querySelector(".yourcardgood").innerHTML="有效的卡號。"
+    document.querySelector(".yourcardgood").style.opacity=1;
+    document.querySelector(".yourcardgood").style.color='green'
+    
     submitButton.removeAttribute('disabled')
-    // Enable submit Button to get prime.
-    // submitButton.removeAttribute('disabled')
   } else {
     submitButton.setAttribute('disabled', true)
-    console.log(update.canGetPrime)
-
-    // Disable submit Button to get prime.
-    // submitButton.setAttribute('disabled', true)
-  }
-                                        
-  // cardTypes = ['mastercard', 'visa', 'jcb', 'amex', 'unknown']
-  if (update.cardType === 'visa') {
-    // Handle card type visa.
-  }
-
-  // number 欄位是錯誤的
-  if (update.status.number === 2) {
-    // setNumberFormGroupToError()
-  } else if (update.status.number === 0) {
-    // setNumberFormGroupToSuccess()
-  } else {
-    // setNumberFormGroupToNormal()
-  }
-
-  if (update.status.expiry === 2) {
-    // setNumberFormGroupToError()
-  } else if (update.status.expiry === 0) {
-    // setNumberFormGroupToSuccess()
-  } else {
-    // setNumberFormGroupToNormal()
-  }
-
-  if (update.status.ccv === 2) {
-    // setNumberFormGroupToError()
-  } else if (update.status.ccv === 0) {
-    // setNumberFormGroupToSuccess()
-  } else {
-    // setNumberFormGroupToNormal()
+  
+    document.querySelector(".yourcardgood").innerHTML=""
+    document.querySelector(".yourcardgood").style.opacity=0;
   }
 })
-
-// -----------------------------------
-
-
-document.querySelector('#submit').addEventListener('click', function(event){
-  const token = localStorage.getItem('token')
-    if(token == null){
-      alert('請先登入');
-      window.location.href = Ip;
-      return;
-    }
-  const inputContactName = document.getElementById('input-username').value;
-  const inputContactEmail = document.getElementById('input-useremail').value;
-  const inputContactPhone = document.getElementById('input-userphone').value;
-  if(inputContactName == "" || inputContactEmail == "" || inputContactPhone == ""){
-    // systemMsg.innerHTML='請填寫每個欄位';
-    alert('請填寫每個欄位')
-    // systemMsg.style.opacity=1;
-    return;
-  };
-  if (/\s/.test(inputContactName) || /\s/.test(inputContactEmail) || /\s/.test(inputContactPhone)) {
-    alert('請勿輸入空格');
+// ==================  TPDirect  setup  ===============================
+// ====================================================================
+// ====================================================================
+// ===================== submit btn ===================================
+const token = localStorage.getItem('token')
+function confirmTransaction(){
+  if(token == null){
+    alert('請先登入');
+    window.location.href = Ip;
     return;
   }
-  const phoneNumPattern = /^[0-9+-]+$/;
-  if (!phoneNumPattern.test(inputContactPhone)) {
-    alert('請輸入正確的電話號碼格式');
-    return;
-  }
-  const emailPattern = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-  if(!emailPattern.test(inputContactEmail)){
-    // systemMsg.innerHTML='請輸入正確的電子信箱格式';
-    // systemMsg.style.opacity=1;
-    alert('請輸入正確的電子信箱格式')
-    return;
-  };// 
+  document.querySelector(".confirm-transaction").disabled = true; // 禁止連續點擊
+  setTimeout(function() {
+    document.querySelector(".confirm-transaction").disabled = false;
+  }, 3000); // 3秒後重新允許
 
   TPDirect.card.getPrime(async function(result){
     try{
@@ -170,14 +116,12 @@ document.querySelector('#submit').addEventListener('click', function(event){
       console.error(`發生錯誤${err}`);
       return;
     }  
-    // console.log(result)
-    // console.log(result.status)
     console.log('get prime 成功，prime: ' + result.card.prime)
 
     let myprime = result.card.prime
-
-    const apiUrl ='http://127.0.0.1:3000/api/orders'
+    const apiUrl =`${Ip}api/orders`
     try{
+      // const startTime = performance.now();
       const res = await fetch(apiUrl,{
         method:'POST',
         headers:{
@@ -212,15 +156,90 @@ document.querySelector('#submit').addEventListener('click', function(event){
       }
       const data = await res.json();
       console.log(data);
+      window.location.href = Ip+'thankyou?number='+`${data['data']['number']}`;
     }catch(err){
       console.error(`請求失敗：${err}`)
     }
   })
+}
+
+document.querySelector('#submit').addEventListener('click', function(event){
+    if(token == null){
+      alert('請先登入');
+      window.location.href = Ip;
+      return;
+    }
+  const inputContactName = document.getElementById('input-username').value;
+  const inputContactEmail = document.getElementById('input-useremail').value;
+  const inputContactPhone = document.getElementById('input-userphone').value;
+  if(inputContactName == "" || inputContactEmail == "" || inputContactPhone == ""){
+    // systemMsg.innerHTML='請填寫每個欄位';
+    alert('請填寫每個欄位')
+    // systemMsg.style.opacity=1;
+    return;
+  };
+  if (/\s/.test(inputContactName) || /\s/.test(inputContactEmail) || /\s/.test(inputContactPhone)) {
+    alert('請勿輸入空格');
+    return;
+  }
+  const phoneNumPattern = /^[0-9+-]+$/;
+  if (!phoneNumPattern.test(inputContactPhone)) {
+    alert('請輸入正確的電話號碼格式');
+    return;
+  }
+  const emailPattern = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+  if(!emailPattern.test(inputContactEmail)){
+    // systemMsg.innerHTML='請輸入正確的電子信箱格式';
+    // systemMsg.style.opacity=1;
+    alert('請輸入正確的電子信箱格式')
+    return;
+  };// 
+
+  // if(document.querySelector('#submit').getAttribute('disabled')){
+  //   alert('無效的信用卡資訊');
+  //   return;
+  // }
+
+  if(document.querySelector(".yourcardgood").innerHTML!="有效的卡號。"){
+    document.querySelector(".yourcardgood").innerHTML="請輸入有效的卡號。"
+    document.querySelector(".yourcardgood").style.opacity=1;
+    document.querySelector(".yourcardgood").style.color='rgb(227, 60, 60)'
+    return;
+  }else{
+  // document.body.style.overflow = 'hidden';
+  // document.querySelector('.form-wrapper')
+  // .setAttribute('style','pointer-events: auto;transform:translateY(0%)')
+  // document.querySelector('.bg-modal').style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+    openFrom();
+    
+    document.getElementById("username").classList.add("username-field-hidden")
+    document.getElementById("useremail").classList.add("username-field-hidden")
+    document.getElementById("password").classList.add("username-field-hidden")
+      
+    const registerText= document.querySelector(".register-text"); 
+    registerText.innerHTML='即將進行付款'
+
+    document.querySelector(".already").classList.add('already-or-donthave-hidden');
+    document.querySelector(".dont-have").classList.add('already-or-donthave-hidden');
+
+    document.querySelector('.login-btn').classList.add('member-btn-hidden');
+    document.querySelector('.member-btn').classList.add('member-btn-hidden');
+
+    document.querySelector('.confirm-transaction').classList.remove('confirm-transaction-hidden');
+    document.querySelector('.confirm-transaction').style.margin = "0";
+    document.querySelector('.confirm-logout').classList.add('confirm-logout-hidden');
+    document.querySelector('.confirm-delete').classList.add('confirm-delete-hidden');
+
+    document.querySelector(".system-msg").innerHTML=''
+
+    return
+  }
 })
-// -----------------------------------
 
-// console.log(TPDirect)
-
+// ===================== submit btn ===================================
+// ====================================================================
+// ====================================================================
+// ===================== mybooking btn ================================
 async function mybooking(){ 
   const token = localStorage.getItem('token')
   if(token == null){
@@ -252,7 +271,7 @@ async function mybooking(){
   }
 }
 
-// ================ modal =======================================
+// ================ modal =============================================
 function openFrom(){
   document.body.style.overflow = 'hidden';
   document.querySelector('.form-wrapper')
@@ -317,7 +336,7 @@ function switchToRegister(){
   document.getElementById('password').value="";
   document.querySelector(".system-msg").innerHTML=''
 }
-// ================註冊=====================================
+
 async function register(){
   // const apiUrl ='http://54.65.60.124:3000/api/user'
   const apiUrl =`${Ip}api/user`
@@ -380,7 +399,7 @@ async function register(){
     console.error(`請求失敗：${err}`)
   }
 }
-// ===========  登入  ==============
+
 async function login(){
   const useremailInput = document.getElementById('useremail').value;
   const passwordInput = document.getElementById('password').value;
@@ -452,7 +471,7 @@ async function login(){
     console.error(err);
   }
 }
-// =======================================
+
 function logout(){
   // document.body.style.overflow = 'hidden';
   // document.querySelector('.form-wrapper')
@@ -476,26 +495,26 @@ function logout(){
   document.querySelector('.confirm-logout').classList.remove('confirm-logout-hidden');
   document.querySelector('.confirm-logout').style.margin = "0";
   document.querySelector('.confirm-delete').classList.add('confirm-delete-hidden');
+  document.querySelector('.confirm-transaction').classList.add('confirm-transaction-hidden');
+
 
   document.querySelector(".system-msg").innerHTML=''
 }
 
 function confirmLogout(){
   localStorage.removeItem("token");
-  document.querySelector('.open-form-btn').classList.remove("open-form-btn-hidden");//登入註冊選單按鈕消失
-  document.querySelector('.logout-btn').classList.add("logout-btn-hidden");//登出按鈕出現
+  document.querySelector('.open-form-btn').classList.remove("open-form-btn-hidden");//登入註冊選單按鈕
+  document.querySelector('.logout-btn').classList.add("logout-btn-hidden");//登出按鈕
   document.querySelector('.confirm-logout').classList.add('logout-btn-hidden');
-  // checkUserAuth();
-  // window.location.href = "http://127.0.0.1:3000/";
+
   window.location.href = Ip;
   // window.location.href = "http://54.65.60.124:3000/";
-  // location.reload();
 }
-// ===================================
 
-
-
-// ~~~~~~~~~~~~~~~~~~~~確定會員身份，取得會員姓名~~~~~~~~~~~~~~~~~~~~~~~
+// ================ modal =============================================
+// ====================================================================
+// ====================================================================
+// ================ get auth ==========================================
 let userNameData;
 let userData;
 async function checkUserAuth(){
@@ -622,13 +641,17 @@ function deleteBooking(){
   document.querySelector('.login-btn').classList.add('member-btn-hidden');
   document.querySelector('.member-btn').classList.add('member-btn-hidden');
 
-  document.querySelector('.confirm-logout').classList.add('confirm-logout-hidden');
   document.querySelector('.confirm-delete').classList.remove('confirm-delete-hidden');
   document.querySelector('.confirm-delete').style.margin = "0";
+  document.querySelector('.confirm-logout').classList.add('confirm-logout-hidden');
+  document.querySelector('.confirm-transaction').classList.add('confirm-transaction-hidden');
+
+
+
+
 
   document.querySelector(".system-msg").innerHTML=''
 }
-
 
 async function confirmDeleteBooking(){
   const token = localStorage.getItem('token')
@@ -654,3 +677,11 @@ async function confirmDeleteBooking(){
   }
   location.reload();
 }
+
+
+// -------------------------------------
+document.querySelectorAll(".tpfield").forEach((tp)=>{
+  tp.addEventListener('click', function() {
+    divElement.classList.toggle('tappay-field-focus');
+  });
+})

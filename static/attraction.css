@@ -611,7 +611,7 @@ main{
 }
 .system-msg:empty {
   height: 0px; 
-  margin-top: 0px;/* 沒內容時設為0 */
+  margin-top: 0px;/* 當沒內容時設為0 */
 }
 
 /* ＝＝＝＝＝登入＝＝＝＝＝＝＝＝＝＝＝＝ */

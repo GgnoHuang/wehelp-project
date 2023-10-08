@@ -51,6 +51,8 @@ def thankyou():
 
 
 
+# -------------------------------------------------------------------------------------
+# --------------------- 訂單 -----------------------------------------------------------
 @app.route("/api/orders", methods = ["POST"])
 def orderpost():
     err_res = {"error": True,"message":"發生錯誤"}
@@ -75,9 +77,6 @@ def orderpost():
             contact_name = req_json_data['order']['contact']['name']
             contact_email = req_json_data['order']['contact']['email']
             contact_phone = req_json_data['order']['contact']['phone']
-            
-            if '' in contact_name:
-                print('空格')
 
             def generate_order_number(member_id):
                 current_time = datetime.datetime.now()
@@ -137,10 +136,15 @@ def orderpost():
                 conn.close()  
                 return Response(json.dumps(payment_status_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
             elif tappay_api_res['status'] == 0:
+                # tap pay成功的狀況
                 query = "UPDATE payment_order SET is_paid = %s WHERE payment_order_num = %s"
                 cursor.execute(query, (1, payment_order_num))
                 conn.commit() 
                 print('Tap Pay Server交易成功')
+
+                cursor.execute("DELETE FROM orders WHERE member_id = %s;",(member_id,))
+                conn.commit() 
+
                 conn.close()  
                 return Response(json.dumps(payment_status_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
         else:
@@ -168,14 +172,82 @@ def orderpost():
         err_res['message']= err
         return Response(json.dumps(err_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
 
-
-
-
-
 @app.route("/api/orders/<orderNumber>", methods = ["GET"])
-def orderget():
-    error_res = {"error": True,"message":"發生錯誤"}
-    print(1)
+def orderget(orderNumber):
+    err_res = {"error": True,"message":"發生錯誤"}
+    try:
+        conn = pool.get_connection()
+        if conn.is_connected():
+
+            reqToken = req.headers['Authorization'].split()[1]
+            secret_key = 'mysecret-key'
+            decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
+            member_id = decoded_token['id']
+
+            cursor = conn.cursor()
+            query = "SELECT * FROM payment_order WHERE payment_order_num= %s AND member_id = %s"
+            cursor.execute(query, (orderNumber,member_id))
+            result = cursor.fetchall()
+            if not result :
+                err_res["message"]="無此訂單"
+                conn.close()
+                return Response(json.dumps(err_res, ensure_ascii=False), status=403, content_type='application/json; charset=utf-8')
+
+            sql_payment_order_data = result[0]
+            place_id = sql_payment_order_data[3]
+
+            query2 = """SELECT places.id AS place_id,
+                        places.name,
+                        places.address,
+                        (SELECT images.url FROM images WHERE images.place_id = places.id LIMIT 1) AS first_url
+                        FROM places
+                        WHERE places.id = %s;"""
+            cursor.execute(query2, (place_id,))
+            result2 = cursor.fetchall()
+            
+            json_res = {
+                "data": {
+                    "number": sql_payment_order_data[1],
+                    "price": sql_payment_order_data[6],
+                    "trip": {
+                    "attraction": {
+                        "id": sql_payment_order_data[3],
+                        "name": result2[0][1],
+                        "address": result2[0][2],
+                        "image": result2[0][3],
+                    },
+                    "date": sql_payment_order_data[4].strftime("%Y-%-m-%-d"),
+                    "time": sql_payment_order_data[5],
+                    },
+                    "contact": {
+                    "name": sql_payment_order_data[7],
+                    "email": sql_payment_order_data[8],
+                    "phone": sql_payment_order_data[9],
+                    },
+                    "status": sql_payment_order_data[11]
+                }
+            }
+            conn.close()
+            return Response(json.dumps(json_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
+        else:
+            conn.close()
+            err_res['message']='connection pool失敗'
+            return Response(json.dumps(err_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')         
+    except ExpiredSignatureError:
+        conn.close()
+        print('jwt已失效')
+        err_res['message']='jwt已失效'
+        return Response(json.dumps(err_res, ensure_ascii=False), status=403, content_type='application/json; charset=utf-8') 
+    except jwt.exceptions.PyJWTError :
+        conn.close()
+        print('jwt錯誤')
+        err_res['message']='jwt錯誤'
+        return Response(json.dumps(err_res, ensure_ascii=False), status=403, content_type='application/json; charset=utf-8') 
+    except Exception as err :
+        conn.close()
+        print(err)
+        err_res['message']= err
+        return Response(json.dumps(err_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
 
 
 
@@ -188,6 +260,13 @@ def orderget():
 
 
 
+
+
+
+
+# -------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------
 @app.route("/api/booking", methods = ["GET", "POST", "DELETE"])
 def api_booking():
     err_res = { "error": True, "message": "發生錯誤" }#  或 err_res=dict(error=True,message="發生錯誤")
@@ -573,8 +652,7 @@ def api_attractions():
         conn.close()
         return Response(json.dumps(error_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
 
-
-@app.route("/api/attraction/<id>")
+@app.route("/api/attraction/<id>", methods = ["GET"])
 def api_attraction_id(id):
     error_res = {
         "error": True,
@@ -583,7 +661,6 @@ def api_attraction_id(id):
     try:
         conn = pool.get_connection()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
         if conn.is_connected():
             cursor = conn.cursor()
 

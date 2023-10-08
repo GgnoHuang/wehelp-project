@@ -20,8 +20,7 @@ async function mybooking(){
     return; // 沒有token情況直接return就不fetch了
   } 
   try{
-    // const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
-    // const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
+
     const res = await fetch(`${Ip}api/user/auth`,{
       method:'GET',
       headers:{'Authorization': 'Bearer '+token}
@@ -44,9 +43,8 @@ async function mybooking(){
     else if(data.data != null){
       // 只要有點可能null，我就不給執行
     // 只要有一點點的可能性是null那就不讓執行
-      // window.location.href = "http://127.0.0.1:3000/booking";
+
       window.location.href =  `${Ip}booking`;
-      // window.location.href = "http://54.65.60.124:3000/booking";
     }
   }
   catch{
@@ -124,8 +122,6 @@ function switchToRegister(){
 
 //--------- 註冊功能 -----------
 async function register(){
-  // const apiUrl ='http://54.65.60.124:3000/api/user'
-  // const apiUrl ='http://127.0.0.1:3000/api/user'
   const apiUrl = `${Ip}api/user`
 
   const usernameInput = document.getElementById('username').value;
@@ -290,8 +286,6 @@ async function checkUserAuth(){
   const token = localStorage.getItem('token')
   if( token == null ) { return } // 沒有token情況直接return就不fetch了
   try{
-    // const res = await fetch('http://54.65.60.124:3000/api/user/auth',{
-    // const res = await fetch('http://127.0.0.1:3000/api/user/auth',{
     const res = await fetch( `${Ip}api/user/auth`,{
       method:'GET',
       headers:{'Authorization': 'Bearer '+token}
@@ -322,8 +316,7 @@ async function checkUserAuth(){
 checkUserAuth();
 
 // =====// ▼ ▼ ▼載入各個捷運站按鈕▼ ▼ ▼ ▼ ▼ =====// =====// =====// =====// =====
-// fetch("http://54.65.60.124:3000/api/mrts")
-fetch("http://127.0.0.1:3000/api/mrts")
+fetch(`${Ip}api/mrts`)
   .then(res=>{
     if(!res.ok){throw new Error('fetch抓失敗')}
     console.log('fetch成功:api/mrts')
@@ -382,8 +375,7 @@ function handleIntersection(entries){
   entries.forEach(entry =>{
     if (entry.isIntersecting && !apiRequestTriggered){
       apiRequestTriggered = true;
-      // fetch(`http://54.65.60.124:3000/api/attractions?page=${nextPage}&keyword=${keyword}`)
-      fetch(`http://127.0.0.1:3000/api/attractions?page=${nextPage}&keyword=${keyword}`)
+      fetch(`${Ip}api/attractions?page=${nextPage}&keyword=${keyword}`)
         .then(res =>{
           if(!res.ok){throw new Error('fetch抓失敗')}
           // 如果throw new Error，就會立即中斷Promise 所以不會執行return res.json()
