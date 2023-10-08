@@ -153,9 +153,6 @@ async function mybooking(){
 
 // -----------------------------------------------------------------------
 
-
-
-
 let orderNumber;
 async function getOrderStatus(){
   const token = localStorage.getItem('token')

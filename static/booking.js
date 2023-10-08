@@ -195,10 +195,6 @@ document.querySelector('#submit').addEventListener('click', function(event){
     return;
   };// 
 
-  // if(document.querySelector('#submit').getAttribute('disabled')){
-  //   alert('無效的信用卡資訊');
-  //   return;
-  // }
 
   if(document.querySelector(".yourcardgood").innerHTML!="有效的卡號。"){
     document.querySelector(".yourcardgood").innerHTML="請輸入有效的卡號。"
@@ -682,6 +678,10 @@ async function confirmDeleteBooking(){
 // -------------------------------------
 document.querySelectorAll(".tpfield").forEach((tp)=>{
   tp.addEventListener('click', function() {
-    divElement.classList.toggle('tappay-field-focus');
+    document.querySelectorAll(".tpfield").forEach((a)=>{
+      a.classList.remove('tappay-field-focus');
+    })
+    tp.classList.add('tappay-field-focus');
+    console.log(tp)
   });
 })
