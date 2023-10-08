@@ -674,14 +674,3 @@ async function confirmDeleteBooking(){
   location.reload();
 }
 
-
-// -------------------------------------
-document.querySelectorAll(".tpfield").forEach((tp)=>{
-  tp.addEventListener('click', function() {
-    document.querySelectorAll(".tpfield").forEach((a)=>{
-      a.classList.remove('tappay-field-focus');
-    })
-    tp.classList.add('tappay-field-focus');
-    console.log(tp)
-  });
-})
