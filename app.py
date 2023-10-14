@@ -5,6 +5,9 @@ import mysql.connector
 import mysql.connector.pooling
 import json
 
+from dotenv import load_dotenv
+import os
+
 import jwt
 from jwt.exceptions import ExpiredSignatureError
 
@@ -22,11 +25,14 @@ CORS(app, origins = '*')
 app.config["JSON_AS_ASCII"] = False
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.secret_key = "john"
+
+
+load_dotenv()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dbconfig = {
     "host": "localhost",
     "user": "root",
-    "password": "yourpassword",
+    "password": os.getenv('MYSQL_DB_PASSWORD'),
     "database": "taipei_day_trip",
     "pool_name": "mypool",
     "pool_size": 20, 
@@ -49,9 +55,6 @@ def thankyou():
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-
-# -------------------------------------------------------------------------------------
 # --------------------- 訂單 -----------------------------------------------------------
 @app.route("/api/orders", methods = ["POST"])
 def orderpost():
@@ -65,7 +68,7 @@ def orderpost():
             cursor = conn.cursor()
 
             reqToken = req.headers['Authorization'].split()[1]
-            secret_key = 'mysecret-key'
+            secret_key = os.getenv('JWT_SECRET_KEY')
             decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
             member_id = decoded_token['id']
 
@@ -80,7 +83,7 @@ def orderpost():
 
             def generate_order_number(member_id):
                 current_time = datetime.datetime.now()
-                timestamp = current_time.strftime('%Y%m%d%H%M%S%f')  # 包含微秒，以確保唯一性
+                timestamp = current_time.strftime('%Y%m%d%H%M%S%f')  #包含微秒，確保唯一性
                 payment_order_num = f"{timestamp}-{member_id:04d}"
                 return payment_order_num
             payment_order_num = generate_order_number(member_id)
@@ -99,7 +102,7 @@ def orderpost():
             # 這樣的方法將生成基於時間和會員ID的唯一訂單編號，而不依賴於每天的訂單數量。請注意，微秒部分（%f）是為了確保即使在同一秒內生成多個訂單，它們仍然是唯一的。
 
             tappay_api_url = 'https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime'
-            MyPartnerKey = "partner_XSHeU7xfaEjCrv4ib00GBJ8NC9L4Cvm8he4RfQH5BdQE2dLCM4brZq73"
+            MyPartnerKey = os.getenv('TAP_PAY_PARTNER_KEY')
             headers = {
                 "Content-Type": "application/json",
                 "x-api-key": MyPartnerKey
@@ -180,7 +183,7 @@ def orderget(orderNumber):
         if conn.is_connected():
 
             reqToken = req.headers['Authorization'].split()[1]
-            secret_key = 'mysecret-key'
+            secret_key =os.getenv('JWT_SECRET_KEY')
             decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
             member_id = decoded_token['id']
 
@@ -249,22 +252,6 @@ def orderget(orderNumber):
         err_res['message']= err
         return Response(json.dumps(err_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# -------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------
 @app.route("/api/booking", methods = ["GET", "POST", "DELETE"])
@@ -283,7 +270,7 @@ def api_booking():
                 reqData = request.get_json()
                 # print(f"前端傳來的：{reqData}")
                 reqToken = req.headers['Authorization'].split()[1]
-                secret_key = 'mysecret-key'
+                secret_key = os.getenv('JWT_SECRET_KEY')
                 decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
                 memberid=decoded_token['id']
                 print(f"會員id：{memberid}")
@@ -307,7 +294,7 @@ def api_booking():
             
             if req.method == 'GET':
                 reqToken = req.headers['Authorization'].split()[1]
-                secret_key = 'mysecret-key'
+                secret_key = os.getenv('JWT_SECRET_KEY')
                 decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
                 memberid = decoded_token['id']
 
@@ -336,7 +323,7 @@ def api_booking():
                 return Response(json.dumps(booking_res, ensure_ascii=False), status=200, content_type='application/json; charset=utf-8')
             if req.method == 'DELETE':
                 reqToken = req.headers['Authorization'].split()[1]
-                secret_key = 'mysecret-key'
+                secret_key = os.getenv('JWT_SECRET_KEY')
                 decoded_token = jwt.decode(reqToken, secret_key, algorithms=['HS256'])
                 memberid = decoded_token['id']
                 cursor.execute("DELETE FROM orders WHERE member_id = %s;",(memberid,))
@@ -397,7 +384,7 @@ def register():
 @app.route("/api/user/auth", methods = ['GET','PUT'])
 def sign_in():
   err_res = {"error": True,"message":"發生錯誤"}
-  secret_key = 'mysecret-key'
+  secret_key = os.getenv('JWT_SECRET_KEY')
   if req.method =='PUT':
     try:
       conn = pool.get_connection()
@@ -698,7 +685,6 @@ def api_attraction_id(id):
         print(err)
         conn.close()
         return Response(json.dumps(error_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
-
 
 
 @app.route("/api/mrts")
