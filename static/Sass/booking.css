@@ -4,6 +4,8 @@
   padding: 0;
   box-sizing: border-box;
   text-decoration: none;
+  list-style-type: none;
+  transition: all 0.06s ease-in-out;
 }
 
 body {
@@ -217,6 +219,7 @@ body {
   height: 54px;
   background: var(--additional-color-white, #FFF);
   align-items: center;
+  /*----*/
 }
 .nav-wrapper .nav {
   display: flex;
@@ -236,25 +239,76 @@ body {
 .nav-wrapper .nav-actions {
   display: flex;
 }
-.nav-wrapper .nav-actions div {
+.nav-wrapper .w {
+  position: relative;
+  cursor: pointer;
+}
+.nav-wrapper .nav-actions p {
+  cursor: pointer;
   display: flex;
   align-items: center;
   padding: 10px;
 }
-.nav-wrapper .nav-actions .logout-btn-hidden {
+.nav-wrapper .drop-down {
+  position: absolute;
+  top: 100%; /* 注意 */
+}
+.nav-wrapper .drop-down li {
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
   display: none;
 }
-.nav-wrapper .nav-actions .open-form-btn-hidden {
-  display: none;
-}
-.nav-wrapper .nav-actions a {
+.nav-wrapper .nav-actions li, .nav-wrapper .nav-actions p {
+  transition: all 0.2s ease-in-out;
   color: var(--secondary-color-gray-70, #666);
   font-family: Noto Sans TC;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
   line-height: 83.125%;
-  cursor: pointer;
+}
+.nav-wrapper .drop-down li:hover, .nav-wrapper .nav-actions p:hover {
+  background-color: rgb(68, 136, 153);
+  color: #FFF;
+  border-radius: 5px;
+}
+.nav-wrapper .w:hover .drop-down {
+  perspective: 1000px;
+}
+.nav-wrapper .w:hover .drop-down li {
+  display: flex;
+  opacity: 0;
+}
+.nav-wrapper .w:hover .drop-down li:nth-child(1) {
+  animation: drop 500ms ease-in-out forwards;
+  animation-delay: 0ms;
+}
+.nav-wrapper .w:hover .drop-down li:nth-child(2) {
+  animation: drop 500ms ease-in-out forwards;
+  animation-delay: 200ms;
+}
+.nav-wrapper .w:hover .drop-down li:nth-child(3) {
+  animation: drop 500ms ease-in-out forwards;
+  animation-delay: 400ms;
+}
+@keyframes drop {
+  0% {
+    opacity: 0;
+    transform: rotateZ(-80deg) rotateY(270deg) translateY(80px);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateZ(0deg) rotateY(0deg) translateY(0px);
+  }
+}
+.nav-wrapper .nav-actions .logout-btn-hidden {
+  display: none;
+}
+.nav-wrapper .nav-actions .open-form-btn-hidden {
+  display: none;
 }
 
 .separator::before {

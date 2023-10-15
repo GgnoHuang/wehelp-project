@@ -1,5 +1,5 @@
-// const Ip ='http://127.0.0.1:3000/';
-const Ip ='http://54.65.60.124:3000/';
+const Ip ='http://127.0.0.1:3000/';
+// const Ip ='http://54.65.60.124:3000/';
 
 // ====================  TPDirect  setup  =============================
 TPDirect.setupSDK(137160, 'app_mqFIelg6b1mfWMejRa8GDUyBf9AERCV5qwOf9GnRGKSngdUg2Osa23nXNKgY', 'sandbox')

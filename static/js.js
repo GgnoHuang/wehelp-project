@@ -1,5 +1,5 @@
-// const Ip ='http://127.0.0.1:3000/';
-const Ip ='http://54.65.60.124:3000/';
+const Ip ='http://127.0.0.1:3000/';
+// const Ip ='http://54.65.60.124:3000/';
 
 
 async function mybooking(){
@@ -489,8 +489,9 @@ function load(){
       let url = location.href;
       url = url + 'attraction/' + idData
       window.location.href = url
-      console.log(url)
-      console.log(idData)
+      // console.log(url)
+      // console.log(idData)
+
     })
   }
 }
