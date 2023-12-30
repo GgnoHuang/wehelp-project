@@ -320,6 +320,7 @@ main {
 }
 
 .imggbox {
+  cursor: pointer;
   overflow: hidden;
   border-radius: 5px;
   border: 1px solid var(--secondary-color-gray-20, #E8E8E8);
@@ -331,6 +332,25 @@ main {
   width: 268px;
   transition: all 0.2s ease-in-out;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+.imggbox .fontawesome {
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0px 0px 14px rgb(255, 255, 255), 0px 0px 14px rgb(255, 255, 255), 0px 0px 40px rgb(255, 255, 255), 0px 0px 40px rgb(255, 255, 255), 0px 0px 40px rgb(255, 255, 255), 0px 0px 50px rgb(255, 255, 255), 0px 0px 60px rgb(255, 255, 255), 0px 0px 20px rgb(255, 255, 255);
+  color: rgb(69, 191, 225);
+  color: hwb(0 52% 0%);
+}
+.imggbox .not-favorited {
+  color: rgba(236, 236, 236, 0.819);
+}
+.imggbox .not-favorited, .imggbox .fontawesome {
+  position: absolute;
+  cursor: pointer;
+  font-size: 1.8em;
+  z-index: 120;
+  top: 10px;
+  right: 10px;
 }
 
 .imggbox:hover {

@@ -481,8 +481,9 @@ def api_attractions():
             print(cursor)
             page = request.args.get("page",type=int,default=0)
             keyword = request.args.get("keyword",type=str)
-
+            print(keyword)
             if keyword != None:
+                print("if keyword != None")
                 cursor.execute("SELECT DISTINCT mrt FROM places")
                 # 先把所有捷運站名字找出來，並且不重複顯示
                 mrts = cursor.fetchall()
@@ -491,6 +492,7 @@ def api_attractions():
                 next_page = page+1 # offset就是設定要從第幾筆資料開始取，一頁12筆，所以要取第二頁資料就要跳過12筆
                 # 如果要取第三頁資料就要跳過24筆
 
+                # 這裡是搜尋景點的部分
                 for mrt in mrts:
                     if keyword == mrt[0]:
                         cursor.execute("SELECT COUNT(*) FROM places WHERE mrt = %s;", (keyword,))
@@ -502,11 +504,10 @@ def api_attractions():
                                     "error": True,
                                     "message":"您輸入的數字已超過總頁數"
                                 }
-
+                                print("mrt")
                                 cursor.close()
                                 conn.close()
                                 return Response(json.dumps(error_res, ensure_ascii=False), status=500, content_type='application/json; charset=utf-8')
-
                         cursor.execute("SELECT * FROM places WHERE mrt = %s LIMIT %s OFFSET %s", (keyword,12,offset))
                         result = cursor.fetchall()
                         # print(result)
@@ -547,6 +548,8 @@ def api_attractions():
                 # print(result)
 
                 places_data = []
+                useriddd = request.args.get('userid')
+                print(f"前端傳來的id:{useriddd}")
                 for row in result:
                     id, name, category, description, address, transport, mrt, lat, lng = row
                     cursor.execute("SELECT url FROM images WHERE place_id = %s;", (id,))
@@ -563,6 +566,7 @@ def api_attractions():
                         "lat": float(lat),
                         "lng": float(lng),
                         "images": images,
+                        "ok":"我的最愛"
                     }
                     places_data.append(place)
                 if len(result)<12:
@@ -600,7 +604,7 @@ def api_attractions():
             cursor.execute("SELECT * FROM places LIMIT %s OFFSET %s",(12,offset))
             result = cursor.fetchall()
             # print(result)
-
+            print(11111)
             places_data = []
             for row in result:
                 id, name, category, description, address, transport, mrt, lat, lng = row
@@ -619,6 +623,7 @@ def api_attractions():
                     "lat": float(lat),
                     "lng": float(lng),
                     "images": images,
+                    "ok":123
                 }
                 places_data.append(place)
             if len(result) < 12:
@@ -628,7 +633,7 @@ def api_attractions():
                 "data": places_data
                 }
             json_data = json.dumps(data, ensure_ascii=False, sort_keys=False, indent=3)
-
+            print(222222)
             # json_data = jsonify(data)
             cursor.close()
             conn.close()

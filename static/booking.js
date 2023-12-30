@@ -73,7 +73,7 @@ TPDirect.card.onUpdate(function (update) {
   // --> you can call TPDirect.card.getPrime()
   var submitButton = document.querySelector('#submit')
   if (update.canGetPrime) {
-    console.log(update.canGetPrime)
+    // console.log(update.canGetPrime)
     document.querySelector(".yourcardgood").innerHTML="有效的卡號。"
     document.querySelector(".yourcardgood").style.opacity=1;
     document.querySelector(".yourcardgood").style.color='green'
@@ -113,7 +113,7 @@ function confirmTransaction(){
       console.error(`發生錯誤${err}`);
       return;
     }  
-    console.log('get prime 成功，prime: ' + result.card.prime)
+    // console.log('get prime 成功，prime: ' + result.card.prime)
 
     let myprime = result.card.prime
     const apiUrl =`${Ip}api/orders`
@@ -152,7 +152,7 @@ function confirmTransaction(){
         throw new Error(errData.message);
       }
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
       window.location.href = Ip+'thankyou?number='+`${data['data']['number']}`;
     }catch(err){
       console.error(`請求失敗：${err}`)
@@ -250,9 +250,9 @@ async function mybooking(){
       window.location.href = Ip;
     }
     const data = await res.json();
-    console.log(data)
+    // console.log(data)
     if(data.data == null){
-      console.log(data)
+      // console.log(data)
       return;
     }
     else if(data.data != null){
@@ -530,7 +530,7 @@ async function checkUserAuth(){
     }
     const data = await res.json();
     if(data.data == null){
-      console.log(data)
+      // console.log(data)
       return
     }else if(data.data!==null){
     userData = data.data
@@ -554,7 +554,7 @@ let fetchBookingData;
 async function loadBookingInfo(){
   const token = localStorage.getItem('token')
   if(token == null){
-    console.log('沒有token登入');
+    // console.log('沒有token登入');
     window.location.href = Ip;
     return;
   }
@@ -578,7 +578,7 @@ async function loadBookingInfo(){
         document.querySelector("html").classList.add("no-booking-result-html")
         document.querySelector("body").classList.add("no-booking-result-body")
         document.querySelector(".footer-wrapper").classList.add("no-booking-result-footer-wrapper")
-        console.log("沒有訂購的行程")
+        // console.log("沒有訂購的行程")
         document.querySelector(".no-booking-text").classList.remove("username-field-hidden")
 
       }
@@ -589,7 +589,7 @@ async function loadBookingInfo(){
     // document.querySelector("body").classList.remove("no-booking-result-body")
     // document.querySelector(".footer-wrapper").classList.remove("no-booking-result-footer-wrapper")
     // 上面這個不用加，跳轉後dom會自己重新整理
-    console.log("有行程")
+    // console.log("有行程")
     const data = await res.json();
     fetchBookingData = data.data;
     const attractionName = data.data.attraction.name;
@@ -610,7 +610,7 @@ async function loadBookingInfo(){
     document.querySelector(".place-img-src").setAttribute('src',attractionImg);
     document.querySelector(".add").innerHTML=attractionAdd;
 
-    console.log(attractionName,attractionAdd,attractionImg,bookingDate,bookingTime,bookingPrice);
+    // console.log(attractionName,attractionAdd,attractionImg,bookingDate,bookingTime,bookingPrice);
   }catch(err){
     console.error(err);
   }
@@ -649,7 +649,7 @@ function deleteBooking(){
 async function confirmDeleteBooking(){
   const token = localStorage.getItem('token')
   if(token == null){
-    console.log('沒有token登入');
+    // console.log('沒有token登入');
     window.location.href = Ip;
     return;
   }
@@ -660,11 +660,11 @@ async function confirmDeleteBooking(){
     })
     if (!res.ok){
       let errData = await res.json()
-      console.log('response is not ok')
+      // console.log('response is not ok')
       throw new Error(errData.message);
     }
     const data = await res.json();
-    console.log(data)
+    // console.log(data)
   }catch{
     console.log("catch");
   }
