@@ -180,7 +180,6 @@ async function getOrderStatus(){
         throw new Error(errData.message);
       }
       const data = await res.json();
-
       console.log(`付款狀態: ${data.data.status}`);
 
       if(data.data.status == 1){

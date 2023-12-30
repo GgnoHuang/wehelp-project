@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="/static/css.css">
+  <link rel="stylesheet" href="/static/Sass/index.css">
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 💞我的最愛功能開發到一半，繼續開發就解開裡面的comment -->
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+<!-- 💞我的最愛功能開發到一半，繼續開發就解開裡面的comment -->
+
   <title>Document</title>
 </head>
 
@@ -15,11 +20,19 @@
           <a href="/">台北一日遊</a>
         </div>
 
-        <div class="nav-actions">
-          <div onclick="mybooking()"><a>預定行程</a></div>
-          <div class="open-form-btn" onclick="openFrom()"><a>登入/註冊</a></div>
-          <div class="logout-btn logout-btn-hidden" onclick="logout()" ><a>登出系統</a></div>
-        </div>
+        <ul class="nav-actions">
+          <p onclick="mybooking()">預定行程</p>
+          <p class="open-form-btn" onclick="openFrom()">登入/註冊</p>
+          <li class="w logout-btn logout-btn-hidden">
+            <p style="height: 34px;">會員功能</p> 
+            <ul class="drop-down">
+              <!-- <li style="height: 34px;">我的最愛</li> -->
+              <!-- <li style="height: 34px;">歷史訂單</li> -->
+              <li onclick="logout()" style="height: 34px;">登出系統</li>
+            </ul>
+          </li>
+        </ul>
+
     </div>
   </header>
 
@@ -34,18 +47,19 @@
           <div class="three">
             <input type="text" class="user-input" placeholder="輸入景點名稱查詢">
             <div class="btn-wrapper">
-              <img src="/static/icon_search.png" class="submit-btn" alt="">
+              <img src="/static/IMAGES/icon_search.png" class="submit-btn" alt="">
             </div>
           </div>
         </div>
     </section>
   </div>
+
   <main>
     <div class="mainwrapper">
       <!-- ==list bar ===--><!-- ==list bar ===--><!-- ==list bar ===-->
       <div class="list-bar">
         <div class="btn-1">
-          <img class="btn" id="prev" src="/static/prevBtn.jpg" alt="">
+          <img class="btn" id="prev" src="/static/IMAGES/prevBtn.jpg" alt="">
         </div>
         <div class="place-wrapper">
           <div class="place">
@@ -54,17 +68,19 @@
           </div>
         </div>
         <div class="btn-2 ">   
-          <img class="btn" id="next" src="/static/nextBtn.jpg" alt="">
+          <img class="btn" id="next" src="/static/IMAGES/nextBtn.jpg" alt="">
         </div>
       </div>
       <!-- ==img-zone===-->      <!-- ==img-zone===-->      <!-- ==img-zone===-->
       <div class="img-zone">
-        <!--    <div class="imggbox">
+        <!-- <div class="imggbox">
+          <i class="fa-solid fa-heart fontawesome" ></i>
+
           <div class="imgand-mask">
             <div class="mask">
               <p></p>
             </div>
-            <img src="" alt="">
+            <img src="/static/IMAGES/welcome101.png" alt="">
           </div>
           
           <div class="textbox-2">
@@ -75,7 +91,7 @@
               <p class="p-2"></p>
             </div>
           </div>
-        </div>-->
+        </div> -->
       </div>
     </div>
   </main>
@@ -93,7 +109,7 @@
   <div class="form-wrapper">
     <div class="member-form">
       <div class="deco-bar"></div>
-      <img src="/static/close-btn.png" class="close-btn" alt="">
+      <img src="/static/IMAGES/close-btn.png" class="close-btn" alt="">
       <div class="register">
           <p class="register-text">登入會員帳號</p>
           <input id="username" class="username-field-hidden" type="text" name="username" placeholder="輸入姓名">

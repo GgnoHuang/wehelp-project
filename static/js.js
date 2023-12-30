@@ -18,8 +18,8 @@ async function mybooking(){
       headers:{'Authorization': 'Bearer '+token}
     })
     if(!res.ok){ //有token但過期，api判斷token過期 得到500狀態碼所以!res.ok，進入except，
-      console.error('用戶未登入');
-      localStorage.removeItem("token");
+      // console.error('用戶未登入');
+      localStorage.clear();
       const systemMsg = document.querySelector(".system-msg")
       systemMsg.innerHTML='預定行程前請先登入會員';
       systemMsg.style.opacity=1;
@@ -27,9 +27,9 @@ async function mybooking(){
       return;
     }
     const data = await res.json();
-    console.log(data)
+    // console.log(data)
     if(data.data == null){
-      console.log(data)
+      // console.log(data)
       return;
     }
     else if(data.data != null){
@@ -40,7 +40,7 @@ async function mybooking(){
     }
   }
   catch{
-    console.error("catch");
+    // console.error("catch");
   }
 }
 
@@ -162,7 +162,7 @@ async function register(){
       throw new Error(errData.message);
     }
     const data = await response.json();
-    console.log(data)
+    // console.log(data)
     systemMsg.innerHTML="註冊成功！";
     systemMsg.style.color="rgb(69, 199, 89)";
     document.getElementById('username').value="";
@@ -217,12 +217,11 @@ async function login(){
       throw new Error(errData);
     }
     const data = await res.json();
-    console.log(data)
+    // console.log(data)
     const token = data.token
     localStorage.setItem('token', token);
-    // systemMsg.innerHTML='登入成功';
-    // systemMsg.style.color="rgb(69, 199, 89)"
-    // systemMsg.style.opacity=1;
+
+
     document.getElementById('useremail').value="";
     document.getElementById('password').value="";
 
@@ -264,7 +263,7 @@ function logout(){
 }
 
 function confirmLogout(){
-  localStorage.removeItem("token");
+  localStorage.clear();
   document.querySelector('.open-form-btn').classList.remove("open-form-btn-hidden");//登入註冊選單按鈕消失
   document.querySelector('.logout-btn').classList.add("logout-btn-hidden");//登出按鈕出現
   document.querySelector('.confirm-logout').classList.add('logout-btn-hidden');
@@ -276,7 +275,9 @@ async function checkUserAuth(){
   document.querySelector('.open-form-btn').classList.remove("open-form-btn-hidden");//登入註冊選單按鈕出現
   document.querySelector('.logout-btn').classList.add("logout-btn-hidden");//登出按鈕消失
   const token = localStorage.getItem('token')
-  if( token == null ) { return } // 沒有token情況直接return就不fetch了
+  if( token == null ) { 
+    // console.log("登入狀態：未登入")
+    return } // 沒有token情況直接return就不fetch了
   try{
     const res = await fetch( `${Ip}api/user/auth`,{
       method:'GET',
@@ -284,25 +285,33 @@ async function checkUserAuth(){
     })
     if(!res.ok){ //有token但過期，api判斷token過期 得到500狀態碼所以!res.ok，進入except，
       console.error('用戶未登入');
-      localStorage.removeItem("token");
+      localStorage.clear();
       return;
     }
     const data = await res.json();
     if(data.data == null){
-      console.log(data)
+      // console.log(data)
       return
     }else if(data.data!==null){
     const userData = data.data
     const userIdData = userData['id']
     const userEmailData = userData['email']
     const userNameData = userData['name']
-    console.log(userIdData,userNameData,userEmailData)
+    // console.log(userIdData,userNameData,userEmailData)
+
+    //💕💕💕💕💕我的最愛功能 開發到一半，要繼續開發請解開comment
+    localStorage.setItem('userid', userIdData);
+    localStorage.setItem('username', userNameData);
+    localStorage.setItem('username', userEmailData);
+//💕💕💕💕💕我的最愛功能 開發到一半，要繼續開發請解開comment
+
+
     document.querySelector('.open-form-btn').classList.add("open-form-btn-hidden");//登入註冊選單按鈕出現
     document.querySelector('.logout-btn').classList.remove("logout-btn-hidden");//登出按鈕消失
     }
   }
   catch{
-    console.error("catch");
+    // console.error("catch");
   }
 }
 checkUserAuth();
@@ -311,7 +320,7 @@ checkUserAuth();
 fetch(`${Ip}api/mrts`)
   .then(res=>{
     if(!res.ok){throw new Error('fetch抓失敗')}
-    console.log('fetch成功:api/mrts')
+    // console.log('fetch成功:api/mrts')
     return res.json();
   })
   .then(data=>{
@@ -367,11 +376,19 @@ function handleIntersection(entries){
   entries.forEach(entry =>{
     if (entry.isIntersecting && !apiRequestTriggered){
       apiRequestTriggered = true;
+
+//💕💕💕💕💕我的最愛功能 開發到一半，要繼續開發請解開comment
+      // userId= localStorage.getItem('userid')
+      // console.log(`拿到id了：${userId}`)
+      // console.log(`${Ip}api/attractions?page=${nextPage}&keyword=${keyword}`)
+      // fetch(`${Ip}api/attractions?page=${nextPage}&keyword=${keyword}&userid=${userId}`)
+//💕💕💕💕💕我的最愛功能 開發到一半，要繼續開發請解開comment
+
       fetch(`${Ip}api/attractions?page=${nextPage}&keyword=${keyword}`)
         .then(res =>{
           if(!res.ok){throw new Error('fetch抓失敗')}
           // 如果throw new Error，就會立即中斷Promise 所以不會執行return res.json()
-          console.log('fetch成功:api/attractions')
+          // console.log('fetch成功:api/attractions')
           return res.json();
         })
         .then(data =>{
@@ -383,6 +400,11 @@ function handleIntersection(entries){
           nameArr = [];
           idArr = []; 
           for (let i=0; i<results.length; i++) {
+
+            //💕💕💕💕💕我的最愛功能 開發到一半，要繼續開發請解開comment
+            // console.log(results[i].ok)
+            //💕💕💕💕💕我的最愛功能 開發到一半，要繼續開發請解開comment
+
             catArr.push(results[i].category);
             imgArr.push(results[i].images[0]);
             mrtArr.push(results[i].mrt);
@@ -392,11 +414,11 @@ function handleIntersection(entries){
           
           load();
 
-          console.log(`成功加載${dataNum}筆資料`)
+          // console.log(`成功加載${dataNum}筆資料`)
           nextPage = data.nextPage;
           if(nextPage == null){
             io.disconnect();
-            console.log('nextPage為null，停止觀測')
+            // console.log('nextPage為null，停止觀測')
           }
           if(imgZone.innerHTML==""){ //沒搜到
             if(document.querySelector(".no-search-result")==null){
@@ -418,7 +440,16 @@ function handleIntersection(entries){
     }
   });
 }
-io.observe(document.getElementById("watch_end_of_document"));
+
+
+//💕💕💕💕💕我的最愛功能 開發到一半，要繼續開發請解開comment
+// io.observe(document.getElementById("watch_end_of_document"));
+setTimeout(() => {
+  io.observe(document.getElementById("watch_end_of_document"));
+}, 50); 
+//先確保checkAuth()打api先拿到id，才能用id去跑
+//💕💕💕💕💕我的最愛功能 開發到一半，要繼續開發請解開comment
+
 
 // =====△ △ △ △ io和io 要呼叫的函式△ △ △ △==// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====
 // =====▼ ▼ ▼▼ 搜尋功能▼▼ ▼ ▼ ▼ ▼==// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====// =====
@@ -447,6 +478,15 @@ function load(){
 
     const Newimggbox = document.createElement("div");
     Newimggbox.className='imggbox';
+
+
+    //💕💕💕💕💕我的最愛功能 開發到一半，要繼續開發請解開comment
+    // const newI = document.createElement('i');
+    // newI.className = 'fa-solid  fa-heart not-favorited';
+    // newI.id = `placeIdIs-${idData}`;
+//💕💕💕💕💕我的最愛功能 開發到一半，要繼續開發請解開comment
+
+
     const NewimgAndMask = document.createElement('div');
     NewimgAndMask.className='imgand-mask';
     const Newmask = document.createElement('div');
@@ -479,18 +519,30 @@ function load(){
     textBoxTwo.appendChild(newDiv1);
     textBoxTwo.appendChild(newDiv2);
 
+//💕💕💕💕💕我的最愛功能 開發到一半，要繼續開發請解開comment
+    // Newimggbox.appendChild(newI)
+//💕💕💕💕💕我的最愛功能 開發到一半，要繼續開發請解開comment
+
     Newimggbox.appendChild(NewimgAndMask)
     Newimggbox.appendChild(textBoxTwo)
 
     imgZone.appendChild(Newimggbox)
 
 
+  //💕💕💕💕💕我的最愛功能 開發到一半，要繼續開發請解開comment
+    // document.getElementById(`placeIdIs-${idData}`).addEventListener("click", () => {
+    //   console.log(idData);
+    //   document.getElementById(`placeIdIs-${idData}`).classList.toggle('fontawesome');
+    //   document.getElementById(`placeIdIs-${idData}`).classList.toggle('not-favorited');
+    // });
+  //💕💕💕💕💕我的最愛功能 開發到一半，要繼續開發請解開comment
+
+
     Newimggbox.addEventListener('click',()=>{
       let url = location.href;
       url = url + 'attraction/' + idData
       window.location.href = url
-      console.log(url)
-      console.log(idData)
+      // console.log(url)
     })
   }
 }

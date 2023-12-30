@@ -30,7 +30,7 @@ async function startBooking(){
       try{
         const currentUrl = location.href;
         const currentAttractionId = currentUrl.split('/')[currentUrl.split('/').length-1]
-        console.log(`景點id為：${currentAttractionId}`)
+        // console.log(`景點id為：${currentAttractionId}`)
         // ------------------把預定資料傳到後端＆資料庫--------------------------
         const res2 = await fetch(`${Ip}api/booking`,{
           method:'POST',
@@ -47,15 +47,15 @@ async function startBooking(){
         })
         if (!res2.ok){
           let errData = await res2.json()
-          console.log('response不ok')
+          // console.log('response不ok')
           throw new Error(errData.message);
         }
         const data2 = await res2.json();
-        console.log(data2)
+        // console.log(data2)
 
         window.location.href = `${Ip}booking`;
       }catch(err){
-        console.error(`請求失敗：${err}`)
+        // console.error(`請求失敗：${err}`)
       }
     }
 }
@@ -85,9 +85,9 @@ async function mybooking(){
       return;
     }
     const data = await res.json();
-    console.log(data)
+    // console.log(data)
     if(data.data == null){
-      console.log(data)
+      // console.log(data)
       return;
     }
     else if(data.data != null){
@@ -361,17 +361,17 @@ async function checkUserAuth(){
       return;
     }
     const data = await res.json();
-    console.log(data)
+    // console.log(data)
     if(data.data == null){
       return
     }else if(data.data!==null){
-      console.log(data.data)
+      // console.log(data.data)
 
     const userData = data.data
     const userIdData = userData['id']
     const userEmailData = userData['email']
     const userNameData = userData['name']
-    console.log(userIdData,userNameData,userEmailData)
+    // console.log(userIdData,userNameData,userEmailData)
     document.querySelector('.open-form-btn').classList.add("open-form-btn-hidden");//登入註冊選單按鈕消失
     document.querySelector('.logout-btn').classList.remove("logout-btn-hidden");//登出按鈕出現
     }
