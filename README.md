@@ -4,6 +4,7 @@
 
 - The front-end is developed using **`Vanilla JavaScript`** for all page interactions and integrates with **`APIs`** to render attraction information and images in the views.
 - Use **`Python's Flask`** framework to set up routes, and build a **`MySQL`** database for keeping all the member data.
+- Implement the **`Connection Pool`** to enhance database efficiency and performance.
 - The back-end routing uses **`RESTful API`** design for **`CRUD`**. This makes the front-end and back-end work better separately.
 - Use **`JWT`** to authenticate or verify member tokens, aligning with the **`'Stateless'`** principle of RESTful APIs.
 - Create an **`Ubuntu`**-based **`Amazon EC2`** instance and deploy the project to it, then associate an **`Elastic IP`** with the instance for stable external access.
