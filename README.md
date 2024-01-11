@@ -11,7 +11,11 @@ Link: [Click](http://54.65.60.124:3000/)
 
 | Account          | Password |
 | ---------------- | -------- |
-| `test@test.com` | `test` |
+| `test@test.com` | `test`|
+
+| 💳 Test Credit Card | 
+| ------------------ | 
+| `4242-4242-4242-4242` | 
 
 ---
 ## 🟠 Architecture
@@ -25,7 +29,7 @@ Link: [Click](http://54.65.60.124:3000/)
 - Create an **`Ubuntu`**-based **`Amazon EC2`** instance and deploy the project to it, then associate an **`Elastic IP`** with the instance for stable external access.
 
 ---
-## 🟠 Features and Technical Intro(Gif圖較多，謝謝你的耐心等待😊)
+## 🟠 Features and Technical Intro (Gif圖較多，謝謝你的耐心等待😊)
 
 ### **🔸 Scroll Feature**
 <img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/fetch.gif?raw=true" width="600">
