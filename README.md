@@ -20,6 +20,7 @@ Link: [Click](http://54.65.60.124:3000/)
 ---
 ## 🟠 Architecture
 <img width="1000" alt="截圖 2024-01-11 下午1 04 51" src="https://github.com/GgnoHuang/wehelp-project/assets/132812902/e296ab14-18b3-4375-9021-9089558ab127">
+<img width="400" alt="截圖 2024-01-11 下午6 03 40" src="https://github.com/GgnoHuang/wehelp-project/assets/132812902/5b7232f1-4709-456d-abef-d4ae5bbbdeb3">
 
 - The front-end is developed using **`Vanilla JavaScript`** for all page interactions and integrates with **`APIs`** to render attraction information and images in the views.
 - Use **`Python's Flask`** framework to set up routes, and build a **`MySQL`** database for keeping all the member data.
