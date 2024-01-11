@@ -32,28 +32,28 @@ Link: [Click](http://54.65.60.124:3000/)
 ---
 ## 🟠 Features and Technical Intro (Gif載入較慢，謝謝你的耐心等待😊)
 
-### **🔸 Scroll Feature**
+### **🔸 滾動畫面 Scroll Feature**
 <img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/fetch.gif?raw=true" width="600">
 
 - 使用 **`IntersectionObserver`** 使頁面滾動時可以監聽元素，並在觸發觀測後利用 **`fetch`** 向後端取得景點資料，再使用 **`createElement`** 和 **`appendChild`** 動態生成element，最終渲染在畫面上。
 - 我設置了一個Api請求的 **`Trigger`** ，為Boolean值，在呼叫api之後透過 **`Promise`** 的 **`.finally()`** 進行Boolean切換，目的是避免IntersectionObserver的觀測造成重複呼叫Api。
 
 #
-### **🔸 Search Feature**
+### **🔸 搜尋功能 Search Feature**
 <img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/search.gif?raw=true" width="600">
 
 - 搜尋功能使用 **`fetch`** 結合 url 的 **`querystring`** 實現，後端透過 **`request.args.get`** 取得前端的querystring，並用於操作 **`mySQL`** 指令以取得特定資料。
 - 搜尋時，關鍵字若不完全吻合捷運站名，則使用 **`模糊搜尋`** 的SQL指令進行搜尋，並將景點渲染於畫面上。若完全吻合，則SQL中捷運名欄位吻合關鍵字者，將渲染於畫面上。
 
 #
-### **🔸 Carousel Feature**
+### **🔸 輪播圖 Carousel Feature**
 <img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/輪播.gif?raw=true" width="600">
 
 - 將所有景點圖放入同一個container中，此父元素使用 **`overflow: hidden`** 後，利用CSS的 **`translate`** 和每張景點圖設定的 **`唯一index`**，得以顯示指定的景點照片。
 - 點擊左右箭頭可以觸發函式，控制 **`index`** 切換不同照片，而自動輪播使用 **`setInterval`** 自動觸發此函式。
 
 #
-### **🔸 Transaction Feature**
+### **🔸 金流服務 Transaction Feature**
 <img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/訂購.gif?raw=true" width="600">
 <img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/交易.gif?raw=true" width="600">
 
