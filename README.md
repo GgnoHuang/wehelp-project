@@ -42,5 +42,5 @@ Name: 黃駿宏 Jyun-Hung Huang
 
 Email: Lshapeddesk@icloud.com
 
-Resume: [Click](https://www.cakeresume.com/jonhunag)
+Resume: [Click](https://www.cakeresume.com/jonhunag](https://drive.google.com/file/d/1TOtMhhBgRccJ2dvz7alIzB939q3zRSIe/view?usp=sharing)https://drive.google.com/file/d/1TOtMhhBgRccJ2dvz7alIzB939q3zRSIe/view?usp=sharing)
 
