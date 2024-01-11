@@ -19,8 +19,8 @@ Link: [Click](http://54.65.60.124:3000/)
 
 ---
 ## 🟠 Architecture
-<img width="1000" alt="截圖 2024-01-11 下午1 04 51" src="https://github.com/GgnoHuang/wehelp-project/assets/132812902/e296ab14-18b3-4375-9021-9089558ab127">
-<img width="400" alt="截圖 2024-01-11 下午6 03 40" src="https://github.com/GgnoHuang/wehelp-project/assets/132812902/5b7232f1-4709-456d-abef-d4ae5bbbdeb3">
+<img width="1000" alt="圖" src="https://github.com/GgnoHuang/wehelp-project/assets/132812902/e296ab14-18b3-4375-9021-9089558ab127">
+<img width="400" alt="圖" src="https://github.com/GgnoHuang/wehelp-project/assets/132812902/a8a32fbb-fd13-451b-9777-14acb18a6d17">
 
 - The front-end is developed using **`Vanilla JavaScript`** for all page interactions and integrates with **`APIs`** to render attraction information and images in the views.
 - Use **`Python's Flask`** framework to set up routes, and build a **`MySQL`** database for keeping all the member data.
@@ -49,17 +49,16 @@ Link: [Click](http://54.65.60.124:3000/)
 ### **🔸 Carousel Feature**
 <img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/輪播.gif?raw=true" width="600">
 
-#
-### **🔸 Feature**
-<img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/alert.gif?raw=true" width="600">
+- 將所有景點圖放入同一個container中，此父元素使用 **`overflow: hidden`** 後，利用CSS的 **`translate`** 和每張景點圖設定的 **`唯一index`**，得以顯示指定的景點照片。
+- 點擊左右箭頭可以觸發函式，控制 **`index`** 切換不同照片，而自動輪播使用 **`setInterval`** 自動觸發此函式。
 
 #
 ### **🔸 Transaction Feature**
 <img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/訂購.gif?raw=true" width="600">
 <img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/交易.gif?raw=true" width="600">
 
-#
-### **🔸 Feature**
+- 透過串接 **`第三方金流`** TapPay的 **`SDK`** ，實現交易功能。
+- 金流串接的密鑰及其他機敏資料，儲存於 **`.env`** 中，搭配 **`python-dotenv`** 套件載入程式中使用。最後使用 **`.gitignore`** 忽略環境設定檔案，防止其被同步到GitHub上。
 
 ***
 ## Contact
