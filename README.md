@@ -34,6 +34,9 @@ Link: [Click](http://54.65.60.124:3000/)
 ### **🔸 Scroll Feature**
 <img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/fetch.gif?raw=true" width="600">
 
+- 使用 **`IntersectionObserver`** 使頁面滾動時可以監聽元素，並在觸發觀測後利用 **`fetch`** 向後端取得景點資料，再使用 **`createElement`** 和 **`appendChild`** 動態生成element，最終渲染在畫面上。
+- 我設置了一個Api請求的 **`Trigger`** ，為Boolean值，在呼叫api之後透過 **`Promise`** 的 **`.finally()`** 進行Boolean切換，目的是避免IntersectionObserver的觀測造成重複呼叫Api。
+
 #
 ### **🔸 Search Feature**
 <img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/search.gif?raw=true" width="600">
