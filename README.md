@@ -25,7 +25,7 @@ Link: [Click](http://54.65.60.124:3000/)
 - Create an **`Ubuntu`**-based **`Amazon EC2`** instance and deploy the project to it, then associate an **`Elastic IP`** with the instance for stable external access.
 
 ---
-## 🟠 Features and Technical Intro(Gif圖較多，請稍作等待，謝謝😊)
+## 🟠 Features and Technical Intro(Gif圖較多，謝謝你的耐心等待😊)
 
 ### **🔸 Scroll Feature**
 <img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/fetch.gif?raw=true" width="600">
