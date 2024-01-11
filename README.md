@@ -27,11 +27,25 @@ Link: [Click](http://54.65.60.124:3000/)
 ---
 ## 🟠 Features and Technical Introduction
 
-### **🔸 Feature**
-<img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/fetch.gif?raw=true" width="700">
+### **🔸 Scroll Feature**
+<img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/fetch.gif?raw=true" width="600">
+
+#
+### **🔸 Search Feature**
+<img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/search.gif?raw=true" width="600">
+
+#
+### **🔸 Carousel Feature**
+<img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/輪播.gif?raw=true" width="600">
 
 #
 ### **🔸 Feature**
+<img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/alert.gif?raw=true" width="600">
+
+#
+### **🔸 Transaction Feature**
+<img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/訂購.gif?raw=true" width="600">
+<img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/交易.gif?raw=true" width="600">
 
 #
 ### **🔸 Feature**
