@@ -28,6 +28,7 @@ Link: [Click](http://54.65.60.124:3000/)
 ## 🟠 Features and Technical Introduction
 
 ### **🔸 Feature**
+<img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/fetch.gif?raw=true" width="700">
 
 #
 ### **🔸 Feature**
