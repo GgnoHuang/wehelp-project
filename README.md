@@ -61,6 +61,10 @@ Link: [Click](http://54.65.60.124:3000/)
 - 金流串接的密鑰及其他機敏資料，儲存於 **`.env`** 中，搭配 **`python-dotenv`** 套件載入程式中使用。最後使用 **`.gitignore`** 忽略環境設定檔案，防止其被同步到GitHub上。
 
 ***
+
+![210312094-7d199be4-adc1-4a10-83de-e0eaa2b9360c (1)](https://github.com/GgnoHuang/wehelp-project/assets/132812902/1cb542ca-bd84-46e3-a487-71451bbf7a1a)
+
+***
 ## Contact
 
 Name: 黃駿宏 Jyun-Hung Huang
