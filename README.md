@@ -62,7 +62,7 @@ Link: [Click](http://54.65.60.124:3000/)
 
 ***
 
-![210312094-7d199be4-adc1-4a10-83de-e0eaa2b9360c (1)](https://github.com/GgnoHuang/wehelp-project/assets/132812902/1cb542ca-bd84-46e3-a487-71451bbf7a1a)
+<img width=500 alt="img" src="https://github.com/GgnoHuang/wehelp-project/assets/132812902/1cb542ca-bd84-46e3-a487-71451bbf7a1a">
 
 ***
 ## Contact
