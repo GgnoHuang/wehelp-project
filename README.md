@@ -61,8 +61,9 @@ Link: [Click](http://54.65.60.124:3000/)
 - 金流串接的密鑰及其他機敏資料，儲存於 **`.env`** 中，搭配 **`python-dotenv`** 套件載入程式中使用。最後使用 **`.gitignore`** 忽略環境設定檔案，防止其被同步到GitHub上。
 
 ***
+## 🟠 Database EER Diagram
 
-<img width=500 alt="img" src="https://github.com/GgnoHuang/wehelp-project/assets/132812902/1cb542ca-bd84-46e3-a487-71451bbf7a1a">
+<img width="700" alt="圖" src="https://github.com/GgnoHuang/wehelp-project/assets/132812902/9728a067-25f0-4809-8c14-d7c32573fe7a">
 
 ***
 ## Contact
