@@ -72,5 +72,4 @@ Name: 黃駿宏 Jyun-Hung Huang
 
 Email: Lshapeddesk@icloud.com
 
-Resume: [Click](https://drive.google.com/file/d/1TOtMhhBgRccJ2dvz7alIzB939q3zRSIe/view?usp=sharing)
-
+Resume: [Click](https://drive.google.com/file/d/1R11DuC79E_qCuWbIUjdDqQ90j8pBKuax/view?usp=sharing)
