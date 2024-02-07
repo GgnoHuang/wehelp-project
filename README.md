@@ -35,14 +35,14 @@ Link: [Click](http://54.65.60.124:3000/)
 ### **🔸 滾動畫面 Scroll Feature**
 <img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/fetch.gif?raw=true" width="600">
 
-- 使用 **`IntersectionObserver`** 使頁面滾動時可以監聽元素，並在觸發觀測後利用 **`fetch`** 向後端取得景點資料，再使用 **`createElement`** 和 **`appendChild`** 動態生成element，最終渲染在畫面上。
+- 使用 Web API - **`IntersectionObserver`** 使頁面滾動時可以監聽元素，並在觸發觀測後利用 **`fetch`** 向後端取得景點資料，再使用 **`createElement`** 和 **`appendChild`** 動態生成element，最終渲染在畫面上。
 - 我設置了一個Api請求的 **`Trigger`** ，為Boolean值，在呼叫api之後透過 **`Promise`** 的 **`.finally()`** 進行Boolean切換，目的是避免IntersectionObserver的觀測造成重複呼叫Api。
 
 #
 ### **🔸 搜尋功能 Search Feature**
 <img src="https://github.com/GgnoHuang/wehelp-project/blob/main/static/IMAGES/search.gif?raw=true" width="600">
 
-- 搜尋功能使用 **`fetch`** 結合 url 的 **`querystring`** 實現，後端透過 **`request.args.get`** 取得前端的querystring，並用於操作 **`mySQL`** 指令以取得特定資料。
+- 搜尋功能使用 **`fetch`** 結合 url 的 **`querystring`** 實現，後端 Python Flask 透過 **`request.args.get`** 取得前端的querystring，並用於操作 **`mySQL`** 指令以取得特定資料。
 - 搜尋時，關鍵字若不完全吻合捷運站名，則使用 **`模糊搜尋`** 的SQL指令進行搜尋，並將景點渲染於畫面上。若完全吻合，則SQL中捷運名欄位吻合關鍵字者，將渲染於畫面上。
 
 #
